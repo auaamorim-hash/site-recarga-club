@@ -1,6 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
+set VIDEO_COMPRESSOR_PORT=8787
 
 echo.
 echo RECARGA CLUB - Site com compactador de video

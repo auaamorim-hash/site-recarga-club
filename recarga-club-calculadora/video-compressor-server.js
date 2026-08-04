@@ -5,7 +5,7 @@ const path = require("path");
 const crypto = require("crypto");
 const { spawn, spawnSync } = require("child_process");
 
-const PORT = Number(process.env.PORT || process.env.VIDEO_COMPRESSOR_PORT || 8787);
+const PORT = Number(process.env.PORT || process.env.VIDEO_COMPRESSOR_PORT || 10000);
 const HOST = process.env.HOST || "0.0.0.0";
 const STATIC_ROOT = __dirname;
 const VIDEO_LIBRARY_ROOT = path.resolve(process.env.VIDEO_LIBRARY_DIR || path.join(__dirname, "data", "videos"));
