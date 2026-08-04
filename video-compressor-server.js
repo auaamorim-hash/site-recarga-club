@@ -12,6 +12,8 @@ const VIDEO_LIBRARY_ROOT = path.resolve(process.env.VIDEO_LIBRARY_DIR || path.jo
 const VIDEO_LIBRARY_INDEX = path.join(VIDEO_LIBRARY_ROOT, "video-library.json");
 const VIDEO_JOB_ROOT = path.resolve(process.env.VIDEO_JOB_DIR || path.join(os.tmpdir(), "recarga-video-jobs"));
 const MAX_UPLOAD_BYTES = 1024 * 1024 * 1024;
+const VIDEO_MAX_WIDTH = Math.max(480, Math.min(1920, Number(process.env.VIDEO_MAX_WIDTH) || 1280));
+const VIDEO_RETRY_TARGET_RATIO = Math.max(0.5, Math.min(0.95, Number(process.env.VIDEO_RETRY_TARGET_RATIO) || 0.74));
 const videoJobs = new Map();
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -278,6 +280,49 @@ function run(command, args) {
   });
 }
 
+function parseFfmpegProgressSeconds(line = "") {
+  const outTimeMs = line.match(/out_time_ms=(\d+)/i);
+  if (outTimeMs) return Number(outTimeMs[1]) / 1000000;
+  const outTime = line.match(/out_time=(\d+):(\d+):(\d+(?:\.\d+)?)/i);
+  if (outTime) {
+    return (Number(outTime[1]) * 3600) + (Number(outTime[2]) * 60) + Number(outTime[3]);
+  }
+  const time = line.match(/time=(\d+):(\d+):(\d+(?:\.\d+)?)/i);
+  if (time) {
+    return (Number(time[1]) * 3600) + (Number(time[2]) * 60) + Number(time[3]);
+  }
+  return null;
+}
+
+function runFfmpeg(command, args, { duration = 0, onProgress } = {}) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, args, { windowsHide: true });
+    let stdout = "";
+    let stderr = "";
+    child.stdout.on("data", (chunk) => { stdout += chunk.toString(); });
+    child.stderr.on("data", (chunk) => {
+      const text = chunk.toString();
+      stderr += text;
+      if (!duration || !onProgress) return;
+      text.split(/\r?\n/).forEach((line) => {
+        const seconds = parseFfmpegProgressSeconds(line);
+        if (seconds !== null) {
+          onProgress(Math.max(0, Math.min(0.98, seconds / duration)));
+        }
+      });
+    });
+    child.on("error", reject);
+    child.on("close", (code) => {
+      if (code === 0) {
+        if (onProgress) onProgress(1);
+        resolve({ stdout, stderr });
+      } else {
+        reject(new Error(stderr || stdout || `FFmpeg saiu com codigo ${code}.`));
+      }
+    });
+  });
+}
+
 async function getDuration(ffmpeg, inputPath) {
   try {
     await run(ffmpeg, ["-i", inputPath]);
@@ -290,19 +335,29 @@ async function getDuration(ffmpeg, inputPath) {
   throw new Error("Nao foi possivel ler a duracao do video.");
 }
 
-async function compressVideo({ ffmpeg, inputPath, outputPath, targetBytes }) {
-  const duration = Math.max(1, await getDuration(ffmpeg, inputPath));
-  const totalBitrate = Math.max(220000, Math.floor((targetBytes * 8) / duration));
-  const audioBitrate = Math.min(128000, Math.max(48000, Math.floor(totalBitrate * 0.16)));
-  const videoBitrate = Math.max(140000, totalBitrate - audioBitrate);
+function getVideoScaleFilter(duration) {
+  const durationWidth = duration > 240 ? 854 : duration > 120 ? 960 : VIDEO_MAX_WIDTH;
+  const width = Math.min(VIDEO_MAX_WIDTH, durationWidth);
+  return `scale=w='if(gt(iw,${width}),${width},trunc(iw/2)*2)':h=-2:flags=fast_bilinear`;
+}
 
-  await run(ffmpeg, [
+async function compressVideo({ ffmpeg, inputPath, outputPath, targetBytes, duration, onProgress }) {
+  const videoDuration = Math.max(1, Number(duration) || await getDuration(ffmpeg, inputPath));
+  const totalBitrate = Math.max(76000, Math.floor((targetBytes * 8) / videoDuration));
+  const audioBitrate = Math.min(96000, Math.max(24000, Math.floor(totalBitrate * 0.15)));
+  const videoBitrate = Math.max(52000, totalBitrate - audioBitrate);
+
+  await runFfmpeg(ffmpeg, [
+    "-hide_banner",
+    "-nostdin",
     "-y",
     "-i", inputPath,
     "-map", "0:v:0",
     "-map", "0:a?",
+    "-vf", getVideoScaleFilter(videoDuration),
     "-c:v", "libx264",
-    "-preset", "superfast",
+    "-preset", "ultrafast",
+    "-tune", "fastdecode",
     "-threads", "2",
     "-b:v", `${Math.floor(videoBitrate / 1000)}k`,
     "-maxrate", `${Math.floor(videoBitrate / 1000)}k`,
@@ -311,39 +366,52 @@ async function compressVideo({ ffmpeg, inputPath, outputPath, targetBytes }) {
     "-c:a", "aac",
     "-b:a", `${Math.floor(audioBitrate / 1000)}k`,
     "-movflags", "+faststart",
+    "-nostats",
+    "-progress", "pipe:2",
     outputPath
-  ]);
+  ], { duration: videoDuration, onProgress });
 }
 
-async function compressVideoToTarget({ ffmpeg, inputPath, outputPath, targetBytes, onProgress }) {
-  const attempts = [0.94, 0.78, 0.62, 0.48];
+async function compressVideoToTarget({ ffmpeg, inputPath, outputPath, targetBytes, maxBytes = targetBytes, onProgress }) {
+  const duration = Math.max(1, await getDuration(ffmpeg, inputPath));
+  const attempts = [1, VIDEO_RETRY_TARGET_RATIO];
   let bestPath = "";
   let bestSize = Infinity;
   for (let index = 0; index < attempts.length; index += 1) {
     const ratio = attempts[index];
     const attemptPath = `${outputPath.replace(/\.mp4$/i, "")}-${index + 1}.mp4`;
-    if (onProgress) onProgress(20 + index * 16, `Compactando tentativa ${index + 1}/${attempts.length}...`);
+    const startProgress = index === 0 ? 18 : 78;
+    const endProgress = index === 0 ? 76 : 90;
+    if (onProgress) onProgress(startProgress, `Compactando tentativa ${index + 1}/${attempts.length}...`);
     await compressVideo({
       ffmpeg,
       inputPath,
       outputPath: attemptPath,
-      targetBytes: Math.floor(targetBytes * ratio)
+      targetBytes: Math.floor(targetBytes * ratio),
+      duration,
+      onProgress: (ratioProgress) => {
+        if (onProgress) {
+          const progress = startProgress + ((endProgress - startProgress) * ratioProgress);
+          onProgress(progress, `Compactando tentativa ${index + 1}/${attempts.length}...`);
+        }
+      }
     });
     const size = fs.statSync(attemptPath).size;
+    if (onProgress) onProgress(endProgress, `Tentativa ${index + 1} gerou ${(size / 1024 / 1024).toFixed(1)}MB. Validando...`);
     if (size < bestSize) {
       bestPath = attemptPath;
       bestSize = size;
     }
-    if (size <= targetBytes) {
+    if (size <= maxBytes) {
       fs.copyFileSync(attemptPath, outputPath);
       return outputPath;
     }
   }
-  if (bestPath) {
+  if (bestPath && bestSize <= maxBytes) {
     fs.copyFileSync(bestPath, outputPath);
     return outputPath;
   }
-  throw new Error("Nao foi possivel gerar o MP4 compactado.");
+  throw new Error("O video ainda ficou acima de 16MB. Tente um video menor ou com menor duracao.");
 }
 
 async function handleCompress(req, res) {
@@ -364,7 +432,7 @@ async function handleCompress(req, res) {
 
   try {
     fs.writeFileSync(inputPath, multipart.file.buffer);
-    await compressVideoToTarget({ ffmpeg, inputPath, outputPath, targetBytes });
+    await compressVideoToTarget({ ffmpeg, inputPath, outputPath, targetBytes, maxBytes: targetBytes });
     const output = fs.readFileSync(outputPath);
     sendCors(res);
     res.writeHead(200, {
@@ -403,6 +471,7 @@ function publicVideoJob(job) {
 }
 
 async function processVideoJob(job) {
+  let heartbeat = null;
   try {
     const ffmpeg = findFfmpeg();
     if (!ffmpeg) {
@@ -411,13 +480,24 @@ async function processVideoJob(job) {
     job.status = "processing";
     job.progress = 12;
     job.message = "Video recebido. Preparando compactacao...";
+    let lastProgressAt = Date.now();
+    heartbeat = setInterval(() => {
+      if (job.status !== "processing") return;
+      if (Date.now() - lastProgressAt < 10000) return;
+      if (job.progress >= 88) return;
+      job.progress = Math.min(88, job.progress + 1);
+      job.message = "Compactando em modo rapido no servidor...";
+    }, 6000);
+    heartbeat.unref?.();
     const outputPath = path.join(job.tempDir, "output.mp4");
     await compressVideoToTarget({
       ffmpeg,
       inputPath: job.inputPath,
       outputPath,
       targetBytes: job.targetBytes,
+      maxBytes: job.maxBytes,
       onProgress: (progress, message) => {
+        lastProgressAt = Date.now();
         job.progress = Math.min(92, progress);
         job.message = message;
       }
@@ -445,6 +525,7 @@ async function processVideoJob(job) {
     job.error = error.message || "Falha ao compactar video.";
     job.message = job.error;
   } finally {
+    if (heartbeat) clearInterval(heartbeat);
     try { fs.rmSync(job.tempDir, { recursive: true, force: true }); } catch (error) {}
     setTimeout(() => videoJobs.delete(job.id), 60 * 60 * 1000).unref?.();
   }

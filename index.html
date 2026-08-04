@@ -1518,6 +1518,25 @@
         display: none;
       }
 
+      .video-eta {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 0.78rem;
+        line-height: 1.35;
+      }
+
+      .video-eta strong {
+        color: #0f9f5f;
+        font-weight: 800;
+      }
+
+      .video-eta.hidden {
+        display: none;
+      }
+
       .video-library {
         display: grid;
         gap: 12px;
@@ -3360,6 +3379,7 @@
                   <button id="compressVideoButton" class="btn" type="button">Compactar e salvar</button>
                 </div>
                 <progress id="videoCompressProgress" class="video-progress hidden" max="100" value="0"></progress>
+                <div id="videoCompressEta" class="video-eta hidden" aria-live="polite"></div>
                 <div id="videoCompressStatus" class="inventory-editor-status">Nenhum vídeo selecionado.</div>
                 <p class="muted">Em produção, a compactação usa a API do próprio site para gerar MP4 com áudio. No uso local, abra <strong>iniciar-compactador-video.bat</strong> e acesse o site pelo endereço indicado.</p>
                 <p class="muted">Os vídeos ficam organizados por pasta/marca na biblioteca compartilhada do servidor. Em produção, use disco persistente para manter os arquivos salvos.</p>
@@ -4269,7 +4289,7 @@
         "negotiationText", "reportError", "copyNegotiation", "copyOcrText", "ocrFilterCpf", "ocrFilterName", "ocrImage", "pasteOcrImage", "ocrPasteZone", "ocrResult",
         "quotePressName", "quotePasteZone", "quoteResult", "copyQuoteMessage",
         "inventoryPasteZone", "inventoryEditorStatus", "inventoryEditorControls", "inventoryCaliberSelect", "inventoryQuantity", "inventoryPreview", "inventoryCanvas", "downloadInventoryImage",
-        "videoName", "videoBrandPreview", "videoFile", "selectVideoButton", "compressVideoButton", "videoCompressProgress", "videoCompressStatus", "videoLibrary",
+        "videoName", "videoBrandPreview", "videoFile", "selectVideoButton", "compressVideoButton", "videoCompressProgress", "videoCompressEta", "videoCompressStatus", "videoLibrary",
         "carrierDdd", "carrierCep", "carrierCepResult", "carrierLocation", "militaryRegionBadge", "sfpcResult", "ufGrid", "carrierTitle", "carrierCount", "carrierList",
         "userTabButton", "profileAvatar", "profileName", "profileEmail", "profilePhone", "profileRole", "activitiesPanel", "activitySource", "activityList",
         "activityOverdueCount", "activityTodayCount", "activityFutureCount", "activityCompletedCount",
@@ -4321,6 +4341,7 @@
           videos: [],
           busy: false,
           selectedFolder: "",
+          compressionStartedAt: 0,
           ffmpeg: null,
           ffmpegLoading: null
         },
@@ -6752,6 +6773,45 @@
         el.videoCompressProgress.classList.toggle("hidden", !visible);
       }
 
+      function formatVideoEta(seconds) {
+        const safeSeconds = Math.max(0, Math.ceil(Number(seconds) || 0));
+        if (safeSeconds < 5) return "finalizando...";
+        if (safeSeconds < 60) return `${safeSeconds}s`;
+        const minutes = Math.floor(safeSeconds / 60);
+        const remainder = safeSeconds % 60;
+        if (minutes < 60) return remainder ? `${minutes}min ${remainder}s` : `${minutes}min`;
+        const hours = Math.floor(minutes / 60);
+        const minuteRemainder = minutes % 60;
+        return minuteRemainder ? `${hours}h ${minuteRemainder}min` : `${hours}h`;
+      }
+
+      function getVideoEtaLabel(progress, startedAt) {
+        const safeProgress = Math.max(0, Math.min(100, Number(progress) || 0));
+        if (!startedAt || safeProgress < 8 || safeProgress >= 99) return "Calculando tempo...";
+        const elapsedSeconds = (Date.now() - startedAt) / 1000;
+        if (elapsedSeconds < 4) return "Calculando tempo...";
+        const estimatedTotalSeconds = elapsedSeconds / (safeProgress / 100);
+        const remainingSeconds = Math.max(0, estimatedTotalSeconds - elapsedSeconds);
+        return `Tempo estimado restante: ${formatVideoEta(remainingSeconds)}`;
+      }
+
+      function setVideoEta(progress = 0, startedAt = 0, label = "") {
+        if (!el.videoCompressEta) return;
+        const safeProgress = Math.max(0, Math.min(100, Number(progress) || 0));
+        const etaLabel = label || getVideoEtaLabel(safeProgress, startedAt);
+        el.videoCompressEta.innerHTML = `
+          <span><strong>${Math.round(safeProgress)}%</strong> concluido</span>
+          <span>${etaLabel}</span>
+        `;
+        el.videoCompressEta.classList.toggle("hidden", safeProgress <= 0 && !label);
+      }
+
+      function clearVideoEta() {
+        if (!el.videoCompressEta) return;
+        el.videoCompressEta.textContent = "";
+        el.videoCompressEta.classList.add("hidden");
+      }
+
       function withVideoTimeout(promise, ms, message) {
         let timer = null;
         return Promise.race([
@@ -6931,6 +6991,8 @@
         data.append("originalSize", String(record.originalSize || file.size || 0));
         setVideoStatus("Enviando video para o servidor de compactacao...");
         setVideoProgress(5, true);
+        state.videoCompressor.compressionStartedAt = Date.now();
+        setVideoEta(5, state.videoCompressor.compressionStartedAt, "Enviando para o servidor...");
         const response = await withVideoTimeout(
           fetch(getVideoServerUrl("/api/compress-video-job"), {
             method: "POST",
@@ -6953,6 +7015,9 @@
 
       async function waitSharedVideoCompressionJob(jobId) {
         let lastProgress = 5;
+        let sameProgressReads = 0;
+        const startedAt = state.videoCompressor.compressionStartedAt || Date.now();
+        state.videoCompressor.compressionStartedAt = startedAt;
         for (let attempt = 0; attempt < 900; attempt += 1) {
           await new Promise((resolve) => window.setTimeout(resolve, 1800));
           const response = await withVideoTimeout(
@@ -6964,9 +7029,14 @@
           const dataResponse = await response.json();
           const job = dataResponse.job || {};
           const progress = Math.max(lastProgress, Math.min(100, Number(job.progress) || lastProgress));
+          sameProgressReads = progress === lastProgress ? sameProgressReads + 1 : 0;
           lastProgress = progress;
           setVideoProgress(progress, true);
-          setVideoStatus(`${job.message || "Compactando video..."} ${Math.round(progress)}%`);
+          setVideoEta(progress, startedAt);
+          const slowHint = sameProgressReads >= 8
+            ? " O Render Free pode demorar nesta etapa, mas o processamento continua."
+            : "";
+          setVideoStatus(`${job.message || "Compactando video..."} ${Math.round(progress)}%${slowHint}`);
           if (job.status === "done" && job.video) {
             return { ...job.video, shared: true };
           }
@@ -7372,6 +7442,7 @@
         const file = el.videoFile.files?.[0] || null;
         state.videoCompressor.file = file;
         setVideoProgress(0, false);
+        clearVideoEta();
         if (!file) {
           setVideoStatus("Nenhum video selecionado.");
           return;
@@ -7397,9 +7468,15 @@
 
         const detected = getSelectedVideoBrand(name);
         state.videoCompressor.busy = true;
+        state.videoCompressor.compressionStartedAt = Date.now();
         el.compressVideoButton.disabled = true;
         el.selectVideoButton.disabled = true;
         setVideoProgress(0, file.size > VIDEO_MAX_BYTES || !isMp4VideoFile(file));
+        if (file.size > VIDEO_MAX_BYTES || !isMp4VideoFile(file)) {
+          setVideoEta(1, state.videoCompressor.compressionStartedAt, "Preparando estimativa...");
+        } else {
+          clearVideoEta();
+        }
         setVideoStatus(file.size > VIDEO_MAX_BYTES
           ? `Compactando em segundo plano e salvando na pasta ${detected.folder}...`
           : isMp4VideoFile(file)
@@ -7422,6 +7499,7 @@
           let compressed = false;
           if (file.size <= VIDEO_MAX_BYTES && isMp4VideoFile(file)) {
             setVideoProgress(35, true);
+            setVideoEta(35, state.videoCompressor.compressionStartedAt, "Salvando na biblioteca...");
             finalRecord = await uploadSharedVideoRecord(record, file);
           } else {
             compressed = true;
@@ -7429,6 +7507,8 @@
             finalRecord = await waitSharedVideoCompressionJob(job.id);
           }
           await renderVideoLibrary();
+          setVideoProgress(100, true);
+          setVideoEta(100, state.videoCompressor.compressionStartedAt, "Concluido.");
           setVideoStatus(`${compressed ? "Video compactado" : "Video salvo"} com ${formatFileSize(finalRecord.size)} na pasta ${finalRecord.folder}. Disponivel para todos os usuarios.`, "success");
           showToast("Video salvo na biblioteca compartilhada.");
         } catch (error) {
@@ -7443,7 +7523,11 @@
           state.videoCompressor.busy = false;
           el.compressVideoButton.disabled = false;
           el.selectVideoButton.disabled = false;
-          setVideoProgress(0, false);
+          window.setTimeout(() => {
+            if (state.videoCompressor.busy) return;
+            setVideoProgress(0, false);
+            clearVideoEta();
+          }, 4500);
         }
       }
 
