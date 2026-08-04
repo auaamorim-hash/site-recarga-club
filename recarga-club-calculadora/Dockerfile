@@ -7,9 +7,8 @@ RUN apt-get update \
 WORKDIR /app
 COPY . .
 
-ENV PORT=8787
 ENV VIDEO_LIBRARY_DIR=/data/videos
-EXPOSE 8787
+EXPOSE 10000
 VOLUME ["/data"]
 
 CMD ["node", "video-compressor-server.js"]
