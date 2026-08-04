@@ -10,7 +10,9 @@ const HOST = process.env.HOST || "0.0.0.0";
 const STATIC_ROOT = __dirname;
 const VIDEO_LIBRARY_ROOT = path.resolve(process.env.VIDEO_LIBRARY_DIR || path.join(__dirname, "data", "videos"));
 const VIDEO_LIBRARY_INDEX = path.join(VIDEO_LIBRARY_ROOT, "video-library.json");
+const VIDEO_JOB_ROOT = path.resolve(process.env.VIDEO_JOB_DIR || path.join(os.tmpdir(), "recarga-video-jobs"));
 const MAX_UPLOAD_BYTES = 1024 * 1024 * 1024;
+const videoJobs = new Map();
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -154,6 +156,35 @@ function listPublicVideos() {
     .map(publicVideoRecord);
 }
 
+function saveSharedVideoBuffer({ buffer, name, brand, folder, originalSize }) {
+  const id = crypto.randomUUID ? crypto.randomUUID() : `video-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  const safeName = sanitizeText(name, "Video");
+  const safeBrand = sanitizeText(brand, "Outros", 60);
+  const safeFolder = sanitizeFolder(folder || safeBrand);
+  const fileName = `${slugify(safeFolder)}-${slugify(safeName)}-16mb-${id.slice(0, 8)}.mp4`;
+  const folderPath = path.join(VIDEO_LIBRARY_ROOT, slugify(safeFolder));
+  const storagePath = path.join(folderPath, fileName);
+  fs.mkdirSync(folderPath, { recursive: true });
+  fs.writeFileSync(storagePath, buffer);
+
+  const records = readVideoLibrary();
+  const record = {
+    id,
+    name: safeName,
+    brand: safeBrand,
+    folder: safeFolder,
+    fileName,
+    mimeType: "video/mp4",
+    size: buffer.length,
+    originalSize: Math.max(0, Number(originalSize) || buffer.length),
+    createdAt: new Date().toISOString(),
+    storagePath
+  };
+  records.push(record);
+  writeVideoLibrary(records);
+  return record;
+}
+
 function commandWorks(command) {
   try {
     const result = spawnSync(command, ["-version"], { windowsHide: true, stdio: "ignore" });
@@ -271,7 +302,8 @@ async function compressVideo({ ffmpeg, inputPath, outputPath, targetBytes }) {
     "-map", "0:v:0",
     "-map", "0:a?",
     "-c:v", "libx264",
-    "-preset", "veryfast",
+    "-preset", "superfast",
+    "-threads", "2",
     "-b:v", `${Math.floor(videoBitrate / 1000)}k`,
     "-maxrate", `${Math.floor(videoBitrate / 1000)}k`,
     "-bufsize", `${Math.floor((videoBitrate * 2) / 1000)}k`,
@@ -281,6 +313,37 @@ async function compressVideo({ ffmpeg, inputPath, outputPath, targetBytes }) {
     "-movflags", "+faststart",
     outputPath
   ]);
+}
+
+async function compressVideoToTarget({ ffmpeg, inputPath, outputPath, targetBytes, onProgress }) {
+  const attempts = [0.94, 0.78, 0.62, 0.48];
+  let bestPath = "";
+  let bestSize = Infinity;
+  for (let index = 0; index < attempts.length; index += 1) {
+    const ratio = attempts[index];
+    const attemptPath = `${outputPath.replace(/\.mp4$/i, "")}-${index + 1}.mp4`;
+    if (onProgress) onProgress(20 + index * 16, `Compactando tentativa ${index + 1}/${attempts.length}...`);
+    await compressVideo({
+      ffmpeg,
+      inputPath,
+      outputPath: attemptPath,
+      targetBytes: Math.floor(targetBytes * ratio)
+    });
+    const size = fs.statSync(attemptPath).size;
+    if (size < bestSize) {
+      bestPath = attemptPath;
+      bestSize = size;
+    }
+    if (size <= targetBytes) {
+      fs.copyFileSync(attemptPath, outputPath);
+      return outputPath;
+    }
+  }
+  if (bestPath) {
+    fs.copyFileSync(bestPath, outputPath);
+    return outputPath;
+  }
+  throw new Error("Nao foi possivel gerar o MP4 compactado.");
 }
 
 async function handleCompress(req, res) {
@@ -301,7 +364,7 @@ async function handleCompress(req, res) {
 
   try {
     fs.writeFileSync(inputPath, multipart.file.buffer);
-    await compressVideo({ ffmpeg, inputPath, outputPath, targetBytes });
+    await compressVideoToTarget({ ffmpeg, inputPath, outputPath, targetBytes });
     const output = fs.readFileSync(outputPath);
     sendCors(res);
     res.writeHead(200, {
@@ -318,34 +381,116 @@ async function handleCompress(req, res) {
 async function handleSaveSharedVideo(req, res) {
   const body = await readRequestBody(req);
   const multipart = parseMultipart(body, req.headers["content-type"] || "");
-  const id = crypto.randomUUID ? crypto.randomUUID() : `video-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-  const name = sanitizeText(multipart.fields.name, "Video");
-  const brand = sanitizeText(multipart.fields.brand, "Outros", 60);
-  const folder = sanitizeFolder(multipart.fields.folder || brand);
-  const originalSize = Math.max(0, Number(multipart.fields.originalSize) || multipart.file.buffer.length);
-  const mimeType = "video/mp4";
-  const fileName = `${slugify(folder)}-${slugify(name)}-16mb-${id.slice(0, 8)}.mp4`;
-  const folderPath = path.join(VIDEO_LIBRARY_ROOT, slugify(folder));
-  const storagePath = path.join(folderPath, fileName);
-  fs.mkdirSync(folderPath, { recursive: true });
-  fs.writeFileSync(storagePath, multipart.file.buffer);
-
-  const records = readVideoLibrary();
-  const record = {
-    id,
-    name,
-    brand,
-    folder,
-    fileName,
-    mimeType,
-    size: multipart.file.buffer.length,
-    originalSize,
-    createdAt: new Date().toISOString(),
-    storagePath
-  };
-  records.push(record);
-  writeVideoLibrary(records);
+  const record = saveSharedVideoBuffer({
+    buffer: multipart.file.buffer,
+    name: multipart.fields.name,
+    brand: multipart.fields.brand,
+    folder: multipart.fields.folder,
+    originalSize: multipart.fields.originalSize
+  });
   sendJson(res, 201, { video: publicVideoRecord(record) });
+}
+
+function publicVideoJob(job) {
+  return {
+    id: job.id,
+    status: job.status,
+    progress: job.progress,
+    message: job.message,
+    error: job.error,
+    video: job.video || null
+  };
+}
+
+async function processVideoJob(job) {
+  try {
+    const ffmpeg = findFfmpeg();
+    if (!ffmpeg) {
+      throw new Error("FFmpeg nao encontrado no servidor.");
+    }
+    job.status = "processing";
+    job.progress = 12;
+    job.message = "Video recebido. Preparando compactacao...";
+    const outputPath = path.join(job.tempDir, "output.mp4");
+    await compressVideoToTarget({
+      ffmpeg,
+      inputPath: job.inputPath,
+      outputPath,
+      targetBytes: job.targetBytes,
+      onProgress: (progress, message) => {
+        job.progress = Math.min(92, progress);
+        job.message = message;
+      }
+    });
+    const output = fs.readFileSync(outputPath);
+    if (output.length > job.maxBytes) {
+      throw new Error("O video ainda ficou acima de 16MB. Tente um video menor ou com menor resolucao.");
+    }
+    job.progress = 94;
+    job.message = "Salvando na biblioteca compartilhada...";
+    const record = saveSharedVideoBuffer({
+      buffer: output,
+      name: job.name,
+      brand: job.brand,
+      folder: job.folder,
+      originalSize: job.originalSize
+    });
+    job.video = publicVideoRecord(record);
+    job.status = "done";
+    job.progress = 100;
+    job.message = "Video compactado e compartilhado.";
+  } catch (error) {
+    job.status = "error";
+    job.progress = 100;
+    job.error = error.message || "Falha ao compactar video.";
+    job.message = job.error;
+  } finally {
+    try { fs.rmSync(job.tempDir, { recursive: true, force: true }); } catch (error) {}
+    setTimeout(() => videoJobs.delete(job.id), 60 * 60 * 1000).unref?.();
+  }
+}
+
+async function handleStartVideoJob(req, res) {
+  const ffmpeg = findFfmpeg();
+  if (!ffmpeg) {
+    sendJson(res, 500, { error: "FFmpeg nao encontrado no servidor." });
+    return;
+  }
+  fs.mkdirSync(VIDEO_JOB_ROOT, { recursive: true });
+  const body = await readRequestBody(req);
+  const multipart = parseMultipart(body, req.headers["content-type"] || "");
+  const id = crypto.randomUUID ? crypto.randomUUID() : `job-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  const tempDir = fs.mkdtempSync(path.join(VIDEO_JOB_ROOT, `${id}-`));
+  const inputPath = path.join(tempDir, `input${safeExtension(multipart.file.fileName)}`);
+  fs.writeFileSync(inputPath, multipart.file.buffer);
+  const maxBytes = 16 * 1024 * 1024;
+  const job = {
+    id,
+    status: "queued",
+    progress: 5,
+    message: "Upload recebido. Entrando na fila de compactacao...",
+    inputPath,
+    tempDir,
+    name: multipart.fields.name,
+    brand: multipart.fields.brand,
+    folder: multipart.fields.folder,
+    originalSize: Math.max(0, Number(multipart.fields.originalSize) || multipart.file.buffer.length),
+    maxBytes,
+    targetBytes: Math.max(1024 * 1024, Number(multipart.fields.targetBytes) || Math.floor(maxBytes * 0.94)),
+    createdAt: new Date().toISOString()
+  };
+  videoJobs.set(id, job);
+  sendJson(res, 202, { job: publicVideoJob(job) });
+  setImmediate(() => processVideoJob(job));
+}
+
+function handleGetVideoJob(req, res, id) {
+  const job = videoJobs.get(id);
+  if (!job) {
+    sendJson(res, 404, { error: "Compactacao nao encontrada ou expirada." });
+    return;
+  }
+  sendJson(res, 200, { job: publicVideoJob(job) });
 }
 
 function handleListSharedVideos(req, res) {
@@ -414,6 +559,14 @@ const server = http.createServer(async (req, res) => {
     }
     if (req.method === "POST" && pathname === "/api/compress-video") {
       await handleCompress(req, res);
+      return;
+    }
+    if (req.method === "POST" && pathname === "/api/compress-video-job") {
+      await handleStartVideoJob(req, res);
+      return;
+    }
+    if (req.method === "GET" && pathname.startsWith("/api/compress-video-job/")) {
+      handleGetVideoJob(req, res, decodeURIComponent(pathname.replace("/api/compress-video-job/", "")));
       return;
     }
     if ((req.method === "GET" || req.method === "HEAD") && sendStaticFile(req, res, pathname)) {

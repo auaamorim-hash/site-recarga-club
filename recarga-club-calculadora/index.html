@@ -120,6 +120,8 @@
         align-items: center;
         gap: 12px;
         min-width: 0;
+        color: var(--text);
+        text-decoration: none;
       }
 
       .brand img {
@@ -1488,8 +1490,28 @@
 
       .video-progress {
         width: 100%;
-        height: 10px;
+        height: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(254, 195, 43, 0.32);
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.08);
         accent-color: var(--yellow);
+      }
+
+      .video-progress::-webkit-progress-bar {
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.08);
+      }
+
+      .video-progress::-webkit-progress-value {
+        border-radius: 999px;
+        background: linear-gradient(90deg, #fec32b, #22c55e);
+        transition: width 0.35s ease;
+      }
+
+      .video-progress::-moz-progress-bar {
+        border-radius: 999px;
+        background: linear-gradient(90deg, #fec32b, #22c55e);
       }
 
       .video-progress.hidden {
@@ -3253,8 +3275,8 @@
                   <div class="stack" id="paymentSchedule"></div>
                 </div>
                 <div class="field">
-                  <label for="ollowLink">Link do HubSpot</label>
-                  <input id="ollowLink" placeholder="Insira o link do HubSpot (opcional)..." />
+                  <label for="ollowLink">Link</label>
+                  <input id="ollowLink" placeholder="Insira o link (opcional)..." />
                 </div>
               </div>
             </div>
@@ -5485,7 +5507,7 @@
           "",
           paymentText,
           "",
-          "Link do HubSpot:",
+          "Link:",
           link || ""
         ].join("\n"));
         updateReportGuide();
@@ -6899,6 +6921,62 @@
         return { ...(saved.video || record), shared: true };
       }
 
+      async function startSharedVideoCompressionJob(file, record) {
+        const data = new FormData();
+        data.append("video", file, file.name || "video");
+        data.append("targetBytes", String(Math.floor(VIDEO_MAX_BYTES * 0.94)));
+        data.append("name", record.name || "Video");
+        data.append("brand", record.brand || "Outros");
+        data.append("folder", record.folder || "Outros");
+        data.append("originalSize", String(record.originalSize || file.size || 0));
+        setVideoStatus("Enviando video para o servidor de compactacao...");
+        setVideoProgress(5, true);
+        const response = await withVideoTimeout(
+          fetch(getVideoServerUrl("/api/compress-video-job"), {
+            method: "POST",
+            body: data
+          }),
+          10 * 60 * 1000,
+          "O upload do video demorou demais."
+        );
+        if (!response.ok) {
+          let message = "Nao foi possivel iniciar a compactacao no servidor.";
+          try {
+            const errorData = await response.json();
+            if (errorData?.error) message = errorData.error;
+          } catch (error) {}
+          throw new Error(message);
+        }
+        const dataResponse = await response.json();
+        return dataResponse.job;
+      }
+
+      async function waitSharedVideoCompressionJob(jobId) {
+        let lastProgress = 5;
+        for (let attempt = 0; attempt < 900; attempt += 1) {
+          await new Promise((resolve) => window.setTimeout(resolve, 1800));
+          const response = await withVideoTimeout(
+            fetch(getVideoServerUrl(`/api/compress-video-job/${encodeURIComponent(jobId)}`), { cache: "no-store" }),
+            15000,
+            "O servidor demorou demais para atualizar o progresso."
+          );
+          if (!response.ok) throw new Error("Nao foi possivel consultar o progresso da compactacao.");
+          const dataResponse = await response.json();
+          const job = dataResponse.job || {};
+          const progress = Math.max(lastProgress, Math.min(100, Number(job.progress) || lastProgress));
+          lastProgress = progress;
+          setVideoProgress(progress, true);
+          setVideoStatus(`${job.message || "Compactando video..."} ${Math.round(progress)}%`);
+          if (job.status === "done" && job.video) {
+            return { ...job.video, shared: true };
+          }
+          if (job.status === "error") {
+            throw new Error(job.error || "Falha ao compactar video.");
+          }
+        }
+        throw new Error("A compactacao demorou demais. Tente novamente com um video menor.");
+      }
+
       async function deleteSharedVideoRecord(id) {
         const response = await withVideoTimeout(
           fetch(getVideoServerUrl(`/api/videos/${encodeURIComponent(id)}`), { method: "DELETE" }),
@@ -7329,10 +7407,6 @@
             : `Convertendo para MP4 e salvando na pasta ${detected.folder}.`);
 
         try {
-          const output = await compressVideoToLimit(file);
-          if (!output.blob || output.blob.size > VIDEO_MAX_BYTES) {
-            throw new Error(`O video ficou acima de 16MB. Tente um video menor ou com menor resolucao.`);
-          }
           const record = {
             id: window.crypto?.randomUUID?.() || `video-${Date.now()}-${Math.random().toString(16).slice(2)}`,
             name,
@@ -7340,21 +7414,23 @@
             folder: detected.folder,
             fileName: makeSafeVideoFileName(name, detected.folder, "video/mp4"),
             mimeType: "video/mp4",
-            size: output.blob.size,
+            size: file.size,
             originalSize: file.size,
-            createdAt: new Date().toISOString(),
-            blob: output.blob
+            createdAt: new Date().toISOString()
           };
-          let savedRecord = null;
-          try {
-            savedRecord = await uploadSharedVideoRecord(record, output.blob);
-          } catch (sharedError) {
-            await saveVideoRecord(record);
+          let finalRecord = null;
+          let compressed = false;
+          if (file.size <= VIDEO_MAX_BYTES && isMp4VideoFile(file)) {
+            setVideoProgress(35, true);
+            finalRecord = await uploadSharedVideoRecord(record, file);
+          } else {
+            compressed = true;
+            const job = await startSharedVideoCompressionJob(file, record);
+            finalRecord = await waitSharedVideoCompressionJob(job.id);
           }
           await renderVideoLibrary();
-          const finalRecord = savedRecord || record;
-          setVideoStatus(`${output.compressed ? "Video compactado" : "Video salvo"} com ${formatFileSize(finalRecord.size)} na pasta ${finalRecord.folder}. ${savedRecord ? "Disponivel para todos os usuarios." : "Salvo apenas neste navegador; biblioteca compartilhada indisponivel."}`, savedRecord ? "success" : "error");
-          showToast(savedRecord ? "Video salvo na biblioteca compartilhada." : "Video salvo apenas localmente.");
+          setVideoStatus(`${compressed ? "Video compactado" : "Video salvo"} com ${formatFileSize(finalRecord.size)} na pasta ${finalRecord.folder}. Disponivel para todos os usuarios.`, "success");
+          showToast("Video salvo na biblioteca compartilhada.");
         } catch (error) {
           const protocolHint = location.protocol === "file:"
             ? " Se continuar, abra o site por http://127.0.0.1 em vez de file://."
