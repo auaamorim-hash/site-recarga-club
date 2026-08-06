@@ -14,6 +14,11 @@ const VIDEO_JOB_ROOT = path.resolve(process.env.VIDEO_JOB_DIR || path.join(os.tm
 const MAX_UPLOAD_BYTES = 1024 * 1024 * 1024;
 const VIDEO_MAX_WIDTH = Math.max(480, Math.min(1920, Number(process.env.VIDEO_MAX_WIDTH) || 1280));
 const VIDEO_RETRY_TARGET_RATIO = Math.max(0.5, Math.min(0.95, Number(process.env.VIDEO_RETRY_TARGET_RATIO) || 0.74));
+const SUPABASE_URL = String(process.env.SUPABASE_URL || "").replace(/\/+$/, "");
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || "";
+const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET || "videos";
+const SUPABASE_INDEX_PATH = process.env.SUPABASE_INDEX_PATH || "_recarga/video-library.json";
+const SUPABASE_RECORDS_PREFIX = process.env.SUPABASE_RECORDS_PREFIX || "_recarga/records";
 const videoJobs = new Map();
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -89,15 +94,116 @@ function safeExtension(fileName = "") {
   return ext && ext.length <= 6 ? ext : ".mp4";
 }
 
-function ensureVideoLibrary() {
+function isSupabaseVideoStorageEnabled() {
+  return Boolean(SUPABASE_URL && SUPABASE_KEY && SUPABASE_BUCKET);
+}
+
+function encodeStoragePath(objectPath = "") {
+  return String(objectPath || "")
+    .split("/")
+    .filter(Boolean)
+    .map((part) => encodeURIComponent(part))
+    .join("/");
+}
+
+function supabaseObjectUrl(objectPath = "") {
+  return `${SUPABASE_URL}/storage/v1/object/${encodeURIComponent(SUPABASE_BUCKET)}/${encodeStoragePath(objectPath)}`;
+}
+
+function supabaseBucketUrl() {
+  return `${SUPABASE_URL}/storage/v1/object/${encodeURIComponent(SUPABASE_BUCKET)}`;
+}
+
+function supabaseHeaders(extra = {}) {
+  return {
+    apikey: SUPABASE_KEY,
+    Authorization: `Bearer ${SUPABASE_KEY}`,
+    ...extra
+  };
+}
+
+async function getSupabaseError(response) {
+  let text = "";
+  try {
+    text = await response.text();
+  } catch (error) {}
+  return text || `Supabase respondeu com status ${response.status}.`;
+}
+
+async function readSupabaseObjectBuffer(objectPath) {
+  const response = await fetch(supabaseObjectUrl(objectPath), {
+    method: "GET",
+    headers: supabaseHeaders()
+  });
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error(await getSupabaseError(response));
+  return Buffer.from(await response.arrayBuffer());
+}
+
+async function uploadSupabaseObject({ objectPath, buffer, contentType }) {
+  const response = await fetch(supabaseObjectUrl(objectPath), {
+    method: "POST",
+    headers: supabaseHeaders({
+      "Content-Type": contentType || "application/octet-stream",
+      "Cache-Control": "31536000",
+      "x-upsert": "true"
+    }),
+    body: buffer
+  });
+  if (!response.ok) {
+    throw new Error(await getSupabaseError(response));
+  }
+}
+
+async function deleteSupabaseObjects(objectPaths = []) {
+  const prefixes = objectPaths.filter(Boolean);
+  if (!prefixes.length) return;
+  const response = await fetch(supabaseBucketUrl(), {
+    method: "DELETE",
+    headers: supabaseHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ prefixes })
+  });
+  if (!response.ok && response.status !== 404) {
+    throw new Error(await getSupabaseError(response));
+  }
+}
+
+async function listSupabaseObjects(prefix = "") {
+  const response = await fetch(`${SUPABASE_URL}/storage/v1/object/list/${encodeURIComponent(SUPABASE_BUCKET)}`, {
+    method: "POST",
+    headers: supabaseHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({
+      prefix,
+      limit: 1000,
+      offset: 0,
+      sortBy: { column: "name", order: "asc" }
+    })
+  });
+  if (response.status === 404) return [];
+  if (!response.ok) throw new Error(await getSupabaseError(response));
+  const parsed = await response.json();
+  return Array.isArray(parsed) ? parsed : [];
+}
+
+function getSupabaseRecordPath(id) {
+  return `${SUPABASE_RECORDS_PREFIX}/${encodeURIComponent(String(id || "video")).replace(/%/g, "-")}.json`;
+}
+
+function resolveSupabaseListedPath(prefix, name = "") {
+  const cleanName = String(name || "").replace(/^\/+/, "");
+  if (!cleanName) return "";
+  return cleanName.includes("/") ? cleanName : `${prefix.replace(/\/+$/, "")}/${cleanName}`;
+}
+
+function ensureLocalVideoLibrary() {
   fs.mkdirSync(VIDEO_LIBRARY_ROOT, { recursive: true });
   if (!fs.existsSync(VIDEO_LIBRARY_INDEX)) {
     fs.writeFileSync(VIDEO_LIBRARY_INDEX, "[]", "utf8");
   }
 }
 
-function readVideoLibrary() {
-  ensureVideoLibrary();
+function readLocalVideoLibrary() {
+  ensureLocalVideoLibrary();
   try {
     const parsed = JSON.parse(fs.readFileSync(VIDEO_LIBRARY_INDEX, "utf8"));
     return Array.isArray(parsed) ? parsed : [];
@@ -106,11 +212,48 @@ function readVideoLibrary() {
   }
 }
 
-function writeVideoLibrary(records) {
-  ensureVideoLibrary();
+function writeLocalVideoLibrary(records) {
+  ensureLocalVideoLibrary();
   const tempPath = `${VIDEO_LIBRARY_INDEX}.tmp`;
   fs.writeFileSync(tempPath, JSON.stringify(records, null, 2), "utf8");
   fs.renameSync(tempPath, VIDEO_LIBRARY_INDEX);
+}
+
+async function readVideoLibrary() {
+  if (!isSupabaseVideoStorageEnabled()) return readLocalVideoLibrary();
+  const items = await listSupabaseObjects(SUPABASE_RECORDS_PREFIX);
+  const records = [];
+  for (const item of items) {
+    const objectPath = resolveSupabaseListedPath(SUPABASE_RECORDS_PREFIX, item?.name);
+    if (!objectPath || !/\.json$/i.test(objectPath)) continue;
+    try {
+      const buffer = await readSupabaseObjectBuffer(objectPath);
+      if (!buffer) continue;
+      const record = JSON.parse(buffer.toString("utf8"));
+      if (record && record.id && record.storagePath) records.push(record);
+    } catch (error) {}
+  }
+  if (records.length) return records;
+  const legacyBuffer = await readSupabaseObjectBuffer(SUPABASE_INDEX_PATH);
+  if (!legacyBuffer) return [];
+  try {
+    const parsed = JSON.parse(legacyBuffer.toString("utf8"));
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+async function writeVideoLibrary(records) {
+  if (!isSupabaseVideoStorageEnabled()) {
+    writeLocalVideoLibrary(records);
+    return;
+  }
+  await Promise.all((records || []).map((record) => uploadSupabaseObject({
+    objectPath: getSupabaseRecordPath(record.id),
+    buffer: Buffer.from(JSON.stringify(record, null, 2), "utf8"),
+    contentType: "application/json; charset=utf-8"
+  })));
 }
 
 function sanitizeText(value = "", fallback = "Video", maxLength = 90) {
@@ -151,25 +294,37 @@ function publicVideoRecord(record) {
   };
 }
 
-function listPublicVideos() {
-  return readVideoLibrary()
-    .filter((record) => record && record.id && record.storagePath && fs.existsSync(record.storagePath))
+async function listPublicVideos() {
+  const records = await readVideoLibrary();
+  return records
+    .filter((record) => {
+      if (!record || !record.id || !record.storagePath) return false;
+      return isSupabaseVideoStorageEnabled() || fs.existsSync(record.storagePath);
+    })
     .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
     .map(publicVideoRecord);
 }
 
-function saveSharedVideoBuffer({ buffer, name, brand, folder, originalSize }) {
+async function saveSharedVideoBuffer({ buffer, name, brand, folder, originalSize }) {
   const id = crypto.randomUUID ? crypto.randomUUID() : `video-${Date.now()}-${Math.random().toString(16).slice(2)}`;
   const safeName = sanitizeText(name, "Video");
   const safeBrand = sanitizeText(brand, "Outros", 60);
   const safeFolder = sanitizeFolder(folder || safeBrand);
   const fileName = `${slugify(safeFolder)}-${slugify(safeName)}-16mb-${id.slice(0, 8)}.mp4`;
-  const folderPath = path.join(VIDEO_LIBRARY_ROOT, slugify(safeFolder));
-  const storagePath = path.join(folderPath, fileName);
-  fs.mkdirSync(folderPath, { recursive: true });
-  fs.writeFileSync(storagePath, buffer);
+  const storagePath = isSupabaseVideoStorageEnabled()
+    ? `${slugify(safeFolder)}/${fileName}`
+    : path.join(VIDEO_LIBRARY_ROOT, slugify(safeFolder), fileName);
+  if (isSupabaseVideoStorageEnabled()) {
+    await uploadSupabaseObject({
+      objectPath: storagePath,
+      buffer,
+      contentType: "video/mp4"
+    });
+  } else {
+    fs.mkdirSync(path.dirname(storagePath), { recursive: true });
+    fs.writeFileSync(storagePath, buffer);
+  }
 
-  const records = readVideoLibrary();
   const record = {
     id,
     name: safeName,
@@ -182,8 +337,17 @@ function saveSharedVideoBuffer({ buffer, name, brand, folder, originalSize }) {
     createdAt: new Date().toISOString(),
     storagePath
   };
-  records.push(record);
-  writeVideoLibrary(records);
+  if (isSupabaseVideoStorageEnabled()) {
+    await uploadSupabaseObject({
+      objectPath: getSupabaseRecordPath(id),
+      buffer: Buffer.from(JSON.stringify(record, null, 2), "utf8"),
+      contentType: "application/json; charset=utf-8"
+    });
+  } else {
+    const records = await readVideoLibrary();
+    records.push(record);
+    await writeVideoLibrary(records);
+  }
   return record;
 }
 
@@ -449,7 +613,7 @@ async function handleCompress(req, res) {
 async function handleSaveSharedVideo(req, res) {
   const body = await readRequestBody(req);
   const multipart = parseMultipart(body, req.headers["content-type"] || "");
-  const record = saveSharedVideoBuffer({
+  const record = await saveSharedVideoBuffer({
     buffer: multipart.file.buffer,
     name: multipart.fields.name,
     brand: multipart.fields.brand,
@@ -508,7 +672,7 @@ async function processVideoJob(job) {
     }
     job.progress = 94;
     job.message = "Salvando na biblioteca compartilhada...";
-    const record = saveSharedVideoBuffer({
+    const record = await saveSharedVideoBuffer({
       buffer: output,
       name: job.name,
       brand: job.brand,
@@ -574,13 +738,35 @@ function handleGetVideoJob(req, res, id) {
   sendJson(res, 200, { job: publicVideoJob(job) });
 }
 
-function handleListSharedVideos(req, res) {
-  sendJson(res, 200, { videos: listPublicVideos() });
+async function handleListSharedVideos(req, res) {
+  sendJson(res, 200, {
+    videos: await listPublicVideos(),
+    storage: isSupabaseVideoStorageEnabled() ? "supabase" : "local"
+  });
 }
 
-function handleDownloadSharedVideo(req, res, id) {
-  const record = readVideoLibrary().find((item) => item.id === id);
-  if (!record || !record.storagePath || !fs.existsSync(record.storagePath)) {
+async function handleDownloadSharedVideo(req, res, id) {
+  const record = (await readVideoLibrary()).find((item) => item.id === id);
+  if (!record || !record.storagePath) {
+    sendJson(res, 404, { error: "Video nao encontrado." });
+    return;
+  }
+  if (isSupabaseVideoStorageEnabled()) {
+    const buffer = await readSupabaseObjectBuffer(record.storagePath);
+    if (!buffer) {
+      sendJson(res, 404, { error: "Video nao encontrado no Supabase." });
+      return;
+    }
+    res.writeHead(200, {
+      "Content-Type": record.mimeType || "video/mp4",
+      "Content-Length": buffer.length,
+      "Content-Disposition": `attachment; filename="${String(record.fileName || "video-16mb.mp4").replace(/"/g, "")}"`,
+      "Cache-Control": "public, max-age=31536000, immutable"
+    });
+    res.end(buffer);
+    return;
+  }
+  if (!fs.existsSync(record.storagePath)) {
     sendJson(res, 404, { error: "Video nao encontrado." });
     return;
   }
@@ -593,19 +779,23 @@ function handleDownloadSharedVideo(req, res, id) {
   fs.createReadStream(record.storagePath).pipe(res);
 }
 
-function handleDeleteSharedVideo(req, res, id) {
-  const records = readVideoLibrary();
+async function handleDeleteSharedVideo(req, res, id) {
+  const records = await readVideoLibrary();
   const record = records.find((item) => item.id === id);
   if (!record) {
     sendJson(res, 404, { error: "Video nao encontrado." });
     return;
   }
-  try {
-    if (record.storagePath && fs.existsSync(record.storagePath)) {
-      fs.unlinkSync(record.storagePath);
-    }
-  } catch (error) {}
-  writeVideoLibrary(records.filter((item) => item.id !== id));
+  if (isSupabaseVideoStorageEnabled()) {
+    await deleteSupabaseObjects([record.storagePath, getSupabaseRecordPath(record.id)]);
+  } else {
+    try {
+      if (record.storagePath && fs.existsSync(record.storagePath)) {
+        fs.unlinkSync(record.storagePath);
+      }
+    } catch (error) {}
+    await writeVideoLibrary(records.filter((item) => item.id !== id));
+  }
   sendJson(res, 200, { ok: true });
 }
 
@@ -619,11 +809,16 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     if (req.method === "GET" && pathname === "/health") {
-      sendJson(res, 200, { ok: true, ffmpeg: Boolean(findFfmpeg()) });
+      sendJson(res, 200, {
+        ok: true,
+        ffmpeg: Boolean(findFfmpeg()),
+        videoStorage: isSupabaseVideoStorageEnabled() ? "supabase" : "local",
+        supabaseBucket: isSupabaseVideoStorageEnabled() ? SUPABASE_BUCKET : null
+      });
       return;
     }
     if (req.method === "GET" && pathname === "/api/videos") {
-      handleListSharedVideos(req, res);
+      await handleListSharedVideos(req, res);
       return;
     }
     if (req.method === "POST" && pathname === "/api/videos") {
@@ -631,11 +826,11 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     if (req.method === "GET" && pathname.startsWith("/shared-videos/")) {
-      handleDownloadSharedVideo(req, res, decodeURIComponent(pathname.replace("/shared-videos/", "")));
+      await handleDownloadSharedVideo(req, res, decodeURIComponent(pathname.replace("/shared-videos/", "")));
       return;
     }
     if (req.method === "DELETE" && pathname.startsWith("/api/videos/")) {
-      handleDeleteSharedVideo(req, res, decodeURIComponent(pathname.replace("/api/videos/", "")));
+      await handleDeleteSharedVideo(req, res, decodeURIComponent(pathname.replace("/api/videos/", "")));
       return;
     }
     if (req.method === "POST" && pathname === "/api/compress-video") {

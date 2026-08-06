@@ -4,7 +4,8 @@ Este site agora tem duas partes:
 
 - `index.html`: interface do sistema.
 - `video-compressor-server.js`: servidor que entrega o site e compacta videos em MP4 usando FFmpeg.
-- `data/videos`: biblioteca compartilhada onde os videos compactados ficam salvos.
+- Supabase Storage: biblioteca compartilhada onde os videos compactados ficam salvos em producao.
+- `data/videos`: fallback local para testes quando Supabase nao estiver configurado.
 
 ## Importante
 
@@ -15,9 +16,20 @@ Se o site for publicado apenas como HTML/CSS/JS, a tela abre normalmente, mas
 o endpoint `/api/compress-video` nao existe. Nesse caso os usuarios verão erro
 de "API de compactacao offline" ou "nao foi possivel compactar pelo servidor".
 
-Para usuarios publicos baixarem os mesmos videos, a hospedagem precisa manter
-um disco/pasta persistente. No Docker, a biblioteca usa `VIDEO_LIBRARY_DIR=/data/videos`.
-Configure um volume/disco persistente em `/data` para nao perder os videos ao reiniciar.
+Para usuarios publicos baixarem os mesmos videos sem perder arquivos em reinicio,
+configure Supabase Storage no Render com estas variaveis:
+
+```text
+SUPABASE_URL=https://seu-projeto.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=sb_secret_...
+SUPABASE_BUCKET=videos
+```
+
+Nao coloque a chave `SUPABASE_SERVICE_ROLE_KEY` no GitHub. Ela deve ficar somente
+nas variaveis de ambiente do Render.
+
+Se Supabase nao estiver configurado, o servidor usa a pasta local `data/videos`
+apenas como fallback de teste.
 
 ## Caminho recomendado
 
