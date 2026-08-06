@@ -6981,14 +6981,11 @@
         return { ...(saved.video || record), shared: true };
       }
 
+      function encodeVideoHeader(value) {
+        return encodeURIComponent(String(value || ""));
+      }
+
       async function startSharedVideoCompressionJob(file, record) {
-        const data = new FormData();
-        data.append("video", file, file.name || "video");
-        data.append("targetBytes", String(Math.floor(VIDEO_MAX_BYTES * 0.94)));
-        data.append("name", record.name || "Video");
-        data.append("brand", record.brand || "Outros");
-        data.append("folder", record.folder || "Outros");
-        data.append("originalSize", String(record.originalSize || file.size || 0));
         setVideoStatus("Enviando video para o servidor de compactacao...");
         setVideoProgress(5, true);
         state.videoCompressor.compressionStartedAt = Date.now();
@@ -6996,7 +6993,16 @@
         const response = await withVideoTimeout(
           fetch(getVideoServerUrl("/api/compress-video-job"), {
             method: "POST",
-            body: data
+            headers: {
+              "Content-Type": file.type || "application/octet-stream",
+              "X-File-Name": encodeVideoHeader(file.name || "video.mp4"),
+              "X-Target-Bytes": String(Math.floor(VIDEO_MAX_BYTES * 0.94)),
+              "X-Video-Name": encodeVideoHeader(record.name || "Video"),
+              "X-Video-Brand": encodeVideoHeader(record.brand || "Outros"),
+              "X-Video-Folder": encodeVideoHeader(record.folder || "Outros"),
+              "X-Original-Size": String(record.originalSize || file.size || 0)
+            },
+            body: file
           }),
           10 * 60 * 1000,
           "O upload do video demorou demais."
@@ -7025,7 +7031,14 @@
             15000,
             "O servidor demorou demais para atualizar o progresso."
           );
-          if (!response.ok) throw new Error("Nao foi possivel consultar o progresso da compactacao.");
+          if (!response.ok) {
+            let message = "Nao foi possivel consultar o progresso da compactacao.";
+            try {
+              const errorData = await response.json();
+              if (errorData?.error) message = errorData.error;
+            } catch (error) {}
+            throw new Error(message);
+          }
           const dataResponse = await response.json();
           const job = dataResponse.job || {};
           const progress = Math.max(lastProgress, Math.min(100, Number(job.progress) || lastProgress));

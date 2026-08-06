@@ -12,6 +12,8 @@ const VIDEO_LIBRARY_ROOT = path.resolve(process.env.VIDEO_LIBRARY_DIR || path.jo
 const VIDEO_LIBRARY_INDEX = path.join(VIDEO_LIBRARY_ROOT, "video-library.json");
 const VIDEO_JOB_ROOT = path.resolve(process.env.VIDEO_JOB_DIR || path.join(os.tmpdir(), "recarga-video-jobs"));
 const MAX_UPLOAD_BYTES = 1024 * 1024 * 1024;
+const BUFFER_UPLOAD_MAX_BYTES = 80 * 1024 * 1024;
+const STREAM_UPLOAD_MAX_BYTES = Math.max(64 * 1024 * 1024, Number(process.env.STREAM_UPLOAD_MAX_BYTES) || 350 * 1024 * 1024);
 const VIDEO_MAX_WIDTH = Math.max(480, Math.min(1920, Number(process.env.VIDEO_MAX_WIDTH) || 1280));
 const VIDEO_RETRY_TARGET_RATIO = Math.max(0.5, Math.min(0.95, Number(process.env.VIDEO_RETRY_TARGET_RATIO) || 0.74));
 function normalizeSupabaseProjectUrl(value = "") {
@@ -54,7 +56,7 @@ const MIME_TYPES = {
 function sendCors(res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-File-Name, X-Video-Name, X-Video-Brand, X-Video-Folder, X-Original-Size, X-Target-Bytes");
 }
 
 function sendJson(res, status, payload) {
@@ -389,14 +391,14 @@ function findFfmpeg() {
   }) || null;
 }
 
-function readRequestBody(req) {
+function readRequestBody(req, maxBytes = MAX_UPLOAD_BYTES) {
   return new Promise((resolve, reject) => {
     const chunks = [];
     let size = 0;
     req.on("data", (chunk) => {
       size += chunk.length;
-      if (size > MAX_UPLOAD_BYTES) {
-        reject(new Error("Video grande demais para o compactador local."));
+      if (size > maxBytes) {
+        reject(new Error("Video grande demais para envio em memoria. Use a compactacao em segundo plano."));
         req.destroy();
         return;
       }
@@ -404,6 +406,59 @@ function readRequestBody(req) {
     });
     req.on("end", () => resolve(Buffer.concat(chunks)));
     req.on("error", reject);
+  });
+}
+
+function decodeHeaderValue(value, fallback = "") {
+  const raw = Array.isArray(value) ? value[0] : value;
+  const text = String(raw || "").trim();
+  if (!text) return fallback;
+  try {
+    return decodeURIComponent(text);
+  } catch (error) {
+    return text || fallback;
+  }
+}
+
+function readHeaderNumber(req, name, fallback = 0) {
+  const raw = Array.isArray(req.headers[name]) ? req.headers[name][0] : req.headers[name];
+  const value = Number(raw);
+  return Number.isFinite(value) && value >= 0 ? value : fallback;
+}
+
+function isMultipartRequest(req) {
+  return /multipart\/form-data/i.test(String(req.headers["content-type"] || ""));
+}
+
+function writeRequestBodyToFile(req, outputPath, maxBytes = STREAM_UPLOAD_MAX_BYTES) {
+  return new Promise((resolve, reject) => {
+    let size = 0;
+    let settled = false;
+    const output = fs.createWriteStream(outputPath);
+
+    function cleanup(error) {
+      if (settled) return;
+      settled = true;
+      output.destroy();
+      try { fs.unlinkSync(outputPath); } catch (unlinkError) {}
+      reject(error);
+    }
+
+    req.on("data", (chunk) => {
+      size += chunk.length;
+      if (size > maxBytes) {
+        cleanup(new Error("Video grande demais para este servidor gratuito. Tente um arquivo menor."));
+        req.destroy();
+      }
+    });
+    req.on("error", cleanup);
+    output.on("error", cleanup);
+    output.on("finish", () => {
+      if (settled) return;
+      settled = true;
+      resolve(size);
+    });
+    req.pipe(output);
   });
 }
 
@@ -718,13 +773,40 @@ async function handleStartVideoJob(req, res) {
     return;
   }
   fs.mkdirSync(VIDEO_JOB_ROOT, { recursive: true });
-  const body = await readRequestBody(req);
-  const multipart = parseMultipart(body, req.headers["content-type"] || "");
   const id = crypto.randomUUID ? crypto.randomUUID() : `job-${Date.now()}-${Math.random().toString(16).slice(2)}`;
   const tempDir = fs.mkdtempSync(path.join(VIDEO_JOB_ROOT, `${id}-`));
-  const inputPath = path.join(tempDir, `input${safeExtension(multipart.file.fileName)}`);
-  fs.writeFileSync(inputPath, multipart.file.buffer);
   const maxBytes = 16 * 1024 * 1024;
+  let inputPath = "";
+  let upload = null;
+  try {
+    if (isMultipartRequest(req)) {
+      const body = await readRequestBody(req, BUFFER_UPLOAD_MAX_BYTES);
+      const multipart = parseMultipart(body, req.headers["content-type"] || "");
+      inputPath = path.join(tempDir, `input${safeExtension(multipart.file.fileName)}`);
+      fs.writeFileSync(inputPath, multipart.file.buffer);
+      upload = {
+        name: multipart.fields.name,
+        brand: multipart.fields.brand,
+        folder: multipart.fields.folder,
+        originalSize: Math.max(0, Number(multipart.fields.originalSize) || multipart.file.buffer.length),
+        targetBytes: Number(multipart.fields.targetBytes) || 0
+      };
+    } else {
+      const fileName = decodeHeaderValue(req.headers["x-file-name"], "video.mp4");
+      inputPath = path.join(tempDir, `input${safeExtension(fileName)}`);
+      const uploadSize = await writeRequestBodyToFile(req, inputPath, STREAM_UPLOAD_MAX_BYTES);
+      upload = {
+        name: decodeHeaderValue(req.headers["x-video-name"], "Video"),
+        brand: decodeHeaderValue(req.headers["x-video-brand"], "Outros"),
+        folder: decodeHeaderValue(req.headers["x-video-folder"], "Outros"),
+        originalSize: Math.max(0, readHeaderNumber(req, "x-original-size", uploadSize)),
+        targetBytes: readHeaderNumber(req, "x-target-bytes", 0)
+      };
+    }
+  } catch (error) {
+    try { fs.rmSync(tempDir, { recursive: true, force: true }); } catch (cleanupError) {}
+    throw error;
+  }
   const job = {
     id,
     status: "queued",
@@ -732,12 +814,12 @@ async function handleStartVideoJob(req, res) {
     message: "Upload recebido. Entrando na fila de compactacao...",
     inputPath,
     tempDir,
-    name: multipart.fields.name,
-    brand: multipart.fields.brand,
-    folder: multipart.fields.folder,
-    originalSize: Math.max(0, Number(multipart.fields.originalSize) || multipart.file.buffer.length),
+    name: upload.name,
+    brand: upload.brand,
+    folder: upload.folder,
+    originalSize: upload.originalSize,
     maxBytes,
-    targetBytes: Math.max(1024 * 1024, Number(multipart.fields.targetBytes) || Math.floor(maxBytes * 0.94)),
+    targetBytes: Math.max(1024 * 1024, upload.targetBytes || Math.floor(maxBytes * 0.94)),
     createdAt: new Date().toISOString()
   };
   videoJobs.set(id, job);
@@ -748,7 +830,7 @@ async function handleStartVideoJob(req, res) {
 function handleGetVideoJob(req, res, id) {
   const job = videoJobs.get(id);
   if (!job) {
-    sendJson(res, 404, { error: "Compactacao nao encontrada ou expirada." });
+    sendJson(res, 404, { error: "Compactacao nao encontrada. O servidor pode ter reiniciado durante o processamento; envie o video novamente." });
     return;
   }
   sendJson(res, 200, { job: publicVideoJob(job) });
