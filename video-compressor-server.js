@@ -570,30 +570,35 @@ async function getDuration(ffmpeg, inputPath) {
   throw new Error("Nao foi possivel ler a duracao do video.");
 }
 
-function getVideoScaleFilter(duration) {
+function getVideoScaleFilter(duration, maxWidth = VIDEO_MAX_WIDTH) {
   const durationWidth = duration > 240 ? 854 : duration > 120 ? 960 : VIDEO_MAX_WIDTH;
-  const width = Math.min(VIDEO_MAX_WIDTH, durationWidth);
+  const width = Math.min(VIDEO_MAX_WIDTH, maxWidth, durationWidth);
   return `scale=w='if(gt(iw,${width}),${width},trunc(iw/2)*2)':h=-2:flags=fast_bilinear`;
 }
 
-async function compressVideo({ ffmpeg, inputPath, outputPath, targetBytes, duration, onProgress }) {
+async function compressVideo({ ffmpeg, inputPath, outputPath, targetBytes, duration, maxWidth = VIDEO_MAX_WIDTH, preset = "veryfast", onProgress }) {
   const videoDuration = Math.max(1, Number(duration) || await getDuration(ffmpeg, inputPath));
-  const totalBitrate = Math.max(76000, Math.floor((targetBytes * 8) / videoDuration));
-  const audioBitrate = Math.min(96000, Math.max(24000, Math.floor(totalBitrate * 0.15)));
-  const videoBitrate = Math.max(52000, totalBitrate - audioBitrate);
+  const minAudioBitrate = videoDuration > 600 ? 16000 : 24000;
+  const minVideoBitrate = videoDuration > 600 ? 36000 : 52000;
+  const totalBitrate = Math.max(minAudioBitrate + minVideoBitrate, Math.floor((targetBytes * 8) / videoDuration));
+  const audioBitrate = Math.min(96000, Math.max(minAudioBitrate, Math.floor(totalBitrate * 0.15)));
+  const videoBitrate = Math.max(minVideoBitrate, totalBitrate - audioBitrate);
 
   await runFfmpeg(ffmpeg, [
     "-hide_banner",
     "-nostdin",
     "-y",
+    "-fflags", "+genpts+discardcorrupt",
+    "-analyzeduration", "100M",
+    "-probesize", "100M",
     "-i", inputPath,
     "-map", "0:v:0",
     "-map", "0:a?",
-    "-vf", getVideoScaleFilter(videoDuration),
+    "-vf", getVideoScaleFilter(videoDuration, maxWidth),
     "-c:v", "libx264",
-    "-preset", "ultrafast",
+    "-preset", preset,
     "-tune", "fastdecode",
-    "-threads", "2",
+    "-threads", "1",
     "-b:v", `${Math.floor(videoBitrate / 1000)}k`,
     "-maxrate", `${Math.floor(videoBitrate / 1000)}k`,
     "-bufsize", `${Math.floor((videoBitrate * 2) / 1000)}k`,
@@ -601,6 +606,7 @@ async function compressVideo({ ffmpeg, inputPath, outputPath, targetBytes, durat
     "-c:a", "aac",
     "-b:a", `${Math.floor(audioBitrate / 1000)}k`,
     "-movflags", "+faststart",
+    "-max_muxing_queue_size", "1024",
     "-nostats",
     "-progress", "pipe:2",
     outputPath
@@ -609,25 +615,31 @@ async function compressVideo({ ffmpeg, inputPath, outputPath, targetBytes, durat
 
 async function compressVideoToTarget({ ffmpeg, inputPath, outputPath, targetBytes, maxBytes = targetBytes, onProgress }) {
   const duration = Math.max(1, await getDuration(ffmpeg, inputPath));
-  const attempts = [1, VIDEO_RETRY_TARGET_RATIO];
+  const attempts = [
+    { ratio: 1, width: VIDEO_MAX_WIDTH, preset: "veryfast", label: "qualidade alta" },
+    { ratio: VIDEO_RETRY_TARGET_RATIO, width: Math.min(VIDEO_MAX_WIDTH, 960), preset: "veryfast", label: "compactacao reforcada" },
+    { ratio: 0.58, width: Math.min(VIDEO_MAX_WIDTH, 720), preset: "faster", label: "modo compativel" }
+  ];
   let bestPath = "";
   let bestSize = Infinity;
   for (let index = 0; index < attempts.length; index += 1) {
-    const ratio = attempts[index];
+    const attempt = attempts[index];
     const attemptPath = `${outputPath.replace(/\.mp4$/i, "")}-${index + 1}.mp4`;
-    const startProgress = index === 0 ? 18 : 78;
-    const endProgress = index === 0 ? 76 : 90;
-    if (onProgress) onProgress(startProgress, `Compactando tentativa ${index + 1}/${attempts.length}...`);
+    const startProgress = 18 + Math.floor((68 / attempts.length) * index);
+    const endProgress = 18 + Math.floor((68 / attempts.length) * (index + 1));
+    if (onProgress) onProgress(startProgress, `Compactando tentativa ${index + 1}/${attempts.length} (${attempt.label})...`);
     await compressVideo({
       ffmpeg,
       inputPath,
       outputPath: attemptPath,
-      targetBytes: Math.floor(targetBytes * ratio),
+      targetBytes: Math.floor(targetBytes * attempt.ratio),
       duration,
+      maxWidth: attempt.width,
+      preset: attempt.preset,
       onProgress: (ratioProgress) => {
         if (onProgress) {
           const progress = startProgress + ((endProgress - startProgress) * ratioProgress);
-          onProgress(progress, `Compactando tentativa ${index + 1}/${attempts.length}...`);
+          onProgress(progress, `Compactando tentativa ${index + 1}/${attempts.length} (${attempt.label})...`);
         }
       }
     });

@@ -6835,7 +6835,7 @@
         try {
           const response = await withVideoTimeout(
             fetch(getVideoServerUrl("/health"), { cache: "no-store" }),
-            8000,
+            65000,
             "API de compactação demorou demais para responder."
           );
           if (!response.ok) throw new Error("API de compactação indisponivel.");
@@ -7525,13 +7525,16 @@
           setVideoStatus(`${compressed ? "Video compactado" : "Video salvo"} com ${formatFileSize(finalRecord.size)} na pasta ${finalRecord.folder}. Disponivel para todos os usuarios.`, "success");
           showToast("Video salvo na biblioteca compartilhada.");
         } catch (error) {
+          const message = error?.message || "Nao foi possivel compactar o video.";
           const protocolHint = location.protocol === "file:"
             ? " Se continuar, abra o site por http://127.0.0.1 em vez de file://."
             : "";
-          const serverHint = /fetch|Failed|NetworkError|compactador|servidor|API/i.test(error?.message || "")
+          const shouldShowApiHint = /fetch|Failed|NetworkError|API offline|indisponivel|demorou demais/i.test(message)
+            && !/Compactacao nao encontrada|acima de 16MB|video ainda ficou/i.test(message);
+          const serverHint = shouldShowApiHint
             ? ` ${getVideoApiOfflineMessage()}`
             : "";
-          setVideoStatus(`${error?.message || "Nao foi possivel compactar o video."}${serverHint}${protocolHint}`, "error");
+          setVideoStatus(`${message}${serverHint}${protocolHint}`, "error");
         } finally {
           state.videoCompressor.busy = false;
           el.compressVideoButton.disabled = false;
