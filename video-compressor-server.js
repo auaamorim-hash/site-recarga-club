@@ -14,7 +14,23 @@ const VIDEO_JOB_ROOT = path.resolve(process.env.VIDEO_JOB_DIR || path.join(os.tm
 const MAX_UPLOAD_BYTES = 1024 * 1024 * 1024;
 const VIDEO_MAX_WIDTH = Math.max(480, Math.min(1920, Number(process.env.VIDEO_MAX_WIDTH) || 1280));
 const VIDEO_RETRY_TARGET_RATIO = Math.max(0.5, Math.min(0.95, Number(process.env.VIDEO_RETRY_TARGET_RATIO) || 0.74));
-const SUPABASE_URL = String(process.env.SUPABASE_URL || "").replace(/\/+$/, "");
+function normalizeSupabaseProjectUrl(value = "") {
+  const cleaned = String(value || "")
+    .trim()
+    .replace(/^SUPABASE_URL\s*=\s*/i, "")
+    .replace(/^NEXT_PUBLIC_SUPABASE_URL\s*=\s*/i, "")
+    .trim()
+    .replace(/^["']|["']$/g, "");
+  if (!cleaned) return "";
+  try {
+    const parsed = new URL(cleaned);
+    return `${parsed.protocol}//${parsed.host}`.replace(/\/+$/, "");
+  } catch (error) {
+    return cleaned.replace(/\/storage\/v1\/.*$/i, "").replace(/\/+$/, "");
+  }
+}
+
+const SUPABASE_URL = normalizeSupabaseProjectUrl(process.env.SUPABASE_URL);
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || "";
 const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET || "videos";
 const SUPABASE_INDEX_PATH = process.env.SUPABASE_INDEX_PATH || "_recarga/video-library.json";
