@@ -276,7 +276,7 @@
 
       .dash-tabs {
         width: min(100%, 1100px);
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         margin: 0 0 18px;
       }
 
@@ -304,6 +304,37 @@
       .view.active,
       .dash-view.active {
         display: block;
+      }
+
+      .rcos-panel {
+        overflow: hidden;
+        padding: 0;
+      }
+
+      .rcos-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 22px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .rcos-head h3 {
+        margin: 4px 0 8px;
+      }
+
+      .rcos-frame-wrap {
+        min-height: 760px;
+        background: #ffffff;
+      }
+
+      .rcos-frame {
+        width: 100%;
+        min-height: 760px;
+        display: block;
+        border: 0;
+        background: #ffffff;
       }
 
       .field,
@@ -1268,6 +1299,118 @@
         gap: 8px;
         flex-wrap: wrap;
         margin-top: 10px;
+      }
+
+      .quote-installments-panel {
+        display: grid;
+        gap: 8px;
+        margin-top: 12px;
+        padding: 12px;
+        border: 1px solid rgba(254, 195, 43, 0.32);
+        border-radius: 8px;
+        background: rgba(254, 195, 43, 0.07);
+      }
+
+      .quote-installments-panel.hidden {
+        display: none;
+      }
+
+      .quote-installments-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--text);
+        font-weight: 800;
+      }
+
+      .quote-installments-head span {
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+
+      .quote-installments-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 8px;
+      }
+
+      .quote-installment-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        min-height: 38px;
+        padding: 8px 10px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: rgba(255, 255, 255, 0.72);
+        color: var(--text);
+        font-size: 0.9rem;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .quote-installment-item b {
+        color: #0f9f5a;
+      }
+
+      .deal-saver-box {
+        border-color: rgba(22, 163, 74, 0.28);
+      }
+
+      .deal-saver-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 10px;
+      }
+
+      .deal-saver-result {
+        display: grid;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .deal-saver-card {
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.74);
+      }
+
+      .deal-saver-card strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--text);
+      }
+
+      .deal-saver-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .deal-saver-list {
+        margin: 8px 0 0;
+        padding-left: 18px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .deal-saver-ok {
+        border-color: rgba(22, 163, 74, 0.35);
+        background: rgba(22, 163, 74, 0.08);
+      }
+
+      .deal-saver-warn {
+        border-color: rgba(254, 195, 43, 0.45);
+        background: rgba(254, 195, 43, 0.1);
+      }
+
+      .deal-saver-danger {
+        border-color: rgba(255, 56, 64, 0.32);
+        background: rgba(255, 56, 64, 0.08);
       }
 
       .ocr-box {
@@ -3040,6 +3183,7 @@
             <button class="tab active" data-dash-tab="calc" type="button">Calculadora Inteligente</button>
             <button class="tab" data-dash-tab="report" type="button">Gerador de Relatório</button>
             <button class="tab" data-dash-tab="carriers" type="button">Consultar Transportadoras</button>
+            <button class="tab" data-dash-tab="rcos" type="button">RC OS</button>
             <button id="userTabButton" class="tab" data-dash-tab="user" type="button">Usuário</button>
           </div>
 
@@ -3313,7 +3457,6 @@
               <div class="report-tools-column">
                 <div class="panel ocr-box">
                 <h3>Extrair texto de imagem</h3>
-                <p class="muted">Envie um print ou imagem. O sistema tenta ler e devolver o texto completo.</p>
                 <div class="ocr-filter-row" role="group" aria-label="Dados para extrair">
                   <label>
                     <input id="ocrFilterCpf" type="checkbox" />
@@ -3329,7 +3472,6 @@
               </div>
                 <div class="panel ocr-box">
                 <h3>Mensagem de orçamento</h3>
-                <p class="muted">Cole o print do orçamento. O sistema lê subtotal, frete e total para gerar a mensagem comercial.</p>
                 <div class="field">
                   <label for="quotePressName">Nome da prensa (opcional)</label>
                   <input id="quotePressName" placeholder="Ex.: Dillon XL 750" />
@@ -3338,11 +3480,43 @@
                 <textarea id="quoteResult" placeholder="A mensagem do orçamento aparece aqui..."></textarea>
                 <div class="copy-row">
                   <button id="copyQuoteMessage" class="btn" type="button">Copiar orçamento</button>
+                  <button id="quoteInstallmentsButton" class="btn ghost" type="button">Parcelas</button>
                 </div>
+                <div id="quoteInstallmentsPreview" class="quote-installments-panel hidden" aria-live="polite"></div>
+              </div>
+              <div class="panel ocr-box deal-saver-box">
+                <h3>Proibido perder venda</h3>
+                <div class="deal-saver-grid">
+                  <div class="field">
+                    <label for="dealSaverGroup">Grupo</label>
+                    <select id="dealSaverGroup">
+                      <option value="lee">Lee Precision (Prensas e Dies)</option>
+                      <option value="pressesDies">Prensas e Dies</option>
+                      <option value="accessories">Acessórios</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="dealSaverPayment">Pagamento</label>
+                    <select id="dealSaverPayment">
+                      <option value="pix">Pix / Transferência</option>
+                      <option value="card">Cartão até 12x</option>
+                      <option value="card21">Cartão 21x</option>
+                      <option value="boleto">Boleto</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="dealSaverValue">Valor total</label>
+                    <input id="dealSaverValue" inputmode="decimal" placeholder="Ex.: 6000,00" />
+                  </div>
+                  <div class="field">
+                    <label for="dealSaverEntry">Entrada boleto</label>
+                    <input id="dealSaverEntry" inputmode="decimal" placeholder="Ex.: 1200,00" />
+                  </div>
+                </div>
+                <div id="dealSaverResult" class="deal-saver-result"></div>
               </div>
               <div class="panel ocr-box">
                 <h3>Editar quantidade do print</h3>
-                <p class="muted">Cole o print de seleção de produtos. O sistema identifica os calibres e edita a quantidade disponível na imagem.</p>
                 <button id="inventoryPasteZone" class="btn ghost image-paste-button" type="button">Colar print de estoque</button>
                 <div id="inventoryEditorStatus" class="inventory-editor-status">Cole uma imagem para começar.</div>
                 <div id="inventoryEditorControls" class="inventory-editor-controls hidden">
@@ -3364,7 +3538,6 @@
                 <div class="video-compressor-hero">
                   <div>
                     <h3>Compactar vídeos para 16MB</h3>
-                    <p class="muted">Informe o nome do item e salve uma versão pronta para a plataforma, sem cortar e sem acelerar o vídeo.</p>
                   </div>
                   <span class="video-limit-pill">16MB</span>
                 </div>
@@ -3381,8 +3554,6 @@
                 <progress id="videoCompressProgress" class="video-progress hidden" max="100" value="0"></progress>
                 <div id="videoCompressEta" class="video-eta hidden" aria-live="polite"></div>
                 <div id="videoCompressStatus" class="inventory-editor-status">Nenhum vídeo selecionado.</div>
-                <p class="muted">Em produção, a compactação usa a API do próprio site para gerar MP4 com áudio. No uso local, abra <strong>iniciar-compactador-video.bat</strong> e acesse o site pelo endereço indicado.</p>
-                <p class="muted">Os vídeos ficam organizados por pasta/marca na biblioteca compartilhada. Em produção, use Supabase Storage para manter os arquivos salvos entre reinícios.</p>
                 <div id="videoLibrary" class="video-library"></div>
               </div>
               </div>
@@ -3431,6 +3602,27 @@
                   <p class="muted"><b class="economia">NPCE:</b> acessórios comuns sem tecnologia térmica ou noturna. <b class="industria">PCE:</b> armas de fogo, prensas, matrizes, canos táticos e calibradores. <b class="recarga">Insumos:</b> pólvora, espoletas, projéteis e componentes de recarga.</p>
                   <p class="muted">Prazos estimados por transportadora saindo de Campinas/SP. Para prazo contratual exato por CEP, use a cotação/API da transportadora.</p>
                 </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="rcosView" class="dash-view">
+            <div class="panel rcos-panel">
+              <div class="rcos-head">
+                <div>
+                  <p class="eyebrow">RC OS</p>
+                  <h3>Ordem de Servico RECARGA CLUB</h3>
+                  <p class="muted">Preencha a OS abaixo. O envio vai direto para o Google Forms oficial.</p>
+                </div>
+                <a class="btn ghost" href="https://docs.google.com/forms/d/e/1FAIpQLSd-pnK2Nc2TmKhp3ybflFd-aPKbYUflYzO8uRMQepu1WQW0Sw/viewform" target="_blank" rel="noopener">Abrir Forms</a>
+              </div>
+              <div class="rcos-frame-wrap">
+                <iframe
+                  class="rcos-frame"
+                  title="RC OS - Google Forms"
+                  src="https://docs.google.com/forms/d/e/1FAIpQLSd-pnK2Nc2TmKhp3ybflFd-aPKbYUflYzO8uRMQepu1WQW0Sw/viewform?embedded=true"
+                  loading="lazy"
+                >Carregando formulario RC OS...</iframe>
               </div>
             </div>
           </section>
@@ -4287,7 +4479,8 @@
         "shareCanvas", "downloadImage", "investmentValue", "monthlyQty", "monthlySave", "breakEvenQty", "paybackShort", "paybackText",
         "reportValue", "reportEntry", "resetReport", "firstPayDate", "installments", "dateSchedule", "paymentSchedule", "ollowLink", "reportGuideTitle", "reportGuideHint",
         "negotiationText", "reportError", "copyNegotiation", "copyOcrText", "ocrFilterCpf", "ocrFilterName", "ocrImage", "pasteOcrImage", "ocrPasteZone", "ocrResult",
-        "quotePressName", "quotePasteZone", "quoteResult", "copyQuoteMessage",
+        "quotePressName", "quotePasteZone", "quoteResult", "copyQuoteMessage", "quoteInstallmentsButton", "quoteInstallmentsPreview",
+        "dealSaverGroup", "dealSaverPayment", "dealSaverValue", "dealSaverEntry", "dealSaverResult",
         "inventoryPasteZone", "inventoryEditorStatus", "inventoryEditorControls", "inventoryCaliberSelect", "inventoryQuantity", "inventoryPreview", "inventoryCanvas", "downloadInventoryImage",
         "videoName", "videoBrandPreview", "videoFile", "selectVideoButton", "compressVideoButton", "videoCompressProgress", "videoCompressEta", "videoCompressStatus", "videoLibrary",
         "carrierDdd", "carrierCep", "carrierCepResult", "carrierLocation", "militaryRegionBadge", "sfpcResult", "ufGrid", "carrierTitle", "carrierCount", "carrierList",
@@ -5543,6 +5736,15 @@
         el.quotePressName.value = "";
         el.quoteResult.value = "";
         state.quoteValues = null;
+        if (el.quoteInstallmentsPreview) {
+          el.quoteInstallmentsPreview.innerHTML = "";
+          el.quoteInstallmentsPreview.classList.add("hidden");
+        }
+        el.dealSaverGroup.value = "lee";
+        el.dealSaverPayment.value = "pix";
+        el.dealSaverValue.value = "";
+        el.dealSaverEntry.value = "";
+        updateDealSaver();
         state.receiptControls = {};
         el.paymentSchedule.innerHTML = "";
         el.dateSchedule.innerHTML = "";
@@ -5908,6 +6110,127 @@
         return formatCurrencyCompact(truncateQuoteCents(value));
       }
 
+      const DEAL_SAVER_RULES = {
+        lee: {
+          label: "Lee Precision (Prensas e Dies)",
+          kind: "press",
+          pix: 0.15,
+          card: 0.10
+        },
+        pressesDies: {
+          label: "Prensas e Dies",
+          kind: "press",
+          pix: 0.10,
+          card: 0.05
+        },
+        accessories: {
+          label: "Acessórios",
+          kind: "accessory",
+          pix: 0.15,
+          card: 0.10
+        }
+      };
+
+      function getDealSaverRule() {
+        return DEAL_SAVER_RULES[el.dealSaverGroup?.value] || DEAL_SAVER_RULES.lee;
+      }
+
+      function getDealSaverPaymentLabel(payment) {
+        if (payment === "pix") return "Pix / Transferência";
+        if (payment === "card") return "Cartão até 12x";
+        if (payment === "card21") return "Cartão 21x";
+        return "Boleto";
+      }
+
+      function getDealSaverGiftItems(rule, total) {
+        if (rule.kind !== "press") return ["Sem brinde automático para acessórios."];
+        if (total > 15000) {
+          return [
+            "Camisa e boné liberados.",
+            "Base Prensa Recarga Club + adaptador grátis."
+          ];
+        }
+        if (total > 6000) {
+          return [
+            total > 4000 ? "Boné liberado." : "Boné ainda não liberado.",
+            "Base Prensa Recarga Club + adaptador com 50% de desconto."
+          ];
+        }
+        if (total > 4000) return ["Boné liberado."];
+        return ["Sem brinde automático pelo valor informado."];
+      }
+
+      function buildDealSaverHtml() {
+        const rule = getDealSaverRule();
+        const payment = el.dealSaverPayment?.value || "pix";
+        const total = parseMoney(el.dealSaverValue?.value);
+        const entry = parseMoney(el.dealSaverEntry?.value);
+        if (!total) {
+          return `
+            <div class="deal-saver-card deal-saver-warn">
+              <strong>Informe o valor total</strong>
+              <p>Preencha o valor para consultar desconto máximo, boleto e brindes.</p>
+            </div>
+          `;
+        }
+
+        const cards = [];
+        if (payment === "boleto") {
+          const minimumEntry = total * 0.2;
+          const isMinimumValue = total >= 6000;
+          const hasMinimumEntry = entry >= minimumEntry;
+          const remaining = Math.max(total - entry, 0);
+          const boletoInstallment = remaining / 5;
+          cards.push(`
+            <div class="deal-saver-card ${isMinimumValue && hasMinimumEntry ? "deal-saver-ok" : "deal-saver-danger"}">
+              <strong>Boleto prudente</strong>
+              <p>Valor mínimo: R$ 6.000,00 • Formato: 1 + 5 parcelas • Entrada mínima: 20%.</p>
+              <ul class="deal-saver-list">
+                <li>${isMinimumValue ? "Valor mínimo atendido." : `Faltam ${formatCurrencyCompact(6000 - total)} para o valor mínimo.`}</li>
+                <li>${hasMinimumEntry ? "Entrada mínima atendida." : `Entrada mínima necessária: ${formatCurrencyCompact(minimumEntry)}.`}</li>
+                <li>Saldo em 5 parcelas: ${formatInstallmentCurrency(boletoInstallment)}.</li>
+              </ul>
+            </div>
+          `);
+        } else {
+          const rate = payment === "card21" ? 0.05 : payment === "pix" ? rule.pix : rule.card;
+          const maxDiscount = total * rate;
+          const limitPrice = total - maxDiscount;
+          const reserveMinimum = total * 0.2;
+          cards.push(`
+            <div class="deal-saver-card deal-saver-ok">
+              <strong>Desconto máximo permitido</strong>
+              <p>${payment === "card21" ? "Regra genérica" : rule.label} • ${getDealSaverPaymentLabel(payment)}</p>
+              <ul class="deal-saver-list">
+                <li>Limite: ${formatPercent(rate * 100)}.</li>
+                <li>Desconto máximo: ${formatCurrencyCompact(maxDiscount)}.</li>
+                <li>Valor mínimo após desconto: ${formatCurrencyCompact(limitPrice)}.</li>
+                <li>Valor mínimo para reservar: ${formatCurrencyCompact(reserveMinimum)}.</li>
+              </ul>
+            </div>
+          `);
+        }
+
+        const gifts = getDealSaverGiftItems(rule, total);
+        cards.push(`
+          <div class="deal-saver-card">
+            <strong>Condições e brindes</strong>
+            <ul class="deal-saver-list">${gifts.map((item) => `<li>${item}</li>`).join("")}</ul>
+          </div>
+        `);
+        return cards.join("");
+      }
+
+      function updateDealSaver() {
+        if (!el.dealSaverResult) return;
+        const isBoleto = el.dealSaverPayment?.value === "boleto";
+        if (el.dealSaverEntry) {
+          el.dealSaverEntry.disabled = !isBoleto;
+          el.dealSaverEntry.placeholder = isBoleto ? "Ex.: 1200,00" : "Usado apenas no boleto";
+        }
+        el.dealSaverResult.innerHTML = buildDealSaverHtml();
+      }
+
       function parseQuoteMoneyCandidate(value) {
         const raw = String(value || "")
           .replace(/[Oo]/g, "0")
@@ -6106,10 +6429,53 @@
         return lines.join("\n");
       }
 
+      function buildQuoteInstallmentsHtml(values) {
+        const total = Number(values?.total) || 0;
+        if (!total) return "";
+        const items = Array.from({ length: QUOTE_INSTALLMENTS }, (_, index) => {
+          const number = index + 1;
+          return `
+            <div class="quote-installment-item">
+              <span>${number}x</span>
+              <b>${formatInstallmentCurrency(total / number)}</b>
+            </div>
+          `;
+        }).join("");
+        return `
+          <div class="quote-installments-head">
+            <strong>Cartão de crédito sem juros</strong>
+            <span>Total ${formatCurrencyCompact(total)}</span>
+          </div>
+          <div class="quote-installments-list">${items}</div>
+        `;
+      }
+
+      function renderQuoteInstallments(forceOpen = false) {
+        if (!el.quoteInstallmentsPreview) return;
+        if (!state.quoteValues?.total) {
+          el.quoteInstallmentsPreview.innerHTML = "";
+          el.quoteInstallmentsPreview.classList.add("hidden");
+          return;
+        }
+        el.quoteInstallmentsPreview.innerHTML = buildQuoteInstallmentsHtml(state.quoteValues);
+        if (forceOpen) el.quoteInstallmentsPreview.classList.remove("hidden");
+      }
+
+      function toggleQuoteInstallments() {
+        if (!state.quoteValues?.total) {
+          showToast("Gere ou cole um orçamento antes de simular as parcelas.");
+          return;
+        }
+        const shouldOpen = el.quoteInstallmentsPreview.classList.contains("hidden");
+        renderQuoteInstallments(shouldOpen);
+        if (!shouldOpen) el.quoteInstallmentsPreview.classList.add("hidden");
+      }
+
       function refreshQuoteMessage() {
         if (!state.quoteValues) return;
         const message = buildQuoteMessage(state.quoteValues, el.quotePressName.value);
         if (message) el.quoteResult.value = message;
+        renderQuoteInstallments(false);
       }
 
       async function readQuoteTextFromImage(file) {
@@ -6160,14 +6526,27 @@
           if (!message) {
             state.quoteValues = null;
             el.quoteResult.value = "Nao consegui identificar subtotal e total. Confira se o print mostra a area de pagamento.";
+            if (el.quoteInstallmentsPreview) {
+              el.quoteInstallmentsPreview.innerHTML = "";
+              el.quoteInstallmentsPreview.classList.add("hidden");
+            }
             showToast("Orçamento não identificado.");
             return;
           }
           state.quoteValues = values;
           el.quoteResult.value = message;
+          if (el.dealSaverValue && !el.dealSaverValue.value.trim()) {
+            el.dealSaverValue.value = formatCurrencyCompact(values.total);
+          }
+          updateDealSaver();
+          renderQuoteInstallments(false);
           showToast("Mensagem de orçamento gerada.");
         } catch (error) {
           el.quoteResult.value = "";
+          if (el.quoteInstallmentsPreview) {
+            el.quoteInstallmentsPreview.innerHTML = "";
+            el.quoteInstallmentsPreview.classList.add("hidden");
+          }
           showToast("Não foi possível ler esse orçamento agora.");
         } finally {
           el.quotePasteZone.classList.remove("active");
@@ -9115,6 +9494,11 @@
       el.quotePasteZone.addEventListener("click", readClipboardQuoteImage);
       el.quotePasteZone.addEventListener("paste", handleQuotePaste);
       el.copyQuoteMessage.addEventListener("click", () => copyText(el.quoteResult.value, "Mensagem de orçamento copiada."));
+      el.quoteInstallmentsButton.addEventListener("click", toggleQuoteInstallments);
+      el.dealSaverGroup.addEventListener("change", updateDealSaver);
+      el.dealSaverPayment.addEventListener("change", updateDealSaver);
+      bindCurrencyField(el.dealSaverValue, updateDealSaver);
+      bindCurrencyField(el.dealSaverEntry, updateDealSaver);
       el.inventoryPasteZone.addEventListener("click", readClipboardInventoryImage);
       el.inventoryPasteZone.addEventListener("paste", handleInventoryPaste);
       el.inventoryCaliberSelect.addEventListener("change", drawInventoryEditedImage);
