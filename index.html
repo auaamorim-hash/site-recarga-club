@@ -6,6 +6,7 @@
     <title>RECARGA CLUB | Calculadora Premium</title>
     <link rel="icon" href="https://www.recargaclub.com.br/cdn/shop/files/FAVICON_POSITIVO_32X32_0287d2d6-8f4b-454e-ad37-5a16a5047a96.png?crop=center&height=32&v=1719242589&width=32" />
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js" defer></script>
     <style>
       @font-face {
         font-family: "Saira";
@@ -304,37 +305,6 @@
       .view.active,
       .dash-view.active {
         display: block;
-      }
-
-      .rcos-panel {
-        overflow: hidden;
-        padding: 0;
-      }
-
-      .rcos-head {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 16px;
-        padding: 22px;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .rcos-head h3 {
-        margin: 4px 0 8px;
-      }
-
-      .rcos-frame-wrap {
-        min-height: 760px;
-        background: #ffffff;
-      }
-
-      .rcos-frame {
-        width: 100%;
-        min-height: 760px;
-        display: block;
-        border: 0;
-        background: #ffffff;
       }
 
       .field,
@@ -1490,6 +1460,18 @@
         min-height: 44px;
       }
 
+      .image-paste-button.quote-drop-zone {
+        min-height: 58px;
+        border-style: dashed;
+      }
+
+      .image-paste-button.quote-drop-zone.active,
+      .image-paste-button.quote-drop-zone.drag-over {
+        border-color: var(--yellow);
+        background: rgba(254, 195, 43, 0.12);
+        box-shadow: 0 0 0 3px rgba(254, 195, 43, 0.14);
+      }
+
       .receipt-id-button {
         justify-content: flex-start;
         padding-inline: 12px;
@@ -2437,6 +2419,13 @@
         align-items: center;
       }
 
+      .user-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
       .user-avatar {
         display: grid;
         place-items: center;
@@ -3183,7 +3172,6 @@
             <button class="tab active" data-dash-tab="calc" type="button">Calculadora Inteligente</button>
             <button class="tab" data-dash-tab="report" type="button">Gerador de Relatório</button>
             <button class="tab" data-dash-tab="carriers" type="button">Consultar Transportadoras</button>
-            <button class="tab" data-dash-tab="rcos" type="button">RC OS</button>
             <button id="userTabButton" class="tab" data-dash-tab="user" type="button">Usuário</button>
           </div>
 
@@ -3476,7 +3464,7 @@
                   <label for="quotePressName">Nome da prensa (opcional)</label>
                   <input id="quotePressName" placeholder="Ex.: Dillon XL 750" />
                 </div>
-                <button id="quotePasteZone" class="btn ghost image-paste-button" type="button">Colar orçamento copiado</button>
+                <button id="quotePasteZone" class="btn ghost image-paste-button quote-drop-zone" type="button">Colar ou arrastar orçamento/PDF</button>
                 <textarea id="quoteResult" placeholder="A mensagem do orçamento aparece aqui..."></textarea>
                 <div class="copy-row">
                   <button id="copyQuoteMessage" class="btn" type="button">Copiar orçamento</button>
@@ -3606,27 +3594,6 @@
             </div>
           </section>
 
-          <section id="rcosView" class="dash-view">
-            <div class="panel rcos-panel">
-              <div class="rcos-head">
-                <div>
-                  <p class="eyebrow">RC OS</p>
-                  <h3>Ordem de Servico RECARGA CLUB</h3>
-                  <p class="muted">Preencha a OS abaixo. O envio vai direto para o Google Forms oficial.</p>
-                </div>
-                <a class="btn ghost" href="https://docs.google.com/forms/d/e/1FAIpQLSd-pnK2Nc2TmKhp3ybflFd-aPKbYUflYzO8uRMQepu1WQW0Sw/viewform" target="_blank" rel="noopener">Abrir Forms</a>
-              </div>
-              <div class="rcos-frame-wrap">
-                <iframe
-                  class="rcos-frame"
-                  title="RC OS - Google Forms"
-                  src="https://docs.google.com/forms/d/e/1FAIpQLSd-pnK2Nc2TmKhp3ybflFd-aPKbYUflYzO8uRMQepu1WQW0Sw/viewform?embedded=true"
-                  loading="lazy"
-                >Carregando formulario RC OS...</iframe>
-              </div>
-            </div>
-          </section>
-
           <section id="userView" class="dash-view">
             <div class="panel">
               <div class="user-profile">
@@ -3638,6 +3605,9 @@
                   <p id="profilePhone" class="user-profile-contact">--</p>
                 </div>
                 <span id="profileRole" class="status-badge status-neutral">Equipe RECARGA CLUB</span>
+              </div>
+              <div class="user-actions">
+                <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSd-pnK2Nc2TmKhp3ybflFd-aPKbYUflYzO8uRMQepu1WQW0Sw/viewform" target="_blank" rel="noopener">Abrir formulário</a>
               </div>
             </div>
 
@@ -5448,6 +5418,17 @@
         });
       }
 
+      function getReportInstallmentCount() {
+        return Math.max(1, Math.min(6, Number(el.installments.value) || 1));
+      }
+
+      function updateReportEntryVisibility(count = getReportInstallmentCount()) {
+        const isSingleInstallment = count === 1;
+        document.querySelector('[data-report-step="entry"]')?.classList.toggle("hidden", isSingleInstallment);
+        document.querySelector('[data-report-step-field="entry"]')?.classList.toggle("hidden", isSingleInstallment);
+        if (isSingleInstallment && el.reportEntry.value) el.reportEntry.value = "";
+      }
+
       const REPORT_GUIDE_STEPS = [
         {
           key: "value",
@@ -5531,14 +5512,17 @@
       }
 
       function updateReportGuide() {
+        const installmentCount = getReportInstallmentCount();
+        updateReportEntryVisibility(installmentCount);
         const completion = {
           value: parseMoney(el.reportValue.value) > 0,
-          entry: el.reportEntry.value.trim() !== "",
+          entry: installmentCount === 1 || el.reportEntry.value.trim() !== "",
           date: Boolean(el.firstPayDate.value),
-          installments: Number(el.installments.value) >= 1,
+          installments: installmentCount >= 1,
           payment: Array.from(el.paymentSchedule.querySelectorAll("[data-payment]")).every((select) => Boolean(select.value))
         };
-        const active = REPORT_GUIDE_STEPS.find((step) => !completion[step.key]) || null;
+        const visibleSteps = REPORT_GUIDE_STEPS.filter((step) => !(step.key === "entry" && installmentCount === 1));
+        const active = visibleSteps.find((step) => !completion[step.key]) || null;
         const activeKey = active?.key || "";
 
         document.querySelectorAll("[data-report-step]").forEach((stepEl) => {
@@ -5562,7 +5546,8 @@
 
       function renderReportSchedules(options = {}) {
         const preserveDates = options.preserveDates !== false;
-        const count = Math.max(1, Math.min(6, Number(el.installments.value) || 1));
+        const count = getReportInstallmentCount();
+        updateReportEntryVisibility(count);
         const methods = getReportMethods();
         const dates = preserveDates ? getReportDates() : {};
         const orders = getReportOrders();
@@ -5671,9 +5656,9 @@
       }
 
       function getReportPaymentRows() {
-        const count = Math.max(1, Math.min(6, Number(el.installments.value) || 1));
+        const count = getReportInstallmentCount();
         const total = parseMoney(el.reportValue.value);
-        const entry = parseMoney(el.reportEntry.value);
+        const entry = count === 1 ? 0 : parseMoney(el.reportEntry.value);
         const manuals = getReportManualAmounts();
         const { amounts, error } = calculateReportAmounts(count, total, entry, manuals);
 
@@ -6309,6 +6294,14 @@
         return amounts[0] || 0;
       }
 
+      function findQuoteAmountByPriorityLabel(lines, labelPatterns, stopPatterns = []) {
+        for (const pattern of labelPatterns) {
+          const amount = findQuoteAmountByLabel(lines, [pattern], stopPatterns);
+          if (amount) return amount;
+        }
+        return 0;
+      }
+
       function isPlausibleQuoteFreight(freight, subtotal, total) {
         const amount = Number(freight) || 0;
         if (amount < 0) return false;
@@ -6375,9 +6368,9 @@
           [/editar\s+frete/i, /frete/i, /entrega/i],
           [/tributo/i, /(^|[\s\n])total\b/i, /pagamento\s+com/i]
         );
-        values.total = findQuoteAmountByLabel(
+        values.total = findQuoteAmountByPriorityLabel(
           lines,
-          [/(^|[\s\n])total\b/i],
+          [/total\s+da\s+proposta/i, /total\s+do\s+pedido/i, /valor\s+total/i, /(^|[\s\n])total\b/i],
           [/pagamento\s+com/i, /enviar\s+fatura/i, /marcar\s+como/i]
         );
 
@@ -6506,86 +6499,228 @@
         return texts.join("\n");
       }
 
-      async function processQuoteImage(file) {
+      const PDFJS_WORKER_URL = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+
+      function isQuotePdfFile(file) {
+        return Boolean(file && (file.type === "application/pdf" || /\.pdf$/i.test(file.name || "")));
+      }
+
+      function isQuoteImageFile(file) {
+        return Boolean(file?.type?.startsWith("image/"));
+      }
+
+      function getPdfPageLines(textContent) {
+        const rows = [];
+        const items = (textContent?.items || [])
+          .map((item) => ({
+            text: String(item.str || "").trim(),
+            x: Number(item.transform?.[4]) || 0,
+            y: Number(item.transform?.[5]) || 0
+          }))
+          .filter((item) => item.text);
+
+        items.forEach((item) => {
+          let row = rows.find((current) => Math.abs(current.y - item.y) <= 3);
+          if (!row) {
+            row = { y: item.y, items: [] };
+            rows.push(row);
+          }
+          row.items.push(item);
+        });
+
+        return rows
+          .sort((a, b) => b.y - a.y)
+          .map((row) => row.items.sort((a, b) => a.x - b.x).map((item) => item.text).join(" "))
+          .filter(Boolean);
+      }
+
+      async function loadPdfDocumentFromBuffer(buffer) {
+        const pdfjs = window.pdfjsLib;
+        if (pdfjs?.GlobalWorkerOptions && !pdfjs.GlobalWorkerOptions.workerSrc) {
+          pdfjs.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_URL;
+        }
+
+        try {
+          return await pdfjs.getDocument({ data: new Uint8Array(buffer) }).promise;
+        } catch (error) {
+          return pdfjs.getDocument({ data: new Uint8Array(buffer), disableWorker: true }).promise;
+        }
+      }
+
+      async function readQuoteTextFromPdf(file) {
+        if (!window.pdfjsLib) {
+          throw new Error("PDF reader unavailable");
+        }
+
+        const buffer = await file.arrayBuffer();
+        const pdf = await loadPdfDocumentFromBuffer(buffer);
+        const pages = [];
+        for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+          const page = await pdf.getPage(pageNumber);
+          const textContent = await page.getTextContent({ normalizeWhitespace: true, disableCombineTextItems: false });
+          pages.push(getPdfPageLines(textContent).join("\n"));
+        }
+        return pages.join("\n");
+      }
+
+      function resetQuoteFailure(message = "Nao consegui identificar subtotal e total. Confira se o orçamento mostra a area de pagamento.") {
+        state.quoteValues = null;
+        el.quoteResult.value = message;
+        if (el.quoteInstallmentsPreview) {
+          el.quoteInstallmentsPreview.innerHTML = "";
+          el.quoteInstallmentsPreview.classList.add("hidden");
+        }
+      }
+
+      function applyQuoteText(text) {
+        const values = extractQuoteValues(text);
+        const message = buildQuoteMessage(values, el.quotePressName.value);
+        if (!message) {
+          resetQuoteFailure();
+          showToast("Orçamento não identificado.");
+          return false;
+        }
+
+        state.quoteValues = values;
+        el.quoteResult.value = message;
+        if (el.dealSaverValue && !el.dealSaverValue.value.trim()) {
+          el.dealSaverValue.value = formatCurrencyCompact(values.total);
+        }
+        updateDealSaver();
+        renderQuoteInstallments(false);
+        showToast("Mensagem de orçamento gerada.");
+        return true;
+      }
+
+      async function readQuoteTextFromFile(file) {
+        if (isQuotePdfFile(file)) return readQuoteTextFromPdf(file);
+        if (isQuoteImageFile(file)) return readQuoteTextFromImage(file);
+        throw new Error("Unsupported quote file");
+      }
+
+      async function processQuoteFile(file) {
         if (!file) return;
-        if (!file.type?.startsWith("image/")) {
-          showToast("Cole uma imagem valida do orçamento.");
+        const isPdf = isQuotePdfFile(file);
+        const isImage = isQuoteImageFile(file);
+        if (!isPdf && !isImage) {
+          showToast("Cole ou arraste uma imagem/PDF do orçamento.");
           return;
         }
-        if (!window.Tesseract) {
+        if (isImage && !window.Tesseract) {
           showToast("OCR precisa de internet para carregar o leitor de imagem.");
+          return;
+        }
+        if (isPdf && !window.pdfjsLib) {
+          showToast("Leitor de PDF ainda não carregou. Aguarde alguns segundos e tente novamente.");
           return;
         }
 
         el.quotePasteZone.classList.add("active");
-        el.quoteResult.value = "Lendo orçamento...";
+        el.quoteResult.value = isPdf ? "Lendo proposta em PDF..." : "Lendo orçamento...";
         try {
-          const text = await readQuoteTextFromImage(file);
-          const values = extractQuoteValues(text);
-          const message = buildQuoteMessage(values, el.quotePressName.value);
-          if (!message) {
-            state.quoteValues = null;
-            el.quoteResult.value = "Nao consegui identificar subtotal e total. Confira se o print mostra a area de pagamento.";
-            if (el.quoteInstallmentsPreview) {
-              el.quoteInstallmentsPreview.innerHTML = "";
-              el.quoteInstallmentsPreview.classList.add("hidden");
-            }
-            showToast("Orçamento não identificado.");
-            return;
-          }
-          state.quoteValues = values;
-          el.quoteResult.value = message;
-          if (el.dealSaverValue && !el.dealSaverValue.value.trim()) {
-            el.dealSaverValue.value = formatCurrencyCompact(values.total);
-          }
-          updateDealSaver();
-          renderQuoteInstallments(false);
-          showToast("Mensagem de orçamento gerada.");
+          const text = await readQuoteTextFromFile(file);
+          applyQuoteText(text);
         } catch (error) {
           el.quoteResult.value = "";
           if (el.quoteInstallmentsPreview) {
             el.quoteInstallmentsPreview.innerHTML = "";
             el.quoteInstallmentsPreview.classList.add("hidden");
           }
-          showToast("Não foi possível ler esse orçamento agora.");
+          showToast(isPdf ? "Não foi possível ler esse PDF agora." : "Não foi possível ler esse orçamento agora.");
         } finally {
           el.quotePasteZone.classList.remove("active");
+          el.quotePasteZone.classList.remove("drag-over");
         }
+      }
+
+      async function processQuoteImage(file) {
+        return processQuoteFile(file);
       }
 
       function handleQuotePaste(event) {
         const items = Array.from(event.clipboardData?.items || []);
-        const imageItem = items.find((item) => item.type?.startsWith("image/"));
-        if (!imageItem) {
-          showToast("Cole uma imagem do orçamento.");
+        const fileItem = items.find((item) => item.kind === "file" && (item.type?.startsWith("image/") || item.type === "application/pdf"));
+        const text = event.clipboardData?.getData("text/plain")?.trim() || "";
+        if (fileItem) {
+          event.preventDefault();
+          processQuoteFile(fileItem.getAsFile());
           return;
         }
-        event.preventDefault();
-        processQuoteImage(imageItem.getAsFile());
+        if (text) {
+          event.preventDefault();
+          el.quoteResult.value = "Lendo orçamento...";
+          applyQuoteText(text);
+          return;
+        }
+        showToast("Cole uma imagem, PDF ou texto do orçamento.");
       }
 
       async function readClipboardQuoteImage() {
         if (!navigator.clipboard?.read) {
           el.quotePasteZone.focus();
-          showToast("Pressione Ctrl+V no botão para colar o orçamento.");
+          showToast("Pressione Ctrl+V no campo para colar o orçamento.");
           return;
         }
         try {
           const clipboardItems = await navigator.clipboard.read();
           for (const item of clipboardItems) {
-            const imageType = item.types.find((type) => type.startsWith("image/"));
-            if (imageType) {
-              const blob = await item.getType(imageType);
-              const file = new File([blob], "orcamento-colado.png", { type: imageType });
-              processQuoteImage(file);
+            const fileType = item.types.find((type) => type.startsWith("image/") || type === "application/pdf");
+            if (fileType) {
+              const blob = await item.getType(fileType);
+              const fileName = fileType === "application/pdf" ? "orcamento-colado.pdf" : "orcamento-colado.png";
+              const file = new File([blob], fileName, { type: fileType });
+              processQuoteFile(file);
               return;
             }
+
+            if (item.types.includes("text/plain")) {
+              const blob = await item.getType("text/plain");
+              const text = (await blob.text()).trim();
+              if (text) {
+                el.quoteResult.value = "Lendo orçamento...";
+                applyQuoteText(text);
+                return;
+              }
+            }
           }
-          showToast("A área de transferência não contém uma imagem.");
+          showToast("A área de transferência não contém orçamento em imagem, PDF ou texto.");
         } catch (error) {
           el.quotePasteZone.focus();
-          showToast("Permissão negada. Pressione Ctrl+V no botão.");
+          showToast("Permissão negada. Pressione Ctrl+V no campo.");
         }
+      }
+
+      function handleQuoteDrag(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.dataTransfer) event.dataTransfer.dropEffect = "copy";
+        el.quotePasteZone.classList.add("drag-over");
+      }
+
+      function handleQuoteDragLeave(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        el.quotePasteZone.classList.remove("drag-over");
+      }
+
+      function handleQuoteDrop(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        el.quotePasteZone.classList.remove("drag-over");
+        const files = Array.from(event.dataTransfer?.files || []);
+        const file = files.find((item) => isQuotePdfFile(item) || isQuoteImageFile(item));
+        if (file) {
+          processQuoteFile(file);
+          return;
+        }
+
+        const text = event.dataTransfer?.getData("text/plain")?.trim() || "";
+        if (text) {
+          el.quoteResult.value = "Lendo orçamento...";
+          applyQuoteText(text);
+          return;
+        }
+        showToast("Arraste um PDF ou imagem do orçamento.");
       }
 
       function setInventoryEditorStatus(message, type = "") {
@@ -9493,6 +9628,10 @@
       el.quotePressName.addEventListener("input", refreshQuoteMessage);
       el.quotePasteZone.addEventListener("click", readClipboardQuoteImage);
       el.quotePasteZone.addEventListener("paste", handleQuotePaste);
+      el.quotePasteZone.addEventListener("dragenter", handleQuoteDrag);
+      el.quotePasteZone.addEventListener("dragover", handleQuoteDrag);
+      el.quotePasteZone.addEventListener("dragleave", handleQuoteDragLeave);
+      el.quotePasteZone.addEventListener("drop", handleQuoteDrop);
       el.copyQuoteMessage.addEventListener("click", () => copyText(el.quoteResult.value, "Mensagem de orçamento copiada."));
       el.quoteInstallmentsButton.addEventListener("click", toggleQuoteInstallments);
       el.dealSaverGroup.addEventListener("change", updateDealSaver);
