@@ -346,7 +346,13 @@
       }
 
       select option {
-        color: #111111;
+        color: #f2f4f5;
+        background-color: #20262b;
+      }
+
+      select option:checked {
+        color: #101316;
+        background-color: #9ec5fe;
       }
 
       .form-grid,
@@ -1420,7 +1426,7 @@
 
       .report-workspace-grid {
         display: grid;
-        grid-template-columns: minmax(420px, 1.08fr) minmax(360px, 0.92fr);
+        grid-template-columns: minmax(0, 1fr);
         gap: 16px;
         align-items: start;
         margin-top: 16px;
@@ -1708,6 +1714,69 @@
         border-color: rgba(254, 195, 43, 0.2);
       }
 
+      .image-tools-panel > h3 {
+        margin-bottom: 12px;
+      }
+
+      .image-tool-tabs {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+        margin-bottom: 14px;
+        padding: 4px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.035);
+      }
+
+      .image-tool-tab {
+        min-width: 0;
+        min-height: 40px;
+        padding: 8px 10px;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: var(--muted);
+        background: transparent;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .image-tool-tab:hover {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.045);
+      }
+
+      .image-tool-tab.active,
+      .image-tool-tab[aria-selected="true"] {
+        border-color: rgba(254, 195, 43, 0.48);
+        color: var(--text);
+        background: rgba(254, 195, 43, 0.12);
+      }
+
+      .image-tool-tab:focus-visible {
+        outline: 2px solid var(--yellow);
+        outline-offset: 2px;
+      }
+
+      .image-tool-panel[hidden],
+      .image-tool-panel.hidden {
+        display: none !important;
+      }
+
+      .image-tool-panel {
+        display: grid;
+        gap: 10px;
+      }
+
+      .image-tool-panel .ocr-filter-row {
+        margin: 0 0 2px;
+      }
+
+      .image-tool-panel #ocrResult {
+        min-height: 154px;
+      }
+
       .ocr-filter-row {
         display: flex;
         gap: 10px;
@@ -1865,187 +1934,6 @@
         border: 1px solid var(--line);
         border-radius: 8px;
         background: #ffffff;
-      }
-
-      .video-compressor-box {
-        gap: 14px;
-        overflow: hidden;
-      }
-
-      .video-compressor-box input[type="file"] {
-        display: none;
-      }
-
-      .video-compressor-hero {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 12px;
-        align-items: center;
-        padding: 14px;
-        border: 1px solid rgba(254, 195, 43, 0.34);
-        border-radius: 10px;
-        background: linear-gradient(135deg, rgba(254, 195, 43, 0.12), rgba(255, 255, 255, 0.86));
-      }
-
-      .video-compressor-hero strong {
-        display: block;
-        margin-bottom: 4px;
-        color: var(--text);
-      }
-
-      .video-limit-pill {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 68px;
-        min-height: 68px;
-        border-radius: 999px;
-        background: var(--yellow);
-        color: #171717;
-        font-weight: 800;
-        box-shadow: 0 12px 26px rgba(254, 195, 43, 0.28);
-      }
-
-      .video-brand-preview {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        min-height: 32px;
-      }
-
-      .video-brand-tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 10px;
-        border-radius: 999px;
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.78);
-        color: var(--muted);
-        font-size: 0.82rem;
-        font-weight: 700;
-        cursor: pointer;
-        font-family: inherit;
-      }
-
-      .video-brand-tag.active {
-        border-color: rgba(254, 195, 43, 0.65);
-        background: rgba(254, 195, 43, 0.16);
-        color: #8a5a00;
-      }
-
-      .video-progress {
-        width: 100%;
-        height: 12px;
-        overflow: hidden;
-        border: 1px solid rgba(254, 195, 43, 0.32);
-        border-radius: 999px;
-        background: rgba(0, 0, 0, 0.08);
-        accent-color: var(--yellow);
-      }
-
-      .video-progress::-webkit-progress-bar {
-        border-radius: 999px;
-        background: rgba(0, 0, 0, 0.08);
-      }
-
-      .video-progress::-webkit-progress-value {
-        border-radius: 999px;
-        background: linear-gradient(90deg, #fec32b, #22c55e);
-        transition: width 0.35s ease;
-      }
-
-      .video-progress::-moz-progress-bar {
-        border-radius: 999px;
-        background: linear-gradient(90deg, #fec32b, #22c55e);
-      }
-
-      .video-progress.hidden {
-        display: none;
-      }
-
-      .video-eta {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        margin-top: 6px;
-        color: var(--muted);
-        font-size: 0.78rem;
-        line-height: 1.35;
-      }
-
-      .video-eta strong {
-        color: #0f9f5f;
-        font-weight: 800;
-      }
-
-      .video-eta.hidden {
-        display: none;
-      }
-
-      .video-library {
-        display: grid;
-        gap: 12px;
-      }
-
-      .video-library-group {
-        display: grid;
-        gap: 8px;
-        padding: 10px;
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.68);
-      }
-
-      .video-library-title {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        color: var(--text);
-        font-size: 0.9rem;
-        font-weight: 800;
-      }
-
-      .video-library-count {
-        color: var(--muted);
-        font-size: 0.76rem;
-        font-weight: 600;
-      }
-
-      .video-card {
-        display: grid;
-        gap: 8px;
-        padding: 10px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: #ffffff;
-      }
-
-      .video-card-head {
-        display: flex;
-        align-items: start;
-        justify-content: space-between;
-        gap: 12px;
-      }
-
-      .video-card h4 {
-        margin: 0 0 4px;
-        font-size: 0.95rem;
-        color: var(--text);
-      }
-
-      .video-card p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 0.78rem;
-        line-height: 1.45;
-      }
-
-      .video-card-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
       }
 
       .receipt-inline-zone:focus,
@@ -3436,6 +3324,443 @@
           justify-self: start;
         }
       }
+
+      /* Dashboard refresh: dark operational workspace. The share canvas is intentionally untouched. */
+      :root {
+        color-scheme: dark;
+        --black: #0b0d0f;
+        --matte: #101316;
+        --panel: #171b1f;
+        --panel-2: #20262b;
+        --line: rgba(226, 232, 238, 0.12);
+        --line-strong: rgba(246, 185, 0, 0.38);
+        --text: #f2f4f5;
+        --muted: #a5afb7;
+        --yellow: #f6b900;
+        --yellow-2: #ffd24a;
+        --green: #35c778;
+        --neon: #61e294;
+        --red: #ff6268;
+        --shadow: 0 18px 46px rgba(0, 0, 0, 0.28);
+      }
+
+      body {
+        background: linear-gradient(145deg, #0b0d0f 0%, #13181c 52%, #0b0d0f 100%);
+      }
+
+      .grid-bg {
+        opacity: 0.11;
+        background-image:
+          linear-gradient(rgba(230, 236, 241, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(230, 236, 241, 0.04) 1px, transparent 1px);
+      }
+
+      .noise { opacity: 0.025; }
+
+      .dashboard.active {
+        background: transparent;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 24;
+        gap: 18px;
+        border-bottom-color: var(--line);
+        background: rgba(13, 16, 18, 0.94);
+        backdrop-filter: blur(16px);
+      }
+
+      .main {
+        width: min(100%, 1540px);
+        padding-top: 22px;
+      }
+
+      .page-title {
+        padding: 20px 24px;
+        border-color: var(--line);
+        background: linear-gradient(110deg, rgba(27, 32, 36, 0.96), rgba(18, 22, 25, 0.92));
+      }
+
+      .page-title h1 {
+        margin: 0;
+        font-size: 1.7rem;
+        line-height: 1.15;
+      }
+
+      .card,
+      .panel,
+      .auth-card,
+      .metric,
+      .page-title {
+        border-color: var(--line);
+        background: linear-gradient(155deg, rgba(27, 32, 36, 0.98), rgba(19, 23, 26, 0.98));
+        box-shadow: var(--shadow);
+      }
+
+      .panel { padding: 20px; }
+
+      .tabs,
+      .dash-tabs,
+      .system-line,
+      .projection,
+      .tech-item,
+      .carrier-card,
+      .social-soon button {
+        border-color: var(--line);
+        background: rgba(25, 30, 34, 0.94);
+      }
+
+      .dash-tabs {
+        display: flex;
+        gap: 6px;
+        padding: 7px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(15, 18, 20, 0.96);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+        backdrop-filter: blur(14px);
+      }
+
+      .tab {
+        min-height: 42px;
+        padding: 9px 14px;
+        color: #b5bec5;
+        white-space: nowrap;
+      }
+
+      .tab.active {
+        border-color: rgba(246, 185, 0, 0.44);
+        color: #ffe08a;
+        background: rgba(246, 185, 0, 0.12);
+      }
+
+      .auth-visual {
+        border-right-color: var(--line);
+        background:
+          linear-gradient(115deg, rgba(8, 10, 11, 0.88), rgba(8, 10, 11, 0.72)),
+          url("https://www.recargaclub.com.br/cdn/shop/files/casefeeder-eletrico-carbon-edition-xl-750-vista-geral.png?v=1779713329&width=1200") center / cover;
+      }
+
+      .auth-panel { background: rgba(11, 13, 15, 0.92); }
+
+      .auth-copy p,
+      .lead,
+      .row,
+      label,
+      .payment-row span,
+      .date-row span { color: #c1c8ce; }
+
+      input,
+      select,
+      textarea {
+        color: var(--text);
+        border-color: rgba(226, 232, 238, 0.16);
+        background: #111619;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: rgba(246, 185, 0, 0.72);
+        background: #151a1e;
+      }
+
+      input::placeholder,
+      textarea::placeholder { color: #7f8a92; }
+
+      .btn.ghost {
+        color: #e8ecef;
+        border-color: var(--line);
+        background: #1d2327;
+      }
+
+      .badge {
+        color: #dce2e6;
+        border-color: var(--line);
+        background: #1d2327;
+      }
+
+      .update-note,
+      .report-guide {
+        border-color: rgba(246, 185, 0, 0.3);
+        background: linear-gradient(120deg, rgba(246, 185, 0, 0.12), rgba(23, 27, 31, 0.97) 54%, rgba(53, 199, 120, 0.07));
+      }
+
+      .update-step,
+      .report-step { border-color: var(--line); background: rgba(24, 29, 33, 0.92); }
+      .report-step::before { background: #3a4248; }
+      .report-step.is-active { background: rgba(246, 185, 0, 0.15); }
+      .report-step.is-complete { background: rgba(53, 199, 120, 0.1); }
+      .metric small,
+      .carrier-card p,
+      .paste-zone span,
+      .edit-amount-toggle { color: var(--muted); }
+      .carrier-card h4,
+      .modal-card h3 { color: var(--text); }
+      .bar-track { background: rgba(226, 232, 238, 0.12); }
+      .uf-button { color: #e1e6e9; background: #1d2327; }
+      .paste-zone { color: var(--text); background: rgba(246, 185, 0, 0.08); }
+      .warning-note { color: #ffb7b9; background: rgba(255, 98, 104, 0.1); }
+      .big-payback { background: linear-gradient(135deg, rgba(53, 199, 120, 0.12), rgba(246, 185, 0, 0.1)); }
+      .watermark-footer { color: rgba(220, 226, 230, 0.64); }
+      .modal-backdrop { background: rgba(4, 6, 7, 0.78); }
+      .modal-card { background: linear-gradient(155deg, #20262a, #13171a); }
+      .toast { color: #8cf0ae; background: rgba(12, 30, 20, 0.98); }
+
+      .user-avatar {
+        color: #151719;
+        background: var(--yellow);
+      }
+
+      .mini-action {
+        color: #e8ecef;
+        border-color: var(--line);
+        background: #20262a;
+      }
+
+      .goal-days-auto { color: #dbe2e6; background: rgba(246, 185, 0, 0.09); }
+
+      .activity-filter {
+        color: #c0c8ce;
+        border-color: var(--line);
+        background: #1c2226;
+      }
+
+      .activity-filter.active {
+        border-color: var(--yellow);
+        color: #ffe08a;
+        background: rgba(246, 185, 0, 0.12);
+        box-shadow: 0 0 0 3px rgba(246, 185, 0, 0.07);
+      }
+
+      .activity-item {
+        border-color: var(--line);
+        background: rgba(27, 32, 36, 0.9);
+      }
+
+      .activity-item.completed { background: rgba(53, 199, 120, 0.07); }
+      .activity-date { color: #b4bec5; }
+      .activity-done-button { color: #99f0b5; background: rgba(53, 199, 120, 0.11); }
+      .activity-done-button.reopen { color: #d3dade; background: rgba(226, 232, 238, 0.06); }
+      .switch-row { color: #d3dade; background: rgba(31, 37, 41, 0.88); }
+      .result-card,
+      .quote-installment-item,
+      .deal-saver-card,
+      .cep-result {
+        color: var(--text);
+        border-color: var(--line);
+        background: rgba(29, 35, 39, 0.92);
+      }
+
+      .result-card.primary { background: rgba(53, 199, 120, 0.09); }
+      .quote-installment-item b { color: #84e6a7; }
+      .deal-saver-box { border-color: rgba(53, 199, 120, 0.3); }
+      .cep-result span,
+      .sfpc-result .sfpc-row span { color: #a7b1b8; }
+      .cep-result.error { color: #ffb7b9; }
+      .sfpc-result {
+        border-color: rgba(246, 185, 0, 0.3);
+        background: linear-gradient(135deg, rgba(246, 185, 0, 0.1), rgba(25, 30, 34, 0.98));
+      }
+      .sfpc-result .sfpc-kicker { color: #f2c94c; }
+      .sfpc-result .sfpc-note { color: #c4cdd2; background: rgba(226, 232, 238, 0.06); }
+      .uf-grid { background: #151a1d; }
+      .tour-card { color: var(--text); border-color: var(--line); background: linear-gradient(155deg, #20262a, #13171a); }
+      .tour-card p { color: #c2cbd1; }
+      .tour-visual { color: #dce4e8; background: rgba(226, 232, 238, 0.07); }
+
+      .report-workspace-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+      }
+
+      .report-setup-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-items: stretch;
+        gap: 16px;
+      }
+
+      .report-setup-grid > .panel {
+        min-width: 0;
+        min-height: 100%;
+        align-content: start;
+        padding: 20px;
+        border-color: rgba(226, 232, 238, 0.13);
+        background: linear-gradient(155deg, rgba(31, 37, 41, 0.98), rgba(20, 25, 28, 0.98));
+      }
+
+      .report-setup-heading {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 2px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .report-setup-heading span {
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        flex: 0 0 28px;
+        border: 1px solid rgba(246, 185, 0, 0.38);
+        border-radius: 50%;
+        color: #ffe08a;
+        background: rgba(246, 185, 0, 0.1);
+        font-size: 0.74rem;
+        font-weight: 800;
+      }
+
+      .report-setup-heading h3 {
+        margin: 0;
+        font-size: 1rem;
+      }
+
+      .report-tools-column {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .report-output textarea { min-height: 210px; }
+
+      @media (max-width: 1250px) {
+        .report-setup-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .report-tools-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+
+      @media (max-width: 1180px) {
+        .report-output textarea { min-height: 220px; }
+      }
+
+      @media (max-width: 680px) {
+        .report-setup-grid { grid-template-columns: 1fr; }
+        .report-tools-column { grid-template-columns: 1fr; }
+      }
+
+      .global-search {
+        position: relative;
+        z-index: 26;
+        width: min(390px, 31vw);
+        flex: 1 1 280px;
+        max-width: 390px;
+      }
+
+      .global-search-field {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 42px;
+        padding: 0 10px 0 13px;
+        border: 1px solid rgba(226, 232, 238, 0.15);
+        border-radius: 7px;
+        background: #171c20;
+        transition: border-color 150ms ease, background 150ms ease;
+      }
+
+      .global-search-field:focus-within {
+        border-color: rgba(246, 185, 0, 0.72);
+        background: #1b2125;
+      }
+
+      .search-icon {
+        width: 16px;
+        height: 16px;
+        flex: 0 0 16px;
+        color: #aeb8be;
+      }
+
+      .global-search-field input {
+        width: 100%;
+        min-width: 0;
+        min-height: 38px;
+        padding: 7px 0;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        box-shadow: none;
+        font-size: 0.88rem;
+      }
+
+      .global-search-field input:focus { background: transparent; box-shadow: none; }
+
+      .global-search-field kbd {
+        padding: 2px 6px;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        color: #aab4ba;
+        background: #101417;
+        font: 0.68rem Saira, sans-serif;
+        white-space: nowrap;
+      }
+
+      .global-search-results {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        left: 0;
+        z-index: 40;
+        max-height: min(66vh, 500px);
+        overflow: auto;
+        padding: 6px;
+        border: 1px solid rgba(226, 232, 238, 0.16);
+        border-radius: 8px;
+        background: #171c20;
+        box-shadow: 0 22px 58px rgba(0, 0, 0, 0.55);
+      }
+
+      .global-search-heading {
+        padding: 7px 10px 5px;
+        color: #929da4;
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .global-search-result {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 2px 12px;
+        width: 100%;
+        min-height: 52px;
+        padding: 8px 10px;
+        border-radius: 5px;
+        color: var(--text);
+        background: transparent;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .global-search-result:hover,
+      .global-search-result[aria-selected="true"] { background: rgba(246, 185, 0, 0.12); }
+      .global-search-result strong { font-size: 0.88rem; font-weight: 600; }
+      .global-search-result span { color: #9ba6ad; font-size: 0.76rem; }
+      .global-search-result em { grid-column: 2; grid-row: 1 / span 2; align-self: center; color: #c8a643; font-size: 0.7rem; font-style: normal; }
+      .global-search-empty { padding: 15px 10px; color: #aab4ba; font-size: 0.84rem; }
+
+      .search-result-focus {
+        outline: 2px solid rgba(246, 185, 0, 0.9) !important;
+        outline-offset: 4px;
+        box-shadow: 0 0 0 7px rgba(246, 185, 0, 0.1) !important;
+        transition: box-shadow 180ms ease;
+      }
+
+      @media (max-width: 880px) {
+        .topbar { flex-wrap: wrap; }
+        .global-search { order: 3; width: 100%; max-width: none; flex-basis: 100%; }
+        .top-actions { margin-left: auto; }
+        .dash-tabs { overflow-x: auto; }
+      }
+
+      @media (max-width: 560px) {
+        .topbar { gap: 10px; }
+        .top-actions { width: auto; flex: 1 1 100%; }
+        .tab { flex: 0 0 auto; }
+        .page-title { padding: 16px; }
+        .page-title h1 { font-size: 1.3rem; }
+        .activity-item { grid-template-columns: 1fr; }
+      }
     </style>
   </head>
   <body>
@@ -3504,6 +3829,17 @@
             <span class="goal-pulse-icon">R$</span>
             <span id="goalTopPulseText" class="goal-pulse-text">Venda hoje para ficar na meta.</span>
           </div>
+          <div class="global-search">
+            <label class="global-search-field" for="globalSearchInput">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8"></circle>
+                <path d="m16 16 4.2 4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+              </svg>
+              <input id="globalSearchInput" type="search" role="combobox" aria-label="Buscar uma função" aria-autocomplete="list" aria-expanded="false" aria-controls="globalSearchResults" placeholder="Buscar uma função..." autocomplete="off" />
+              <kbd>Ctrl K</kbd>
+            </label>
+            <div id="globalSearchResults" class="global-search-results hidden" role="listbox" aria-label="Funções encontradas"></div>
+          </div>
           <div class="top-actions">
             <span class="badge"><i class="dot green"></i><span id="sheetBadge">Conectando planilha</span></span>
             <span class="badge"><i class="dot"></i><span id="userBadge">Usuário ativo</span></span>
@@ -3529,7 +3865,7 @@
 
           <div class="dash-tabs" role="tablist" aria-label="Áreas do dashboard">
             <button class="tab active" data-dash-tab="calc" type="button">Calculadora Inteligente</button>
-            <button class="tab" data-dash-tab="report" type="button">Gerador de Relatório</button>
+            <button class="tab" data-dash-tab="report" type="button">Ferramentas</button>
             <button class="tab" data-dash-tab="carriers" type="button">Consultar Transportadoras</button>
             <button id="userTabButton" class="tab" data-dash-tab="user" type="button">Usuário</button>
           </div>
@@ -3716,106 +4052,47 @@
           </section>
 
           <section id="reportView" class="dash-view">
-            <div class="report-guide" aria-live="polite">
-              <div class="report-guide-head">
-                <div class="report-guide-title">
-                  <p class="eyebrow">Preenchimento guiado</p>
-                  <strong id="reportGuideTitle">Comece pelo valor</strong>
-                  <span id="reportGuideHint" class="report-guide-hint">Digite o valor total da negociação para liberar o próximo passo.</span>
-                </div>
-              </div>
-              <div class="report-stepper" aria-label="Ordem de preenchimento do relatório">
-                <div class="report-step" data-report-step="value" data-step-number="1">
-                  <span>Valor</span>
-                  <small>Total da negociação</small>
-                </div>
-                <div class="report-step" data-report-step="entry" data-step-number="2">
-                  <span>Entrada</span>
-                  <small>Valor recebido agora</small>
-                </div>
-                <div class="report-step" data-report-step="date" data-step-number="3">
-                  <span>Data</span>
-                  <small>Primeiro pagamento</small>
-                </div>
-                <div class="report-step" data-report-step="installments" data-step-number="4">
-                  <span>Parcelas</span>
-                  <small>Quantidade definida</small>
-                </div>
-                <div class="report-step" data-report-step="payment" data-step-number="5">
-                  <span>Pagamento</span>
-                  <small>Meio de pagamento</small>
-                </div>
-              </div>
-            </div>
-            <div class="report-setup-grid">
-              <div class="panel stack">
-                <div class="field" data-report-step-field="value">
-                  <label for="reportValue">Valor</label>
-                  <input id="reportValue" inputmode="decimal" placeholder="Ex.: 3830,00" />
-                </div>
-                <div class="field" data-report-step-field="entry">
-                  <label for="reportEntry">Entrada</label>
-                  <input id="reportEntry" inputmode="decimal" placeholder="Ex.: 2443,64" />
-                </div>
-                <button id="resetReport" class="btn ghost" type="button">Resetar</button>
-              </div>
-
-              <div class="panel stack">
-                <div class="field" data-report-step-field="date">
-                  <label for="firstPayDate">Data 1° PGT</label>
-                  <input id="firstPayDate" type="date" />
-                </div>
-                <div class="field" data-report-step-field="installments">
-                  <label for="installments">Parcelas</label>
-                  <select id="installments">
-                    <option value="1" selected>1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                  </select>
-                </div>
-                <div class="stack" id="dateSchedule"></div>
-              </div>
-
-              <div class="panel stack">
-                <div data-report-step-field="payment">
-                  <label>Pagamento</label>
-                  <div class="stack" id="paymentSchedule"></div>
-                </div>
-                <div class="field">
-                  <label for="ollowLink">Link</label>
-                  <input id="ollowLink" placeholder="Insira o link (opcional)..." />
-                </div>
-              </div>
-            </div>
-
             <div class="report-workspace-grid">
-              <div class="panel report-output">
-                <h3>Condição de negociação</h3>
-                <div id="reportError" class="warning-note"></div>
-                <textarea id="negotiationText" readonly></textarea>
-                <div class="copy-row">
-                  <button id="copyNegotiation" class="btn" type="button">Copiar condição</button>
-                  <button id="copyOcrText" class="btn ghost" type="button">Copiar texto da imagem</button>
-                </div>
-              </div>
               <div class="report-tools-column">
-                <div class="panel ocr-box">
-                <h3>Extrair texto de imagem</h3>
-                <div class="ocr-filter-row" role="group" aria-label="Dados para extrair">
-                  <label>
-                    <input id="ocrFilterCpf" type="checkbox" />
-                    CPF
-                  </label>
-                  <label>
-                    <input id="ocrFilterName" type="checkbox" />
-                    Nome completo
-                  </label>
+                <div class="panel ocr-box image-tools-panel">
+                <h3 id="imageToolsTitle">Extrair texto de imagem</h3>
+                <div class="image-tool-tabs" role="tablist" aria-label="Ferramentas de imagem">
+                  <button id="imageToolTabExtract" class="image-tool-tab active" type="button" role="tab" aria-selected="true" aria-controls="imageToolPanelExtract" tabindex="0">Extrair texto</button>
+                  <button id="imageToolTabEdit" class="image-tool-tab" type="button" role="tab" aria-selected="false" aria-controls="imageToolPanelEdit" tabindex="-1">Editar quantidade</button>
                 </div>
-                <button id="pasteOcrImage" class="btn ghost image-paste-button" type="button">Colar imagem copiada</button>
-                <textarea id="ocrResult" placeholder="O texto extraído aparece aqui..."></textarea>
+                <div id="imageToolPanelExtract" class="image-tool-panel" role="tabpanel" aria-labelledby="imageToolTabExtract" data-image-tool-panel="extract">
+                  <div class="ocr-filter-row" role="group" aria-label="Dados para extrair">
+                    <label>
+                      <input id="ocrFilterCpf" type="checkbox" />
+                      CPF
+                    </label>
+                    <label>
+                      <input id="ocrFilterName" type="checkbox" />
+                      Nome completo
+                    </label>
+                  </div>
+                  <button id="pasteOcrImage" class="btn ghost image-paste-button" type="button">Colar imagem copiada</button>
+                  <textarea id="ocrResult" placeholder="O texto extraído aparece aqui..."></textarea>
+                  <button id="copyOcrText" class="btn ghost image-paste-button" type="button">Copiar texto extraído</button>
+                </div>
+                <div id="imageToolPanelEdit" class="image-tool-panel hidden" role="tabpanel" aria-labelledby="imageToolTabEdit" data-image-tool-panel="edit" hidden>
+                  <button id="inventoryPasteZone" class="btn ghost image-paste-button" type="button">Colar print de estoque</button>
+                  <div id="inventoryEditorStatus" class="inventory-editor-status">Cole uma imagem para começar.</div>
+                  <div id="inventoryEditorControls" class="inventory-editor-controls hidden">
+                    <div class="field">
+                      <label for="inventoryCaliberSelect">Item/variante para alterar</label>
+                      <select id="inventoryCaliberSelect"></select>
+                    </div>
+                    <div class="field">
+                      <label for="inventoryQuantity">Nova quantidade</label>
+                      <input id="inventoryQuantity" inputmode="numeric" placeholder="Ex.: 2" />
+                    </div>
+                  </div>
+                  <div id="inventoryPreview" class="inventory-preview hidden">
+                    <canvas id="inventoryCanvas" aria-label="Imagem de estoque editada"></canvas>
+                    <button id="downloadInventoryImage" class="btn" type="button">Baixar imagem editada</button>
+                  </div>
+                </div>
               </div>
                 <div class="panel ocr-box">
                 <h3>Mensagem de orçamento</h3>
@@ -3861,47 +4138,6 @@
                   </div>
                 </div>
                 <div id="dealSaverResult" class="deal-saver-result"></div>
-              </div>
-              <div class="panel ocr-box">
-                <h3>Editar quantidade do print</h3>
-                <button id="inventoryPasteZone" class="btn ghost image-paste-button" type="button">Colar print de estoque</button>
-                <div id="inventoryEditorStatus" class="inventory-editor-status">Cole uma imagem para começar.</div>
-                <div id="inventoryEditorControls" class="inventory-editor-controls hidden">
-                  <div class="field">
-                    <label for="inventoryCaliberSelect">Calibre para alterar</label>
-                    <select id="inventoryCaliberSelect"></select>
-                  </div>
-                  <div class="field">
-                    <label for="inventoryQuantity">Nova quantidade</label>
-                    <input id="inventoryQuantity" inputmode="numeric" placeholder="Ex.: 2" />
-                  </div>
-                </div>
-                <div id="inventoryPreview" class="inventory-preview hidden">
-                  <canvas id="inventoryCanvas" aria-label="Imagem de estoque editada"></canvas>
-                  <button id="downloadInventoryImage" class="btn" type="button">Baixar imagem editada</button>
-                </div>
-              </div>
-              <div class="panel ocr-box video-compressor-box">
-                <div class="video-compressor-hero">
-                  <div>
-                    <h3>Compactar vídeos para 16MB</h3>
-                  </div>
-                  <span class="video-limit-pill">16MB</span>
-                </div>
-                <div class="field">
-                  <label for="videoName">Nome do vídeo ou item</label>
-                  <input id="videoName" placeholder="Ex.: Tipo O, XL 750, Pro 6000" />
-                </div>
-                <div id="videoBrandPreview" class="video-brand-preview" aria-live="polite"></div>
-                <input id="videoFile" type="file" accept="video/*" />
-                <div class="copy-row">
-                  <button id="selectVideoButton" class="btn ghost" type="button">Selecionar vídeo</button>
-                  <button id="compressVideoButton" class="btn" type="button">Compactar e salvar</button>
-                </div>
-                <progress id="videoCompressProgress" class="video-progress hidden" max="100" value="0"></progress>
-                <div id="videoCompressEta" class="video-eta hidden" aria-live="polite"></div>
-                <div id="videoCompressStatus" class="inventory-editor-status">Nenhum vídeo selecionado.</div>
-                <div id="videoLibrary" class="video-library"></div>
               </div>
               </div>
             </div>
@@ -3965,9 +4201,6 @@
                 </div>
                 <span id="profileRole" class="status-badge status-neutral">Equipe RECARGA CLUB</span>
               </div>
-              <div class="user-actions">
-                <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSd-pnK2Nc2TmKhp3ybflFd-aPKbYUflYzO8uRMQepu1WQW0Sw/viewform" target="_blank" rel="noopener">Abrir formulário</a>
-              </div>
             </div>
 
             <div id="activitiesPanel" class="panel user-section">
@@ -3977,15 +4210,15 @@
                   <h3>Atividades</h3>
                   <p class="muted">Apenas as atividades atribuídas ao usuário conectado.</p>
                 </div>
-                <span id="activitySource" class="badge">Planilha de atividades</span>
+                <span id="activitySource" class="badge">Atividades do usuário</span>
               </div>
-              <div class="activity-tabs" role="tablist" aria-label="Período das atividades">
+              <div class="activity-tabs" role="group" aria-label="Filtrar atividades">
                 <button class="activity-filter active" data-activity-filter="overdue" type="button">Atrasadas<strong id="activityOverdueCount">0</strong></button>
                 <button class="activity-filter" data-activity-filter="today" type="button">Hoje<strong id="activityTodayCount">0</strong></button>
                 <button class="activity-filter" data-activity-filter="future" type="button">Futuras<strong id="activityFutureCount">0</strong></button>
                 <button class="activity-filter" data-activity-filter="completed" type="button">Concluídas<strong id="activityCompletedCount">0</strong></button>
               </div>
-              <div id="activityList" class="activity-list"></div>
+              <div id="activityList" class="activity-list" aria-live="polite"></div>
             </div>
 
             <div class="panel user-section">
@@ -4193,7 +4426,6 @@
       </div>
     </div>
 
-    <script src="activities-data.js"></script>
     <script>
       window.RECARGA_CLUB_CONFIG = window.RECARGA_CLUB_CONFIG || {};
 
@@ -4206,13 +4438,14 @@
 
       const CACHE_KEY = "recarga_club_sheet_cache_v3";
       const LAST_KEY = "recarga_club_last_calc_v3";
-      const SESSION_KEY = "recarga_club_session_v3";
+      const SESSION_KEY = "recarga_club_auth_session_v1";
       const WATERMARK_KEY = "recarga_club_watermark_v1";
       const COMPLETED_ACTIVITIES_KEY = "recarga_club_completed_activities_v1";
       const COMPLETED_ACTIVITIES_SEED_KEY = "recarga_club_completed_activities_seed_v1";
-      const COMPLETED_ACTIVITIES_SEED_CUTOFF = "2026-07-01";
+      const ACTIVITY_COMPLETION_MIGRATION_VERSION = "render-local-v1";
+      const LEGACY_ACTIVITY_SEED_VALUE = "2026-07-02T00:00:00.000Z";
       const GOAL_FORECAST_KEY = "recarga_club_goal_forecast_v1";
-      const UPDATE_TOUR_VERSION = "2026-08-26-tour-v3";
+      const UPDATE_TOUR_VERSION = "2026-09-29-tour-v7";
       const UPDATE_TOUR_KEY = `recarga_club_update_tour_${UPDATE_TOUR_VERSION}`;
       const WATERMARK_PASSWORD = "Ben10301030@";
       const CACHE_TTL = 1000 * 60 * 60 * 6;
@@ -4220,16 +4453,6 @@
         name: "Auã Amorim",
         contact: "+55 82 2180-1474"
       };
-
-      const AUTHORIZED_USERS = Object.freeze([
-        { id: "aua", name: "Auã Amorim", email: "aua.amorim@recargaclub.com.br", phone: "+55 82 2180-1474", role: "Criador do site", passwordHash: "763beb8be5810675079adaf55ac822c03831718fbc99279c045d3f350123da34", showUserArea: true },
-        { id: "johnatha", name: "Johnatha", email: "johnatha@recargaclub.com.br", phone: "+55 82 3512-6537", role: "Consultor", passwordHash: "2104962dc1c3c39a7b4736982732c7f28cbecaf3487caadca3e3240a4570de32", showUserArea: true },
-        { id: "ronieckson", name: "Ronieckson", email: "ronieckson@recargaclub.com.br", phone: "+55 82 3142-0897", role: "Consultor", passwordHash: "2104962dc1c3c39a7b4736982732c7f28cbecaf3487caadca3e3240a4570de32", showUserArea: true },
-        { id: "italo", name: "Italo", email: "italo@recargaclub.com.br", phone: "+55 82 3142-1022", role: "Consultor", passwordHash: "2104962dc1c3c39a7b4736982732c7f28cbecaf3487caadca3e3240a4570de32", showUserArea: true },
-        { id: "jessica", name: "Jessica", email: "jessica@recargaclub.com.br", phone: "+55 82 3142-1082", role: "Consultora", passwordHash: "2104962dc1c3c39a7b4736982732c7f28cbecaf3487caadca3e3240a4570de32", showUserArea: true },
-        { id: "lucas", name: "Lucas", email: "lucas@recargaclub.com.br", phone: "+55 82 3142-1079", role: "Consultor", passwordHash: "2104962dc1c3c39a7b4736982732c7f28cbecaf3487caadca3e3240a4570de32", showUserArea: true },
-        { id: "wilson", name: "Wilson", email: "wilson@recargaclub.com.br", phone: "+55 82 2180-0476", role: "Coordenador", passwordHash: "2104962dc1c3c39a7b4736982732c7f28cbecaf3487caadca3e3240a4570de32", showUserArea: false }
-      ]);
 
       const COMMISSION_RULES = Object.freeze({
         commissionRate: 0.004,
@@ -4249,10 +4472,6 @@
           { maxDiscount: Infinity, prizeRate: 0, label: "Boleto / Outro — sem prêmio por negociação" }
         ]
       });
-
-      const ACTIVITY_DATA = Array.isArray(window.RECARGA_CLUB_ACTIVITIES)
-        ? window.RECARGA_CLUB_ACTIVITIES
-        : [];
 
       const RECARGA_LOGO_DATA_URI = "data:image/png;base64,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";
 
@@ -4821,18 +5040,17 @@
       const ids = [
         "auth", "dashboard", "calcView", "reportView", "carriersView", "userView", "loginForm", "loginEmail", "loginPassword", "rememberLogin",
         "updateNote", "startUpdateTour", "updateTourOverlay", "updateTourStep", "updateTourTitle", "updateTourText", "updateTourVisual", "updateTourCursor", "updateTourFile", "skipUpdateTour", "nextUpdateTour",
-        "sheetBadge", "userBadge", "logoutBtn", "goalTopPulse", "goalTopPulseText", "sourceStatus", "sourceHint", "cacheBadge", "lastUpdateTop",
+        "sheetBadge", "userBadge", "logoutBtn", "goalTopPulse", "goalTopPulseText", "globalSearchInput", "globalSearchResults", "sourceStatus", "sourceHint", "cacheBadge", "lastUpdateTop",
         "ddd", "caliber", "desiredQty", "locationBadge", "autoNote", "autoState", "warningNote",
         "reloadUnit", "reload100", "factoryBox", "boxQtyLabel", "factoryUnit", "saveUnit", "factoryTotal", "reloadTotal", "saveTotal", "savePercent",
         "factoryBar", "reloadBar", "factoryBarLabel", "reloadBarLabel", "save1000", "save4000", "save10000",
         "techState", "techPrimer", "techPowder", "techGrain", "techCharge", "techProjectile", "techCase", "techWad", "techPellets", "techUpdated",
         "shareCanvas", "downloadImage", "investmentValue", "monthlyQty", "monthlySave", "breakEvenQty", "paybackShort", "paybackText",
-        "reportValue", "reportEntry", "resetReport", "firstPayDate", "installments", "dateSchedule", "paymentSchedule", "ollowLink", "reportGuideTitle", "reportGuideHint",
-        "negotiationText", "reportError", "copyNegotiation", "copyOcrText", "ocrFilterCpf", "ocrFilterName", "ocrImage", "pasteOcrImage", "ocrPasteZone", "ocrResult",
+        "copyOcrText", "ocrFilterCpf", "ocrFilterName", "ocrImage", "pasteOcrImage", "ocrPasteZone", "ocrResult",
+        "imageToolsTitle", "imageToolTabExtract", "imageToolTabEdit", "imageToolPanelExtract", "imageToolPanelEdit",
         "quotePressName", "quotePasteZone", "quoteResult", "copyQuoteMessage", "quoteInstallmentsButton", "quoteInstallmentsPreview",
         "dealSaverGroup", "dealSaverPayment", "dealSaverValue", "dealSaverEntry", "dealSaverResult",
         "inventoryPasteZone", "inventoryEditorStatus", "inventoryEditorControls", "inventoryCaliberSelect", "inventoryQuantity", "inventoryPreview", "inventoryCanvas", "downloadInventoryImage",
-        "videoName", "videoBrandPreview", "videoFile", "selectVideoButton", "compressVideoButton", "videoCompressProgress", "videoCompressEta", "videoCompressStatus", "videoLibrary",
         "carrierDdd", "carrierCep", "carrierCepResult", "carrierLocation", "militaryRegionBadge", "sfpcResult", "ufGrid", "carrierTitle", "carrierCount", "carrierList",
         "userTabButton", "profileAvatar", "profileName", "profileEmail", "profilePhone", "profileRole", "activitiesPanel", "activitySource", "activityList",
         "activityOverdueCount", "activityTodayCount", "activityFutureCount", "activityCompletedCount",
@@ -4860,6 +5078,12 @@
         rows: [],
         record: null,
         currentUser: null,
+        authSession: null,
+        activityData: [],
+        activityCompletions: {},
+        activitiesLoaded: false,
+        activitiesLoading: false,
+        activitiesError: "",
         activityFilter: "overdue",
         result: {
           reloadUnit: 0,
@@ -4878,15 +5102,6 @@
           file: null,
           imageBitmap: null,
           rows: []
-        },
-        videoCompressor: {
-          file: null,
-          videos: [],
-          busy: false,
-          selectedFolder: "",
-          compressionStartedAt: 0,
-          ffmpeg: null,
-          ffmpegLoading: null
         },
         lastCarrierAddress: null,
         goalDaysManual: false,
@@ -4908,11 +5123,27 @@
 
       const UPDATE_TOUR_STEPS = [
         {
+          tab: "calc",
+          target: "#globalSearchInput",
+          title: "Visual renovado e busca rápida",
+          text: "As áreas foram reorganizadas em tema escuro. Digite o que precisa na lupa e escolha o resultado para ir direto à função.",
+          status: "Simulação: a busca localiza ferramentas pelo nome ou pelo que você quer fazer.",
+          action: "searchFunctions"
+        },
+        {
+          tab: "calc",
+          target: "#caliber",
+          title: "Custos de munição atualizados",
+          text: "Entraram as referências de espoleta e pólvora do catálogo 09/2026, além de projéteis compatíveis por calibre. Itens sem preço no catálogo mantêm os demais custos da base.",
+          status: "Referências do Catálogo de Insumos Recarga Club v1.0 aplicadas ao cálculo.",
+          action: "showAmmoCosts"
+        },
+        {
           tab: "report",
           target: "#quotePasteZone",
-          title: "Orçamento por PDF",
-          text: "Arraste o PDF do orçamento para este campo, aguarde o processamento e o sistema monta a mensagem com subtotal, frete e total.",
-          status: "Simulação: o PDF sai da área de trabalho e entra no campo real de orçamento.",
+          title: "Orçamento com 10% no Pix",
+          text: "Arraste o PDF para o campo. O sistema lê os valores e calcula 10% de desconto Pix sobre o subtotal, somando o frete depois.",
+          status: "Simulação: o PDF entra no campo de orçamento e a leitura começa.",
           action: "dragPdf",
           duration: 5200
         },
@@ -4920,8 +5151,8 @@
           tab: "report",
           target: "#quoteResult",
           title: "Mensagem pronta para o cliente",
-          text: "O desconto à vista continua sendo aplicado somente no subtotal. Depois o frete entra no valor final, sem alterar a regra do cálculo.",
-          status: "Simulação: a mensagem vai sendo montada no próprio campo de resultado.",
+          text: "Confira a mensagem com o total no cartão e o preço à vista com 10% de desconto aplicado ao subtotal.",
+          status: "Simulação: a mensagem vai sendo montada no campo de resultado.",
           action: "typeQuote",
           duration: 5200
         },
@@ -4936,12 +5167,27 @@
         },
         {
           tab: "user",
-          target: "#userView a[href*='docs.google.com/forms']",
-          title: "Formulário oficial",
-          text: "Na aba Usuário, o botão Abrir formulário leva direto para o formulário oficial quando precisar registrar uma OS.",
-          status: "Simulação: o sistema abre a aba Usuário e aponta o formulário oficial.",
-          action: "openForm",
-          duration: 3600
+          target: "#activitiesPanel",
+          title: "Agenda privada e atividades pessoais",
+          text: "Entre com as credenciais atuais, sem convites. A lista mostra as tarefas do perfil conectado. Marque uma atividade como feita para vê-la em Concluídas neste navegador; essa marcação não sincroniza com outros dispositivos.",
+          status: "A agenda fica privada no servidor; as conclusões ficam neste navegador.",
+          action: "showActivities"
+        },
+        {
+          tab: "report",
+          target: "#imageToolTabExtract",
+          title: "Ferramentas de imagem organizadas",
+          text: "Extração de texto e edição do estoque agora ficam na mesma área. Alterne pelas abas para escolher o que fazer com a imagem.",
+          status: "A demonstração alterna entre os dois modos de imagem.",
+          action: "showImageToolModes"
+        },
+        {
+          tab: "report",
+          target: "#inventoryPasteZone",
+          title: "Editar itens do estoque",
+          text: "Cole um print e escolha qualquer produto identificado, seja calibre, acessório ou item comum. A quantidade é localizada pela coluna ou pelo alinhamento das linhas.",
+          status: "O seletor mostra o item e a quantidade encontrada no print.",
+          action: "showInventoryEditor"
         }
       ];
 
@@ -4951,7 +5197,7 @@ R$3.810,08 em ate 21X sem juros de R$181,43
 
 ou
 
-A vista por R$3.632,08
+A vista por R$3.454,08
 
 _Orcamento valido por 2 dias uteis_`;
 
@@ -4997,6 +5243,178 @@ _Orcamento valido por 2 dias uteis_`;
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, " ")
           .trim();
+      }
+
+      const SUPPLY_CATALOG = Object.freeze({
+        version: "2026-09",
+        primerPerUnit: 1.2795,
+        powderPerKg: 1156.22,
+        grainsPerKg: 15432.3583529,
+        projectileReferences: [
+          { aliases: ["380 acp"], unitPrice: (470 + 425 + 420) / 3000, label: "100 gr ogival; média Morigi, Eagle e Buffalo" },
+          { aliases: ["9mm", "9x19", "38 super", "38 tpc"], unitPrice: (510 + 457 + 460) / 3000, label: "125 gr ogival; média Morigi, Eagle e Buffalo" },
+          { aliases: ["38 spl", "38 special", "357 magnum", "357 mag"], unitPrice: (535 + 485 + 470) / 3000, label: "158 gr ogival; média Morigi, Eagle e Buffalo" },
+          { aliases: ["40 s&w", "40 sw"], unitPrice: (590 + 530 + 530) / 3000, label: "180 gr; média dos projéteis de chumbo listados" },
+          { aliases: ["44 magnum", "44 mag"], unitPrice: (670 + 680) / 2000, label: "240 gr; média Morigi e Buffalo" },
+          { aliases: ["45 acp"], unitPrice: (720 + 651 + 650) / 3000, label: "230 gr ogival; média Morigi, Eagle e Buffalo" },
+          { aliases: ["454 casull"], unitPrice: 710 / 1000, label: "260 gr cone truncado; Morigi" },
+          { aliases: ["6 35", "25 acp"], unitPrice: 420 / 1000, label: "52 gr ogival; Buffalo" },
+          { aliases: ["7 65"], unitPrice: 420 / 1000, label: "78 gr ogival; Buffalo" },
+          { aliases: ["32 s w"], unitPrice: 420 / 1000, label: "98-100 gr de chumbo; Buffalo" },
+          { aliases: ["32 20"], unitPrice: 420 / 1000, label: "100 gr ogival; Buffalo" },
+          { aliases: ["44 40"], unitPrice: 580 / 1000, label: "205 gr cone truncado; Buffalo" },
+          { aliases: ["357 sig"], unitPrice: 1125 / 1000, label: "125 gr jaquetado; Buffalo" },
+          { aliases: ["223 rem", "5 56x45mm", "5 56 x 45mm", "5 56x45"], unitPrice: 2310 / 1000, label: "55 gr jaquetado; Buffalo" },
+          { aliases: ["243 win"], unitPrice: 2830 / 1000, label: "100 gr jaquetado; Buffalo" },
+          { aliases: ["257 roberts"], unitPrice: 2830 / 1000, label: "100 gr jaquetado; Buffalo" },
+          { aliases: ["30 m1"], unitPrice: 1890 / 1000, label: "110 gr jaquetado; Buffalo" },
+          { aliases: ["270 win"], unitPrice: 2830 / 1000, label: "140 gr jaquetado; Buffalo" },
+          { aliases: ["7 mm"], unitPrice: 2830 / 1000, label: "140 gr jaquetado; Buffalo" },
+          { aliases: ["308 winchester", "308 win"], unitPrice: 2830 / 1000, label: "168 gr jaquetado; Buffalo" },
+          { aliases: ["375 h h"], unitPrice: 3540 / 1000, label: "270 gr jaquetado; Buffalo" }
+        ]
+      });
+
+      function applySupplyCatalogPricing(row) {
+        if (!row || row.supplyCatalogVersion === SUPPLY_CATALOG.version) return row;
+        const charge = Number(row.carga) || 0;
+        const oldPrimer = Number(row.espoleta) || 0;
+        const oldGrainPrice = Number(row.valorGrain) || 0;
+        if (!charge || !oldPrimer || !oldGrainPrice) return row;
+
+        const caliber = normalize(row.calibre);
+        const projectile = SUPPLY_CATALOG.projectileReferences.find((reference) =>
+          reference.aliases.some((alias) => caliber === alias || caliber.startsWith(`${alias} `))
+        );
+        const newGrainPrice = SUPPLY_CATALOG.powderPerKg / SUPPLY_CATALOG.grainsPerKg;
+        const powderCost = charge * newGrainPrice;
+        const otherInputs = (Number(row.estojo) || 0) + (Number(row.bucha) || 0) + (Number(row.bagos) || 0);
+        let recargaUnit;
+        let recargaSource;
+
+        if (projectile) {
+          recargaUnit = SUPPLY_CATALOG.primerPerUnit + powderCost + projectile.unitPrice + otherInputs;
+          recargaSource = `Catálogo de Insumos v1.0 (09/2026): ${projectile.label}; estojo e demais componentes conforme base`;
+        } else {
+          const priorTotal = Number(row.recargaUnit)
+            || oldPrimer + charge * oldGrainPrice + (Number(row.projetil) || 0) + otherInputs;
+          recargaUnit = priorTotal
+            + (SUPPLY_CATALOG.primerPerUnit - oldPrimer)
+            + charge * (newGrainPrice - oldGrainPrice);
+          recargaSource = "Catálogo de Insumos v1.0 (09/2026): pólvora e espoleta; demais itens preservados da base";
+        }
+
+        return {
+          ...row,
+          espoleta: SUPPLY_CATALOG.primerPerUnit,
+          polvora: powderCost,
+          valorGrain: newGrainPrice,
+          projetil: projectile ? projectile.unitPrice : row.projetil,
+          recargaUnit,
+          recargaSource,
+          supplyCatalogVersion: SUPPLY_CATALOG.version,
+          atualizacao: "09/2026"
+        };
+      }
+
+      const GLOBAL_SEARCH_COMMANDS = [
+        { tab: "calc", target: "#caliber", title: "Comparar munição por calibre", detail: "Preços, custo por unidade e economia", category: "Calculadora", terms: "calcular comparação munição recarga fábrica preço calibre quantidade" },
+        { tab: "calc", target: "#desiredQty", title: "Alterar quantidade da simulação", detail: "Atualizar totais e economia pela quantidade", category: "Calculadora", terms: "unidades volume total 1000 4000 simular" },
+        { tab: "calc", target: "#downloadImage", title: "Gerar imagem para o cliente", detail: "Baixar a arte da comparação", category: "Calculadora", terms: "imagem compartilhar whatsapp cliente baixar png arte" },
+        { tab: "calc", target: "#investmentValue", title: "Calcular retorno da prensa", detail: "Ponto de equilíbrio e economia mensal", category: "Calculadora", terms: "investimento payback retorno prensa amortizar" },
+        { tab: "report", target: "#pasteOcrImage", title: "Extrair texto de uma imagem", detail: "Ler CPF ou nome de um print", category: "Ferramentas", terms: "ocr copiar print foto cpf nome documento imagem leitura" },
+        { tab: "report", target: "#quotePasteZone", title: "Gerar mensagem para cliente", detail: "Colar ou arrastar orçamento PDF; calcula 10% no Pix", category: "Mensagem de orçamento", terms: "orçamento orcamento pdf proposta cotação cotacao cliente whatsapp pix a vista desconto mensagem 10 porcento" },
+        { tab: "report", target: "#copyQuoteMessage", title: "Copiar mensagem de orçamento", detail: "Copiar o texto pronto para enviar", category: "Mensagem de orçamento", terms: "copiar enviar cliente whatsapp proposta texto" },
+        { tab: "report", target: "#quoteInstallmentsButton", title: "Simular parcelas do orçamento", detail: "Ver opções de 1x até 21x sem juros", category: "Mensagem de orçamento", terms: "parcelamento parcelas cartão credito 1x 12x 21x sem juros" },
+        { tab: "report", target: "#dealSaverGroup", title: "Proibido perder venda", detail: "Consultar desconto, boleto e entrada mínima", category: "Negociação", terms: "desconto limite desconto máximo desconto maximo entrada boleto reservar pix cartão preservar venda" },
+        { tab: "report", target: "#inventoryPasteZone", imageTool: "edit", title: "Editar quantidade do print", detail: "Colar estoque e ajustar item ou variante", category: "Ferramentas", terms: "estoque imagem print editar quantidade calibre item variante acessório acessorio" },
+        { tab: "carriers", target: "#carrierDdd", title: "Consultar transportadora por DDD", detail: "Ver opções de envio pela região", category: "Transportadoras", terms: "frete envio transportadora ddd região estado mapa" },
+        { tab: "carriers", target: "#carrierCep", title: "Buscar endereço e região por CEP", detail: "Localizar UF, cidade e atendimento SFPC", category: "Transportadoras", terms: "cep endereço endereco sfpc rm cidade estado" },
+        { tab: "user", target: "#activitiesPanel", title: "Ver atividades do usuário", detail: "Acompanhar atrasadas, hoje, futuras e concluídas", category: "Usuário", terms: "agenda tarefas atividade atividades compromissos acompanhamento" },
+        { tab: "user", target: "#commissionSaleValue", title: "Calcular comissão da venda", detail: "Estimar comissão e prêmio por negociação", category: "Usuário", terms: "comissão comissao prêmio premio venda pagamento pix" },
+        { tab: "user", target: "#goalMonthly", title: "Acompanhar meta mensal", detail: "Calcular ritmo de vendas por dia útil", category: "Usuário", terms: "meta mensal objetivo previsão previsao dias úteis vendas" },
+        { tab: "user", target: "#profileName", title: "Ver perfil conectado", detail: "Conferir usuário e dados de contato", category: "Usuário", terms: "perfil conta usuario usuário telefone email" }
+      ];
+
+      function closeGlobalSearch() {
+        if (!el.globalSearchResults || !el.globalSearchInput) return;
+        el.globalSearchResults.classList.add("hidden");
+        el.globalSearchInput.setAttribute("aria-expanded", "false");
+        el.globalSearchInput.removeAttribute("aria-activedescendant");
+      }
+
+      function renderGlobalSearchResults(query = el.globalSearchInput?.value || "") {
+        if (!el.globalSearchInput || !el.globalSearchResults) return [];
+        const normalizedQuery = normalize(query);
+        const tokens = normalizedQuery.split(" ").filter(Boolean);
+        const candidates = GLOBAL_SEARCH_COMMANDS
+          .map((command, sourceIndex) => ({ command, sourceIndex }))
+          .filter(({ command }) => command.tab !== "user" || state.currentUser?.showUserArea)
+          .map((entry) => {
+            const title = normalize(entry.command.title);
+            const searchable = normalize(`${entry.command.title} ${entry.command.detail} ${entry.command.category} ${entry.command.terms}`);
+            let score = 0;
+            if (!tokens.length) score = entry.sourceIndex < 6 ? 20 - entry.sourceIndex : 0;
+            else {
+              if (searchable.includes(normalizedQuery)) score += 10;
+              tokens.forEach((token) => {
+                if (title === token) score += 12;
+                else if (title.startsWith(token)) score += 8;
+                else if (title.split(" ").some((word) => word.startsWith(token))) score += 5;
+                else if (searchable.includes(token)) score += 2;
+              });
+              if (tokens.length > 1 && tokens.every((token) => searchable.includes(token))) score += 7;
+              if (
+                entry.command.target === "#quotePasteZone"
+                && tokens.includes("mensagem")
+                && tokens.some((token) => token.startsWith("orcamento"))
+                && !tokens.includes("copiar")
+              ) score += 14;
+            }
+            return { ...entry, score };
+          })
+          .filter((entry) => entry.score > 0)
+          .sort((a, b) => b.score - a.score || a.sourceIndex - b.sourceIndex)
+          .slice(0, 8);
+
+        state.globalSearchMatches = candidates;
+        state.globalSearchActiveIndex = candidates.length ? 0 : -1;
+        const heading = tokens.length ? "Resultados" : "Acesso rápido";
+        const content = candidates.length
+          ? candidates.map(({ command }, index) => `
+              <button id="globalSearchOption-${index}" class="global-search-result" type="button" role="option" aria-selected="${index === 0}" data-search-index="${index}">
+                <strong>${escapeHtml(command.title)}</strong>
+                <span>${escapeHtml(command.detail)}</span>
+                <em>${escapeHtml(command.category)}</em>
+              </button>
+            `).join("")
+          : `<div class="global-search-empty">Nenhuma função encontrada. Tente outra palavra.</div>`;
+
+        el.globalSearchResults.innerHTML = `<div class="global-search-heading">${heading}</div>${content}`;
+        el.globalSearchResults.classList.remove("hidden");
+        el.globalSearchInput.setAttribute("aria-expanded", "true");
+        if (candidates.length) el.globalSearchInput.setAttribute("aria-activedescendant", "globalSearchOption-0");
+        else el.globalSearchInput.removeAttribute("aria-activedescendant");
+        return candidates;
+      }
+
+      function chooseGlobalSearchResult(index) {
+        const match = state.globalSearchMatches?.[index];
+        if (!match) return;
+        const { command } = match;
+        if (command.tab === "user" && !state.currentUser?.showUserArea) return;
+        closeGlobalSearch();
+        el.globalSearchInput.value = "";
+        switchDash(command.tab);
+        if (command.imageTool) setImageToolMode(command.imageTool);
+        requestAnimationFrame(() => {
+          const target = document.querySelector(command.target);
+          if (!target) return;
+          target.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+          target.classList.add("search-result-focus");
+          if (target.matches("input, select, textarea, button")) target.focus({ preventScroll: true });
+          window.setTimeout(() => target.classList.remove("search-result-focus"), 1800);
+        });
       }
 
       function parseMoney(value) {
@@ -5169,25 +5587,53 @@ _Orcamento valido por 2 dias uteis_`;
 
       function typeUpdateTourQuote() {
         if (!el.quoteResult) return;
-        const parts = [
-          "*Tipo O*",
-          "\n\nR$3.810,08 em ate 21X sem juros de R$181,43",
-          "\n\nou",
-          "\n\nA vista por R$3.632,08",
-          "\n\n_Orcamento valido por 2 dias uteis_"
-        ];
         el.quoteResult.value = "";
         moveTourCursorToTarget("#quoteResult", 52, 36);
         setUpdateTourStatus("Digitando a mensagem exatamente onde o usuário copia depois...");
-        parts.forEach((part, index) => {
+        UPDATE_TOUR_DEMO_MESSAGE.split("\n").forEach((line, index) => {
           queueUpdateTour(() => {
-            el.quoteResult.value += part;
+            el.quoteResult.value += `${index ? "\n" : ""}${line}`;
             el.quoteResult.scrollTop = el.quoteResult.scrollHeight;
-          }, 920 * (index + 1));
+          }, 650 * (index + 1));
+        });
+      }
+
+      function typeUpdateTourSearch() {
+        if (!el.globalSearchInput) return;
+        const query = "gerar mensagem para cliente";
+        el.globalSearchInput.value = "";
+        renderGlobalSearchResults("");
+        setUpdateTourStatus("A lupa aceita nomes de ferramentas, assuntos e o que você quer fazer.");
+        Array.from(query).forEach((character, index) => {
+          queueUpdateTour(() => {
+            el.globalSearchInput.value += character;
+            renderGlobalSearchResults(el.globalSearchInput.value);
+          }, 190 * (index + 1));
         });
       }
 
       function runUpdateTourAction(step) {
+        if (step.action === "searchFunctions") {
+          typeUpdateTourSearch();
+          return;
+        }
+        if (step.action === "showAmmoCosts") {
+          setUpdateTourStatus("A referência atualizada aparece nos custos de espoleta, pólvora e projétil por unidade.");
+          moveTourCursorToTarget("#techPrimer", 45, 16);
+          queueUpdateTour(() => moveTourCursorToTarget("#techPowder", 45, 16), 900);
+          queueUpdateTour(() => moveTourCursorToTarget("#techProjectile", 45, 16), 1800);
+          return;
+        }
+        if (step.action === "showImageToolModes") {
+          setImageToolMode("extract");
+          moveTourCursorToTarget("#imageToolTabExtract", 45, 16);
+          queueUpdateTour(() => {
+            setImageToolMode("edit");
+            moveTourCursorToTarget("#imageToolTabEdit", 45, 16);
+            setUpdateTourStatus("A aba Editar quantidade abre o leitor de itens de estoque.");
+          }, 1500);
+          return;
+        }
         if (step.action === "dragPdf") {
           showUpdateTourFileNear(step.target);
           return;
@@ -5217,13 +5663,16 @@ _Orcamento valido por 2 dias uteis_`;
       function captureUpdateTourSnapshot() {
         if (state.updateTourSnapshot) return;
         state.updateTourSnapshot = {
-          quoteResult: el.quoteResult?.value || ""
+          quoteResult: el.quoteResult?.value || "",
+          searchValue: el.globalSearchInput?.value || ""
         };
       }
 
       function restoreUpdateTourSnapshot() {
         if (!state.updateTourSnapshot) return;
         if (el.quoteResult) el.quoteResult.value = state.updateTourSnapshot.quoteResult || "";
+        if (el.globalSearchInput) el.globalSearchInput.value = state.updateTourSnapshot.searchValue || "";
+        closeGlobalSearch();
         state.updateTourSnapshot = null;
       }
 
@@ -5238,7 +5687,9 @@ _Orcamento valido por 2 dias uteis_`;
         clearUpdateTourHighlight();
         el.updateTourFile?.classList.remove("active");
         el.updateTourCursor?.classList.add("active");
+        closeGlobalSearch();
         if (step.tab) switchDash(step.tab);
+        if (step.target === "#inventoryPasteZone") setImageToolMode("edit");
         el.updateTourStep.textContent = `Nova atualização ${state.updateTourIndex + 1}/${steps.length}`;
         el.updateTourTitle.textContent = step.title;
         el.updateTourText.textContent = step.text;
@@ -5349,13 +5800,55 @@ _Orcamento valido por 2 dias uteis_`;
         return String(value || "").trim().toLowerCase();
       }
 
-      async function hashPassword(value) {
-        if (!window.crypto?.subtle) return "";
-        const bytes = new TextEncoder().encode(String(value || ""));
-        const digest = await window.crypto.subtle.digest("SHA-256", bytes);
-        return Array.from(new Uint8Array(digest))
-          .map((byte) => byte.toString(16).padStart(2, "0"))
-          .join("");
+      function getAppServerUrl(path) {
+        const configured = localStorage.getItem("recarga_app_server_url") || "";
+        const baseUrl = configured || (location.protocol === "file:" ? "http://127.0.0.1:8787" : location.origin);
+        const base = baseUrl.replace(/\/$/, "");
+        const suffix = String(path || "").startsWith("/") ? String(path || "") : `/${path || ""}`;
+        return `${base}${suffix}`;
+      }
+
+      function persistAuthSession() {
+        if (state.authSession) localStorage.setItem(SESSION_KEY, JSON.stringify(state.authSession));
+      }
+
+      function clearAuthSession() {
+        state.authSession = null;
+        localStorage.removeItem(SESSION_KEY);
+        localStorage.removeItem("recarga_club_session_v3");
+      }
+
+      async function refreshActivitySession() {
+        if (!state.authSession?.refresh_token) return false;
+        try {
+          const response = await fetch(getAppServerUrl("/api/auth/refresh"), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refresh_token: state.authSession.refresh_token })
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok || !payload.session || !payload.user) throw new Error(payload.error || "Sessão expirada.");
+          state.authSession = payload.session;
+          state.currentUser = payload.user;
+          persistAuthSession();
+          return true;
+        } catch (error) {
+          clearAuthSession();
+          return false;
+        }
+      }
+
+      async function activityApiRequest(path, options = {}, canRefresh = true) {
+        if (!state.authSession?.access_token) throw new Error("Entre novamente para consultar a agenda.");
+        const headers = { ...(options.headers || {}), Authorization: `Bearer ${state.authSession.access_token}` };
+        const response = await fetch(getAppServerUrl(path), { ...options, headers });
+        const payload = await response.json().catch(() => ({}));
+        if (response.status === 401 && canRefresh) {
+          if (await refreshActivitySession()) return activityApiRequest(path, options, false);
+          throw new Error("Sua sessão expirou. Entre novamente.");
+        }
+        if (!response.ok) throw new Error(payload.error || "Não foi possível carregar a agenda.");
+        return payload;
       }
 
       function todayIso() {
@@ -5642,15 +6135,15 @@ _Orcamento valido por 2 dias uteis_`;
       async function loadSheet() {
         const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
         if (LOCAL_SHEET_ROWS.length) {
-          state.rows = LOCAL_SHEET_ROWS;
-          setSource("Planilha local carregada", "Preços importados de Cópia de Custo Munição.xlsx.", "Base local");
+          state.rows = LOCAL_SHEET_ROWS.map(applySupplyCatalogPricing);
+          setSource("Insumos atualizados", "Referências do Catálogo de Insumos Recarga Club v1.0 (09/2026) aplicadas ao cálculo.", "Catálogo 09/2026");
           hydrateCalibers();
           findAndCalculate();
         }
 
         if (cached?.rows?.length && Date.now() - cached.savedAt < CACHE_TTL) {
           if (!state.rows.length) {
-            state.rows = cached.rows;
+            state.rows = cached.rows.map(applySupplyCatalogPricing);
             setSource("Planilha em cache", "Dados carregados do cache inteligente.", "Cache recente");
             hydrateCalibers();
             findAndCalculate();
@@ -5659,9 +6152,9 @@ _Orcamento valido por 2 dias uteis_`;
 
         try {
           const result = await fetchSheetRows();
-          state.rows = result.rows;
-          localStorage.setItem(CACHE_KEY, JSON.stringify({ rows: result.rows, savedAt: Date.now() }));
-          setSource("Planilha conectada", `Dados carregados via ${result.source}.`, "Cache renovado");
+          state.rows = result.rows.map(applySupplyCatalogPricing);
+          localStorage.setItem(CACHE_KEY, JSON.stringify({ rows: state.rows, savedAt: Date.now() }));
+          setSource("Planilha e catálogo conectados", `Dados carregados via ${result.source} e atualizados com o catálogo de insumos 09/2026.`, "Cache renovado");
           hydrateCalibers();
           findAndCalculate();
         } catch (error) {
@@ -6400,31 +6893,6 @@ _Orcamento valido por 2 dias uteis_`;
         updateReportGuide();
       }
 
-      function resetReport() {
-        el.reportValue.value = "";
-        el.reportEntry.value = "";
-        el.firstPayDate.value = todayIso();
-        el.installments.value = "1";
-        el.ollowLink.value = "";
-        el.quotePressName.value = "";
-        el.quoteResult.value = "";
-        state.quoteValues = null;
-        if (el.quoteInstallmentsPreview) {
-          el.quoteInstallmentsPreview.innerHTML = "";
-          el.quoteInstallmentsPreview.classList.add("hidden");
-        }
-        el.dealSaverGroup.value = "lee";
-        el.dealSaverPayment.value = "pix";
-        el.dealSaverValue.value = "";
-        el.dealSaverEntry.value = "";
-        updateDealSaver();
-        state.receiptControls = {};
-        el.paymentSchedule.innerHTML = "";
-        el.dateSchedule.innerHTML = "";
-        renderReportSchedules();
-        updateReport();
-      }
-
       async function copyText(value, message) {
         const text = normalizeAutomationText(value).trim();
         if (!text) {
@@ -7094,7 +7562,7 @@ _Orcamento valido por 2 dias uteis_`;
         const total = Number(values.total) || 0;
         if (!subtotal || !total) return "";
 
-        const cash = subtotal * 0.95 + freight;
+        const cash = subtotal * 0.90 + freight;
         const installment = total / QUOTE_INSTALLMENTS;
         const lines = [
           `${formatCurrencyCompact(total)} em até ${QUOTE_INSTALLMENTS}X sem juros de ${formatInstallmentCurrency(installment)}`,
@@ -7416,6 +7884,29 @@ _Orcamento valido por 2 dias uteis_`;
         el.inventoryEditorStatus.className = `inventory-editor-status ${type || ""}`.trim();
       }
 
+      function setImageToolMode(mode, focusTab = false) {
+        const editing = mode === "edit";
+        const activeTab = editing ? el.imageToolTabEdit : el.imageToolTabExtract;
+        const inactiveTab = editing ? el.imageToolTabExtract : el.imageToolTabEdit;
+        const activePanel = editing ? el.imageToolPanelEdit : el.imageToolPanelExtract;
+        const inactivePanel = editing ? el.imageToolPanelExtract : el.imageToolPanelEdit;
+
+        activeTab.classList.add("active");
+        activeTab.setAttribute("aria-selected", "true");
+        activeTab.tabIndex = 0;
+        inactiveTab.classList.remove("active");
+        inactiveTab.setAttribute("aria-selected", "false");
+        inactiveTab.tabIndex = -1;
+        activePanel.hidden = false;
+        activePanel.classList.remove("hidden");
+        activePanel.setAttribute("aria-hidden", "false");
+        inactivePanel.hidden = true;
+        inactivePanel.classList.add("hidden");
+        inactivePanel.setAttribute("aria-hidden", "true");
+        el.imageToolsTitle.textContent = editing ? "Editar quantidade do print" : "Extrair texto de imagem";
+        if (focusTab) activeTab.focus();
+      }
+
       function resetInventoryEditorView(message = "Cole uma imagem para começar.") {
         setInventoryEditorStatus(message);
         el.inventoryEditorControls.classList.add("hidden");
@@ -7463,11 +7954,10 @@ _Orcamento valido por 2 dias uteis_`;
           .sort((a, b) => a.y - b.y);
       }
 
-      function cleanInventoryCaliberLabel(value) {
+      function cleanInventoryItemLabel(value) {
         return String(value || "")
           .replace(/[^\wÀ-ÖØ-öø-ÿ/&.+\-\s]/g, " ")
           .replace(/\b(?:produto|disponivel|disponível|preco|preço|brl|r\$|selecionar|pesquisar|todos|adicionar|filtro)\b/ig, " ")
-          .replace(/\b(?:prensa|lee|aluminio|alumínio|challenger|kit|dies|carbide|bucha|troca|rapida|rápida|precision|pce)\b/ig, " ")
           .replace(/\s+/g, " ")
           .trim()
           .replace(/^(\d{1,2})\s+(?=\d{2,3}\s*[A-Za-z])/, "")
@@ -7481,11 +7971,10 @@ _Orcamento valido por 2 dias uteis_`;
           .toUpperCase();
       }
 
-      function isLikelyInventoryCaliber(label) {
-        const value = cleanInventoryCaliberLabel(label);
-        if (value.length < 3 || value.length > 34) return false;
-        if (!/\d/.test(value) || !/[A-Z]/.test(value)) return false;
-        if (/^\d{1,5}$/.test(value)) return false;
+      function isLikelyInventoryItem(label) {
+        const value = cleanInventoryItemLabel(label);
+        if (value.length < 2 || value.length > 100) return false;
+        if (!/[A-ZÀ-ÖØ-Þ]/i.test(value) || /^\d+$/.test(value)) return false;
         return true;
       }
 
@@ -7523,38 +8012,76 @@ _Orcamento valido por 2 dias uteis_`;
           .filter(Boolean);
 
         const lines = groupInventoryWordsIntoLines(words, bitmap.height);
-        const headerWord = words.find((word) => normalize(word.text).includes("disponivel"));
-        const quantityColumnX = headerWord?.bbox?.cx || bitmap.width * 0.72;
-        const rows = [];
+        const headerWord = words
+          .filter((word) => /(?:disponivel|quantidade|estoque|\bqtd\b|\bsaldo\b)/.test(normalize(word.text)))
+          .sort((a, b) => a.bbox.y0 - b.bbox.y0)[0];
+        const candidates = [];
 
-        lines.forEach((line) => {
+        lines.forEach((line, lineIndex) => {
           const normalizedLine = normalize(line.text);
-          if (!normalizedLine || normalizedLine.includes("produto") || normalizedLine.includes("disponivel") || normalizedLine.includes("preco")) return;
-          if (normalizedLine.includes("prensa") || normalizedLine.includes("selecionar") || normalizedLine.includes("pesquisar")) return;
+          if (!normalizedLine || /\b(?:produto|disponivel|quantidade|estoque|preco|qtd|saldo)\b/.test(normalizedLine)) return;
+          if (normalizedLine.includes("selecionar") || normalizedLine.includes("pesquisar")) return;
 
-          const sorted = line.words;
-          const quantityCandidates = sorted.filter((word) => {
-            const text = word.text.replace(/[^\d]/g, "");
-            return /^\d{1,5}$/.test(text) && word.bbox.cx > bitmap.width * 0.42;
+          line.words.forEach((word) => {
+            const quantity = word.text.replace(/\s/g, "");
+            if (!/^\d{1,5}$/.test(quantity)) return;
+            const labelWords = line.words.filter((item) => item.bbox.x1 <= word.bbox.x0 - 2);
+            const label = cleanInventoryItemLabel(labelWords.map((item) => item.text).join(" "));
+            if (!isLikelyInventoryItem(label)) return;
+            if (!headerWord && word.bbox.cx < bitmap.width * 0.32) return;
+            candidates.push({ line, lineIndex, word, quantity, labelWords, label });
           });
-          if (!quantityCandidates.length) return;
+        });
 
-          const quantityWord = quantityCandidates
-            .sort((a, b) => Math.abs(a.bbox.cx - quantityColumnX) - Math.abs(b.bbox.cx - quantityColumnX))[0];
-          const labelWords = sorted.filter((word) => word.bbox.cx < quantityWord.bbox.x0 - 2);
-          const labelText = labelWords.map((word) => word.text).join(" ");
-          const label = cleanInventoryCaliberLabel(labelText);
-          if (!isLikelyInventoryCaliber(label)) return;
-          const lineHeight = Math.max(...sorted.map((word) => word.bbox.y1 - word.bbox.y0), 10);
+        if (!candidates.length) return [];
+
+        const tolerance = Math.max(30, bitmap.width * 0.045);
+        let quantityColumnX = headerWord?.bbox.cx || 0;
+        let matchingCandidates = headerWord
+          ? candidates.filter((candidate) => Math.abs(candidate.word.bbox.cx - quantityColumnX) <= Math.max(38, bitmap.width * 0.11))
+          : [];
+
+        if (!matchingCandidates.length) {
+          const clusters = [];
+          candidates.forEach((candidate) => {
+            let cluster = clusters.find((item) => Math.abs(item.x - candidate.word.bbox.cx) <= tolerance);
+            if (!cluster) {
+              cluster = { x: candidate.word.bbox.cx, rows: new Set(), candidates: [] };
+              clusters.push(cluster);
+            }
+            cluster.candidates.push(candidate);
+            cluster.rows.add(candidate.lineIndex);
+            cluster.x = cluster.candidates.reduce((sum, item) => sum + item.word.bbox.cx, 0) / cluster.candidates.length;
+          });
+          clusters.sort((a, b) => b.rows.size - a.rows.size || b.x - a.x);
+          quantityColumnX = clusters[0]?.x || 0;
+          matchingCandidates = candidates.filter((candidate) => Math.abs(candidate.word.bbox.cx - quantityColumnX) <= tolerance);
+          if (clusters[0]?.rows.size === 1) {
+            const onlyRowCandidates = candidates.filter((candidate) => candidate.lineIndex === clusters[0].rows.values().next().value);
+            const rightmost = Math.max(...onlyRowCandidates.map((candidate) => candidate.word.bbox.cx));
+            quantityColumnX = rightmost;
+            matchingCandidates = onlyRowCandidates.filter((candidate) => Math.abs(candidate.word.bbox.cx - rightmost) <= tolerance);
+          }
+        }
+
+        const rows = [];
+        const chosenByLine = new Map();
+        matchingCandidates.forEach((candidate) => {
+          const current = chosenByLine.get(candidate.lineIndex);
+          const distance = Math.abs(candidate.word.bbox.cx - quantityColumnX);
+          if (!current || distance < current.distance) chosenByLine.set(candidate.lineIndex, { ...candidate, distance });
+        });
+
+        chosenByLine.forEach(({ line, word: quantityWord, quantity, label, labelWords }) => {
+          if (!isLikelyInventoryItem(label)) return;
+          const lineHeight = Math.max(...line.words.map((word) => word.bbox.y1 - word.bbox.y0), 10);
           const checkboxSizeHint = Math.max(12, Math.min(17, lineHeight * 0.92));
-          const firstCaliberWord = labelWords.find((word) => /\d/.test(word.text))
-            || labelWords.find((word) => /[A-Za-z]/.test(word.text))
-            || labelWords[0];
-          const labelStartX = firstCaliberWord?.bbox?.x0 || bitmap.width * 0.14;
+          const firstLabelWord = labelWords.find((word) => /[A-Za-zÀ-ÿ]/.test(word.text)) || labelWords[0];
+          const labelStartX = firstLabelWord?.bbox?.x0 || bitmap.width * 0.14;
 
           rows.push({
             label,
-            quantity: quantityWord.text.replace(/[^\d]/g, ""),
+            quantity,
             quantityBox: quantityWord.bbox,
             lineY: line.y,
             labelStartX,
@@ -7571,7 +8098,7 @@ _Orcamento valido por 2 dias uteis_`;
         });
       }
 
-      function populateInventoryCalibers(rows) {
+      function populateInventoryItems(rows) {
         el.inventoryCaliberSelect.innerHTML = rows.map((row, index) => (
           `<option value="${index}">${escapeHtml(row.label)} - atual: ${escapeHtml(row.quantity || "--")}</option>`
         )).join("");
@@ -7700,19 +8227,35 @@ _Orcamento valido por 2 dias uteis_`;
 
         const box = selected.quantityBox;
         const sourceHeight = Math.max(8, box.y1 - box.y0);
-        const fontSize = Math.max(10, Math.round(sourceHeight * 0.92));
+        const fontSize = Math.max(9, Math.round(sourceHeight * 0.82));
         ctx.font = `400 ${fontSize}px Arial, Helvetica, sans-serif`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
         const centerX = (box.x0 + box.x1) / 2;
-        const centerY = (box.y0 + box.y1) / 2 + Math.max(0.2, sourceHeight * 0.04);
+        const centerY = (box.y0 + box.y1) / 2;
         const textWidth = ctx.measureText(quantity).width;
-        const coverWidth = Math.max(box.x1 - box.x0 + 12, textWidth + 14);
-        const coverHeight = Math.max(sourceHeight + 8, fontSize + 7);
-        ctx.fillStyle = "#ffffff";
+        const coverWidth = Math.max(box.x1 - box.x0 + 3, textWidth + 3);
+        const coverHeight = Math.max(sourceHeight + 3, fontSize + 2);
+        const backgroundSamples = [
+          [Math.floor(box.x0 - 3), Math.round(centerY)],
+          [Math.ceil(box.x1 + 3), Math.round(centerY)],
+          [Math.round(centerX), Math.floor(box.y0 - 3)],
+          [Math.round(centerX), Math.ceil(box.y1 + 3)]
+        ].filter(([x, y]) => x >= 0 && y >= 0 && x < canvas.width && y < canvas.height);
+        const backgroundColor = backgroundSamples.reduce((total, [x, y]) => {
+          const pixel = ctx.getImageData(x, y, 1, 1).data;
+          total.r += pixel[0];
+          total.g += pixel[1];
+          total.b += pixel[2];
+          return total;
+        }, { r: 0, g: 0, b: 0 });
+        const sampleCount = backgroundSamples.length || 1;
+        ctx.fillStyle = backgroundSamples.length
+          ? `rgb(${Math.round(backgroundColor.r / sampleCount)}, ${Math.round(backgroundColor.g / sampleCount)}, ${Math.round(backgroundColor.b / sampleCount)})`
+          : "#ffffff";
         ctx.fillRect(centerX - coverWidth / 2, centerY - coverHeight / 2, coverWidth, coverHeight);
-        ctx.fillStyle = "#2b2f36";
+        ctx.fillStyle = "#50545a";
         ctx.fillText(quantity, centerX, centerY);
 
         const checkboxSize = Math.max(11, Math.min(16, sourceHeight * 0.92));
@@ -7756,7 +8299,7 @@ _Orcamento valido por 2 dias uteis_`;
         }
 
         el.inventoryPasteZone.classList.add("active");
-        resetInventoryEditorView("Lendo print e procurando calibres...");
+        resetInventoryEditorView("Lendo print e procurando itens...");
         try {
           if (state.inventoryEditor.imageBitmap?.close) state.inventoryEditor.imageBitmap.close();
           const bitmap = await createImageBitmap(file);
@@ -7768,16 +8311,16 @@ _Orcamento valido por 2 dias uteis_`;
           const rows = extractInventoryRowsFromOcr(result, prepared.scale, bitmap);
           state.inventoryEditor = { file, imageBitmap: bitmap, rows };
           if (!rows.length) {
-            resetInventoryEditorView("Nao consegui encontrar calibres e quantidades nesse print.");
-            showToast("Calibres nao encontrados no print.");
+            resetInventoryEditorView("Nao consegui encontrar itens e quantidades nesse print.");
+            showToast("Itens nao encontrados no print.");
             return;
           }
-          populateInventoryCalibers(rows);
+          populateInventoryItems(rows);
           setInventoryEditorStatus(rows.length > 1
-            ? `${rows.length} opcoes encontradas. Escolha o calibre e informe a nova quantidade.`
+            ? `${rows.length} itens ou variantes encontrados. Escolha um e informe a nova quantidade.`
             : `${rows[0].label} encontrado. Informe a nova quantidade.`);
           el.inventoryQuantity.focus();
-          showToast("Print lido. Escolha o calibre e a quantidade.");
+          showToast("Print lido. Escolha o item e a quantidade.");
         } catch (error) {
           resetInventoryEditorView("Nao foi possivel ler esse print agora.");
           showToast("Nao foi possivel ler esse print agora.");
@@ -7844,928 +8387,6 @@ _Orcamento valido por 2 dias uteis_`;
           URL.revokeObjectURL(url);
           showToast("Imagem editada baixada.");
         }, "image/png");
-      }
-
-      const VIDEO_MAX_BYTES = 16 * 1024 * 1024;
-      const VIDEO_DB_NAME = "recarga-club-videos-v1";
-      const VIDEO_STORE_NAME = "videos";
-      const VIDEO_FFMPEG_IMPORT_URL = "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/+esm";
-      const VIDEO_FFMPEG_UTIL_IMPORT_URL = "https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/+esm";
-      const VIDEO_FFMPEG_ESM_BASE = "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm";
-      const VIDEO_FFMPEG_WORKER_URL = `${VIDEO_FFMPEG_ESM_BASE}/worker.js`;
-      const VIDEO_FFMPEG_CORE_BASE = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm";
-      const VIDEO_COMPRESSOR_API_URL = localStorage.getItem("recarga_video_api_url") || (
-        location.protocol === "file:"
-          ? "http://127.0.0.1:8787/api/compress-video"
-          : `${location.origin}/api/compress-video`
-      );
-      const VIDEO_API_BASE_URL = VIDEO_COMPRESSOR_API_URL.replace(/\/api\/compress-video(?:\?.*)?$/, "");
-      const VIDEO_BRAND_RULES = [
-        {
-          brand: "Lee Precision",
-          folder: "Lee",
-          patterns: [
-            /\blee\b/i,
-            /tipo\s*o/i,
-            /challenger/i,
-            /breech\s*lock/i,
-            /pro\s*6000/i,
-            /ultimate\s*turret/i,
-            /\bturret\b/i
-          ]
-        },
-        {
-          brand: "Dillon Precision",
-          folder: "Dillon",
-          patterns: [
-            /\bdillon\b/i,
-            /\bxl\s*750\b/i,
-            /\bxl\s*650\b/i,
-            /\brl\s*550\b/i,
-            /\brl\s*1100\b/i,
-            /square\s*deal/i,
-            /case\s*feeder/i,
-            /casefeeder/i,
-            /bullet\s*feeder/i,
-            /quick\s*change/i
-          ]
-        },
-        {
-          brand: "Redding",
-          folder: "Redding",
-          patterns: [/\bredding\b/i]
-        },
-        {
-          brand: "RCBS",
-          folder: "RCBS",
-          patterns: [/\brcbs\b/i, /rock\s*chucker/i]
-        },
-        {
-          brand: "Frankford Arsenal",
-          folder: "Frankford",
-          patterns: [/frankford/i, /x[-\s]*10/i]
-        },
-        {
-          brand: "Lyman",
-          folder: "Lyman",
-          patterns: [/\blyman\b/i]
-        }
-      ];
-
-      function formatFileSize(bytes = 0) {
-        const value = Number(bytes) || 0;
-        if (value >= 1024 * 1024) return `${(value / 1024 / 1024).toFixed(2).replace(".", ",")} MB`;
-        if (value >= 1024) return `${(value / 1024).toFixed(1).replace(".", ",")} KB`;
-        return `${value} B`;
-      }
-
-      function classifyVideoBrand(name = "") {
-        const raw = String(name || "");
-        const normalizedName = normalize(raw);
-        const searchable = `${raw} ${normalizedName}`;
-        const match = VIDEO_BRAND_RULES.find((rule) => rule.patterns.some((pattern) => pattern.test(searchable)));
-        return match || { brand: "Outros", folder: "Outros" };
-      }
-
-      function getVideoFolderRule(folder = "") {
-        const selected = VIDEO_BRAND_RULES.find((rule) => rule.folder === folder);
-        if (selected) return selected;
-        return { brand: folder || "Outros", folder: folder || "Outros" };
-      }
-
-      function getSelectedVideoBrand(name = "") {
-        return classifyVideoBrand(name);
-      }
-
-      function renderVideoBrandPreview() {
-        if (!el.videoBrandPreview) return;
-        const name = el.videoName.value.trim();
-        const detected = getSelectedVideoBrand(name);
-        const selectedFolder = state.videoCompressor.selectedFolder || "";
-        const folders = VIDEO_BRAND_RULES.map((rule) => rule.folder).concat("Outros");
-        const folderButtons = [{ label: "Todas", folder: "" }]
-          .concat(folders.map((folder) => ({ label: folder, folder })));
-        el.videoBrandPreview.innerHTML = `
-          <span class="video-brand-tag active">Destino automatico: Pasta ${escapeHtml(detected.folder)}</span>
-          ${folderButtons.map((item) => {
-            const isActive = item.folder === selectedFolder;
-            const label = item.folder ? item.label : "Todas";
-            return `<button class="video-brand-tag ${isActive ? "active" : ""}" type="button" data-video-folder="${escapeHtml(item.folder)}">${escapeHtml(label)}</button>`;
-          }).join("")}
-        `;
-      }
-
-      function handleVideoFolderClick(event) {
-        const button = event.target.closest("[data-video-folder]");
-        if (!button) return;
-        state.videoCompressor.selectedFolder = button.dataset.videoFolder || "";
-        renderVideoBrandPreview();
-        renderVideoLibrary();
-        setVideoStatus(state.videoCompressor.selectedFolder
-          ? `Visualizando pasta ${state.videoCompressor.selectedFolder}. O salvamento continua automatico pelo nome do item.`
-          : "Visualizando todas as pastas. O salvamento continua automatico pelo nome do item.");
-      }
-      function setVideoStatus(message = "", type = "") {
-        el.videoCompressStatus.textContent = message || "";
-        el.videoCompressStatus.className = `inventory-editor-status ${type || ""}`.trim();
-      }
-
-      function setVideoProgress(value = 0, visible = false) {
-        el.videoCompressProgress.value = Math.max(0, Math.min(100, Number(value) || 0));
-        el.videoCompressProgress.classList.toggle("hidden", !visible);
-      }
-
-      function formatVideoEta(seconds) {
-        const safeSeconds = Math.max(0, Math.ceil(Number(seconds) || 0));
-        if (safeSeconds < 5) return "finalizando...";
-        if (safeSeconds < 60) return `${safeSeconds}s`;
-        const minutes = Math.floor(safeSeconds / 60);
-        const remainder = safeSeconds % 60;
-        if (minutes < 60) return remainder ? `${minutes}min ${remainder}s` : `${minutes}min`;
-        const hours = Math.floor(minutes / 60);
-        const minuteRemainder = minutes % 60;
-        return minuteRemainder ? `${hours}h ${minuteRemainder}min` : `${hours}h`;
-      }
-
-      function getVideoEtaLabel(progress, startedAt) {
-        const safeProgress = Math.max(0, Math.min(100, Number(progress) || 0));
-        if (!startedAt || safeProgress < 8 || safeProgress >= 99) return "Calculando tempo...";
-        const elapsedSeconds = (Date.now() - startedAt) / 1000;
-        if (elapsedSeconds < 4) return "Calculando tempo...";
-        const estimatedTotalSeconds = elapsedSeconds / (safeProgress / 100);
-        const remainingSeconds = Math.max(0, estimatedTotalSeconds - elapsedSeconds);
-        return `Tempo estimado restante: ${formatVideoEta(remainingSeconds)}`;
-      }
-
-      function setVideoEta(progress = 0, startedAt = 0, label = "") {
-        if (!el.videoCompressEta) return;
-        const safeProgress = Math.max(0, Math.min(100, Number(progress) || 0));
-        const etaLabel = label || getVideoEtaLabel(safeProgress, startedAt);
-        el.videoCompressEta.innerHTML = `
-          <span><strong>${Math.round(safeProgress)}%</strong> concluido</span>
-          <span>${etaLabel}</span>
-        `;
-        el.videoCompressEta.classList.toggle("hidden", safeProgress <= 0 && !label);
-      }
-
-      function clearVideoEta() {
-        if (!el.videoCompressEta) return;
-        el.videoCompressEta.textContent = "";
-        el.videoCompressEta.classList.add("hidden");
-      }
-
-      function withVideoTimeout(promise, ms, message) {
-        let timer = null;
-        return Promise.race([
-          promise,
-          new Promise((_, reject) => {
-            timer = window.setTimeout(() => reject(new Error(message)), ms);
-          })
-        ]).finally(() => {
-          if (timer) window.clearTimeout(timer);
-        });
-      }
-
-      function getVideoApiOfflineMessage() {
-        if (location.protocol === "file:") {
-          return "API de compactação offline. No uso local, abra iniciar-compactador-video.bat e entre pelo http://127.0.0.1:8787.";
-        }
-        return "API de compactação offline neste domínio. O site precisa estar publicado como servidor Node/Docker com FFmpeg; publicação estática não compacta vídeos.";
-      }
-
-      async function checkVideoCompressorAvailability() {
-        try {
-          const response = await withVideoTimeout(
-            fetch(getVideoServerUrl("/health"), { cache: "no-store" }),
-            65000,
-            "API de compactação demorou demais para responder."
-          );
-          if (!response.ok) throw new Error("API de compactação indisponivel.");
-          const data = await response.json();
-          if (!data.ffmpeg) {
-            setVideoStatus("API online, mas FFmpeg não está instalado no servidor. Publique usando o Dockerfile ou configure FFmpeg.", "error");
-            return false;
-          }
-          return true;
-        } catch (error) {
-          setVideoStatus(getVideoApiOfflineMessage(), "error");
-          return false;
-        }
-      }
-
-      function openVideoLibraryDb() {
-        return new Promise((resolve, reject) => {
-          if (!window.indexedDB) {
-            reject(new Error("IndexedDB indisponivel neste navegador."));
-            return;
-          }
-          const request = indexedDB.open(VIDEO_DB_NAME, 1);
-          request.onupgradeneeded = () => {
-            const db = request.result;
-            if (!db.objectStoreNames.contains(VIDEO_STORE_NAME)) {
-              const store = db.createObjectStore(VIDEO_STORE_NAME, { keyPath: "id" });
-              store.createIndex("createdAt", "createdAt");
-              store.createIndex("folder", "folder");
-            }
-          };
-          request.onsuccess = () => resolve(request.result);
-          request.onerror = () => reject(request.error || new Error("Falha ao abrir biblioteca de videos."));
-        });
-      }
-
-      async function saveVideoRecord(record) {
-        const db = await openVideoLibraryDb();
-        return new Promise((resolve, reject) => {
-          const transaction = db.transaction(VIDEO_STORE_NAME, "readwrite");
-          transaction.objectStore(VIDEO_STORE_NAME).put(record);
-          transaction.oncomplete = () => {
-            db.close();
-            resolve();
-          };
-          transaction.onerror = () => {
-            db.close();
-            reject(transaction.error || new Error("Falha ao salvar video."));
-          };
-        });
-      }
-
-      async function deleteVideoRecord(id) {
-        const db = await openVideoLibraryDb();
-        return new Promise((resolve, reject) => {
-          const transaction = db.transaction(VIDEO_STORE_NAME, "readwrite");
-          transaction.objectStore(VIDEO_STORE_NAME).delete(id);
-          transaction.oncomplete = () => {
-            db.close();
-            resolve();
-          };
-          transaction.onerror = () => {
-            db.close();
-            reject(transaction.error || new Error("Falha ao remover video."));
-          };
-        });
-      }
-
-      async function getVideoRecords() {
-        const db = await openVideoLibraryDb();
-        return new Promise((resolve, reject) => {
-          const transaction = db.transaction(VIDEO_STORE_NAME, "readonly");
-          const request = transaction.objectStore(VIDEO_STORE_NAME).getAll();
-          let records = [];
-          request.onsuccess = () => {
-            records = request.result || [];
-          };
-          request.onerror = () => {
-            db.close();
-            reject(request.error || new Error("Falha ao listar videos."));
-          };
-          transaction.oncomplete = () => {
-            db.close();
-            resolve(records.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))));
-          };
-          transaction.onerror = () => {
-            db.close();
-            reject(transaction.error || new Error("Falha ao listar videos."));
-          };
-        });
-      }
-
-      function getVideoMimeExtension(mime = "") {
-        return "mp4";
-      }
-
-      function makeSafeVideoFileName(name, folder, mime) {
-        const safeFolder = normalize(folder || "videos").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "videos";
-        const slug = normalize(name || "video").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 64) || "video";
-        return `${safeFolder}-${slug}-16mb.${getVideoMimeExtension(mime)}`;
-      }
-
-      function getVideoServerUrl(path) {
-        const base = VIDEO_API_BASE_URL.replace(/\/$/, "");
-        const suffix = String(path || "").startsWith("/") ? String(path || "") : `/${path || ""}`;
-        return `${base}${suffix}`;
-      }
-
-      async function getSharedVideoRecords() {
-        const response = await withVideoTimeout(
-          fetch(getVideoServerUrl("/api/videos"), { cache: "no-store" }),
-          15000,
-          "A biblioteca compartilhada demorou demais para responder."
-        );
-        if (!response.ok) throw new Error("Nao foi possivel carregar a biblioteca compartilhada.");
-        const data = await response.json();
-        return (data.videos || []).map((video) => ({ ...video, shared: true }));
-      }
-
-      async function uploadSharedVideoRecord(record, blob) {
-        const data = new FormData();
-        data.append("video", blob, record.fileName || "video-16mb.mp4");
-        data.append("name", record.name || "Video");
-        data.append("brand", record.brand || "Outros");
-        data.append("folder", record.folder || "Outros");
-        data.append("originalSize", String(record.originalSize || record.size || blob.size || 0));
-        const response = await withVideoTimeout(
-          fetch(getVideoServerUrl("/api/videos"), {
-            method: "POST",
-            body: data
-          }),
-          5 * 60 * 1000,
-          "O servidor demorou demais para salvar o video compartilhado."
-        );
-        if (!response.ok) {
-          let message = "Nao foi possivel salvar o video na biblioteca compartilhada.";
-          try {
-            const errorData = await response.json();
-            if (errorData?.error) message = errorData.error;
-          } catch (error) {}
-          throw new Error(message);
-        }
-        const saved = await response.json();
-        return { ...(saved.video || record), shared: true };
-      }
-
-      function encodeVideoHeader(value) {
-        return encodeURIComponent(String(value || ""));
-      }
-
-      async function startSharedVideoCompressionJob(file, record) {
-        setVideoStatus("Enviando video para o servidor de compactacao...");
-        setVideoProgress(5, true);
-        state.videoCompressor.compressionStartedAt = Date.now();
-        setVideoEta(5, state.videoCompressor.compressionStartedAt, "Enviando para o servidor...");
-        const response = await withVideoTimeout(
-          fetch(getVideoServerUrl("/api/compress-video-job"), {
-            method: "POST",
-            headers: {
-              "Content-Type": file.type || "application/octet-stream",
-              "X-File-Name": encodeVideoHeader(file.name || "video.mp4"),
-              "X-Target-Bytes": String(Math.floor(VIDEO_MAX_BYTES * 0.94)),
-              "X-Video-Name": encodeVideoHeader(record.name || "Video"),
-              "X-Video-Brand": encodeVideoHeader(record.brand || "Outros"),
-              "X-Video-Folder": encodeVideoHeader(record.folder || "Outros"),
-              "X-Original-Size": String(record.originalSize || file.size || 0)
-            },
-            body: file
-          }),
-          10 * 60 * 1000,
-          "O upload do video demorou demais."
-        );
-        if (!response.ok) {
-          let message = "Nao foi possivel iniciar a compactacao no servidor.";
-          try {
-            const errorData = await response.json();
-            if (errorData?.error) message = errorData.error;
-          } catch (error) {}
-          throw new Error(message);
-        }
-        const dataResponse = await response.json();
-        return dataResponse.job;
-      }
-
-      async function waitSharedVideoCompressionJob(jobId) {
-        let lastProgress = 5;
-        let sameProgressReads = 0;
-        const startedAt = state.videoCompressor.compressionStartedAt || Date.now();
-        state.videoCompressor.compressionStartedAt = startedAt;
-        for (let attempt = 0; attempt < 900; attempt += 1) {
-          await new Promise((resolve) => window.setTimeout(resolve, 1800));
-          const response = await withVideoTimeout(
-            fetch(getVideoServerUrl(`/api/compress-video-job/${encodeURIComponent(jobId)}`), { cache: "no-store" }),
-            15000,
-            "O servidor demorou demais para atualizar o progresso."
-          );
-          if (!response.ok) {
-            let message = "Nao foi possivel consultar o progresso da compactacao.";
-            try {
-              const errorData = await response.json();
-              if (errorData?.error) message = errorData.error;
-            } catch (error) {}
-            throw new Error(message);
-          }
-          const dataResponse = await response.json();
-          const job = dataResponse.job || {};
-          const progress = Math.max(lastProgress, Math.min(100, Number(job.progress) || lastProgress));
-          sameProgressReads = progress === lastProgress ? sameProgressReads + 1 : 0;
-          lastProgress = progress;
-          setVideoProgress(progress, true);
-          setVideoEta(progress, startedAt);
-          const slowHint = sameProgressReads >= 8
-            ? " O Render Free pode demorar nesta etapa, mas o processamento continua."
-            : "";
-          setVideoStatus(`${job.message || "Compactando video..."} ${Math.round(progress)}%${slowHint}`);
-          if (job.status === "done" && job.video) {
-            return { ...job.video, shared: true };
-          }
-          if (job.status === "error") {
-            throw new Error(job.error || "Falha ao compactar video.");
-          }
-        }
-        throw new Error("A compactacao demorou demais. Tente novamente com um video menor.");
-      }
-
-      async function deleteSharedVideoRecord(id) {
-        const response = await withVideoTimeout(
-          fetch(getVideoServerUrl(`/api/videos/${encodeURIComponent(id)}`), { method: "DELETE" }),
-          15000,
-          "O servidor demorou demais para remover o video."
-        );
-        if (!response.ok) throw new Error("Nao foi possivel remover o video compartilhado.");
-      }
-
-      async function renderVideoLibrary() {
-        if (!el.videoLibrary) return;
-        try {
-          let videos = [];
-          let sharedOnline = false;
-          try {
-            const sharedVideos = await getSharedVideoRecords();
-            sharedOnline = true;
-            const localVideos = await getVideoRecords().catch(() => []);
-            const sharedIds = new Set(sharedVideos.map((video) => video.id));
-            videos = [
-              ...sharedVideos,
-              ...localVideos
-                .filter((video) => !sharedIds.has(video.id))
-                .map((video) => ({ ...video, localOnly: true }))
-            ];
-          } catch (error) {
-            videos = (await getVideoRecords()).map((video) => ({ ...video, localOnly: true }));
-          }
-          state.videoCompressor.videos = videos;
-          if (!videos.length) {
-            el.videoLibrary.innerHTML = `<p class="muted">${sharedOnline ? "Nenhum video compartilhado ainda." : "Nenhum video salvo ainda."}</p>`;
-            return;
-          }
-          const selectedFolder = state.videoCompressor.selectedFolder || "";
-          const visibleVideos = selectedFolder
-            ? videos.filter((video) => (video.folder || "Outros") === selectedFolder)
-            : videos;
-          if (!visibleVideos.length) {
-            el.videoLibrary.innerHTML = `<p class="muted">Nenhum video salvo na pasta ${escapeHtml(selectedFolder || "selecionada")}.</p>`;
-            return;
-          }
-          const groups = visibleVideos.reduce((acc, video) => {
-            const folder = video.folder || "Outros";
-            if (!acc[folder]) acc[folder] = [];
-            acc[folder].push(video);
-            return acc;
-          }, {});
-          el.videoLibrary.innerHTML = Object.entries(groups).map(([folder, items]) => `
-            <section class="video-library-group">
-              <div class="video-library-title">
-                <span>Pasta ${escapeHtml(folder)}</span>
-                <span class="video-library-count">${items.length} video${items.length === 1 ? "" : "s"}</span>
-              </div>
-              ${items.map((video) => `
-                <article class="video-card" data-video-id="${escapeHtml(video.id)}">
-                  <div class="video-card-head">
-                    <div>
-                      <h4>${escapeHtml(video.name)}</h4>
-                      <p>${escapeHtml(video.brand || folder)} · ${escapeHtml(video.fileName)} · ${formatFileSize(video.size)}</p>
-                      <p>Original: ${formatFileSize(video.originalSize || video.size)} · Salvo em ${escapeHtml(new Date(video.createdAt).toLocaleString("pt-BR"))}</p>
-                      <p>${video.localOnly ? "Biblioteca local deste navegador" : "Biblioteca compartilhada entre usuarios"}</p>
-                    </div>
-                  </div>
-                  <div class="video-card-actions">
-                    <button class="btn" type="button" data-video-download="${escapeHtml(video.id)}">Baixar video</button>
-                    <button class="btn ghost" type="button" data-video-delete="${escapeHtml(video.id)}">Remover</button>
-                  </div>
-                </article>
-              `).join("")}
-            </section>
-          `).join("");
-        } catch (error) {
-          el.videoLibrary.innerHTML = `<p class="muted">Nao foi possivel carregar a biblioteca local de videos.</p>`;
-        }
-      }
-
-      function getSelectedVideoRecord(id) {
-        return state.videoCompressor.videos.find((video) => video.id === id);
-      }
-
-      function downloadStoredVideo(id) {
-        const video = getSelectedVideoRecord(id);
-        if (video?.downloadUrl) {
-          const link = document.createElement("a");
-          link.href = getVideoServerUrl(video.downloadUrl);
-          link.download = video.fileName || makeSafeVideoFileName(video.name, video.folder, video.mimeType);
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-          return;
-        }
-        if (!video?.blob) {
-          showToast("Video nao encontrado na biblioteca.");
-          return;
-        }
-        const url = URL.createObjectURL(video.blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = video.fileName || makeSafeVideoFileName(video.name, video.folder, video.mimeType);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 1500);
-      }
-
-      function getBestVideoRecorderMime() {
-        const options = [
-          "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
-          "video/mp4;codecs=avc1.4D401E,mp4a.40.2",
-          "video/mp4;codecs=h264,aac",
-          "video/mp4"
-        ];
-        return options.find((mime) => window.MediaRecorder?.isTypeSupported?.(mime)) || "";
-      }
-
-      function loadVideoMetadata(file) {
-        return new Promise((resolve, reject) => {
-          const url = URL.createObjectURL(file);
-          const video = document.createElement("video");
-          video.preload = "metadata";
-          video.src = url;
-          video.onloadedmetadata = () => {
-            const duration = Number.isFinite(video.duration) ? video.duration : 0;
-            URL.revokeObjectURL(url);
-            resolve({ duration });
-          };
-          video.onerror = () => {
-            URL.revokeObjectURL(url);
-            reject(new Error("Nao foi possivel ler o video."));
-          };
-        });
-      }
-
-      async function recordVideoToTarget(file, targetBytes) {
-        if (!window.MediaRecorder) throw new Error("Este navegador nao suporta compactacao de video.");
-        const mimeType = getBestVideoRecorderMime();
-        if (!mimeType) throw new Error("Este navegador nao suporta compactar diretamente em MP4. Use Chrome/Edge atualizado ou uma versao com compactacao MP4 por servidor.");
-        const metadata = await loadVideoMetadata(file);
-        const duration = Math.max(1, metadata.duration || 1);
-        const bitsPerSecond = Math.max(180000, Math.floor((targetBytes * 8) / duration));
-        const url = URL.createObjectURL(file);
-        const video = document.createElement("video");
-        video.src = url;
-        video.muted = true;
-        video.defaultMuted = true;
-        video.volume = 0;
-        video.setAttribute("muted", "");
-        video.playsInline = true;
-        video.preload = "auto";
-        video.style.position = "fixed";
-        video.style.left = "-9999px";
-        video.style.top = "0";
-        video.style.width = "1px";
-        video.style.height = "1px";
-        video.style.opacity = "0.01";
-        document.body.appendChild(video);
-
-        await new Promise((resolve, reject) => {
-          video.oncanplay = resolve;
-          video.onerror = () => reject(new Error("Nao foi possivel preparar o video."));
-        });
-
-        const stream = typeof video.captureStream === "function" ? video.captureStream() : null;
-        if (!stream) {
-          video.remove();
-          URL.revokeObjectURL(url);
-          throw new Error("Este navegador nao permite capturar o video para compactar.");
-        }
-
-        const chunks = [];
-        const recorder = new MediaRecorder(stream, { mimeType, bitsPerSecond });
-        const blob = await new Promise((resolve, reject) => {
-          const cleanup = () => {
-            stream.getTracks().forEach((track) => track.stop());
-            video.pause();
-            video.remove();
-            URL.revokeObjectURL(url);
-          };
-          const timer = window.setInterval(() => {
-            const progress = duration ? (video.currentTime / duration) * 100 : 0;
-            setVideoProgress(progress, true);
-          }, 250);
-
-          recorder.ondataavailable = (event) => {
-            if (event.data?.size) chunks.push(event.data);
-          };
-          recorder.onerror = () => {
-            window.clearInterval(timer);
-            cleanup();
-            reject(recorder.error || new Error("Falha ao compactar video."));
-          };
-          recorder.onstop = () => {
-            window.clearInterval(timer);
-            cleanup();
-            setVideoProgress(100, true);
-            resolve(new Blob(chunks, { type: "video/mp4" }));
-          };
-          video.onended = () => {
-            if (recorder.state !== "inactive") recorder.stop();
-          };
-
-          recorder.start(1000);
-          video.play().catch((error) => {
-            window.clearInterval(timer);
-            cleanup();
-            reject(error);
-          });
-        });
-
-        return blob;
-      }
-
-      function isMp4VideoFile(file) {
-        return /mp4/i.test(file?.type || "") || /\.mp4$/i.test(file?.name || "");
-      }
-
-      function getVideoInputExtension(file) {
-        const fromName = String(file?.name || "").split(".").pop();
-        if (fromName && fromName.length <= 5) return normalize(fromName).replace(/[^a-z0-9]/g, "") || "mp4";
-        if (/quicktime|mov/i.test(file?.type || "")) return "mov";
-        if (/webm/i.test(file?.type || "")) return "webm";
-        if (/mp4/i.test(file?.type || "")) return "mp4";
-        return "mp4";
-      }
-
-      async function loadVideoFfmpegModules() {
-        if (!state.videoCompressor.ffmpegModules) {
-          state.videoCompressor.ffmpegModules = withVideoTimeout(
-            Promise.all([
-              import(VIDEO_FFMPEG_IMPORT_URL),
-              import(VIDEO_FFMPEG_UTIL_IMPORT_URL)
-            ]).then(([ffmpegModule, utilModule]) => ({
-              FFmpeg: ffmpegModule.FFmpeg,
-              fetchFile: utilModule.fetchFile,
-              toBlobURL: utilModule.toBlobURL
-            })),
-            45000,
-            "O motor do compactador demorou demais para carregar. Confira a internet e tente novamente."
-          );
-        }
-        return state.videoCompressor.ffmpegModules;
-      }
-
-      async function getVideoFfmpegClassWorkerURL() {
-        if (state.videoCompressor.classWorkerURL) return state.videoCompressor.classWorkerURL;
-        const response = await withVideoTimeout(
-          fetch(VIDEO_FFMPEG_WORKER_URL),
-          30000,
-          "Nao foi possivel baixar o Worker do compactador a tempo."
-        );
-        if (!response.ok) {
-          throw new Error("Nao foi possivel carregar o Worker do compactador de video.");
-        }
-        const source = await response.text();
-        const patchedSource = source.replace(/from\s+["']\.\/([^"']+)["']/g, (_match, fileName) => {
-          return `from "${VIDEO_FFMPEG_ESM_BASE}/${fileName}"`;
-        });
-        state.videoCompressor.classWorkerURL = URL.createObjectURL(
-          new Blob([patchedSource], { type: "text/javascript" })
-        );
-        return state.videoCompressor.classWorkerURL;
-      }
-
-      async function getVideoFfmpeg() {
-        if (state.videoCompressor.ffmpeg) return state.videoCompressor.ffmpeg;
-        if (!state.videoCompressor.ffmpegLoading) {
-          state.videoCompressor.ffmpegLoading = (async () => {
-            setVideoProgress(2, true);
-            setVideoStatus("Carregando biblioteca do compactador. Na primeira vez pode demorar um pouco...");
-            const { FFmpeg, toBlobURL } = await loadVideoFfmpegModules();
-            setVideoProgress(10, true);
-            setVideoStatus("Preparando Worker interno do compactador...");
-            const classWorkerURL = await getVideoFfmpegClassWorkerURL();
-            setVideoProgress(20, true);
-            setVideoStatus("Baixando nucleo de video do compactador...");
-            const coreURL = await withVideoTimeout(
-              toBlobURL(`${VIDEO_FFMPEG_CORE_BASE}/ffmpeg-core.js`, "text/javascript"),
-              60000,
-              "O nucleo do compactador demorou demais para baixar."
-            );
-            setVideoProgress(35, true);
-            setVideoStatus("Baixando motor WASM do compactador...");
-            const wasmURL = await withVideoTimeout(
-              toBlobURL(`${VIDEO_FFMPEG_CORE_BASE}/ffmpeg-core.wasm`, "application/wasm"),
-              90000,
-              "O motor WASM do compactador demorou demais para baixar."
-            );
-            setVideoProgress(55, true);
-            setVideoStatus("Inicializando compactador em segundo plano...");
-            const ffmpeg = new FFmpeg();
-            ffmpeg.on("progress", ({ progress }) => {
-              const value = Math.max(0, Math.min(100, (Number(progress) || 0) * 100));
-              if (state.videoCompressor.busy) setVideoProgress(value, true);
-            });
-            await withVideoTimeout(
-              ffmpeg.load({ classWorkerURL, coreURL, wasmURL }),
-              90000,
-              "O compactador travou ao inicializar. Recarregue a pagina e tente novamente."
-            );
-            setVideoProgress(70, true);
-            state.videoCompressor.ffmpeg = ffmpeg;
-            return ffmpeg;
-          })().catch((error) => {
-            state.videoCompressor.ffmpegLoading = null;
-            if (state.videoCompressor.ffmpeg?.terminate) {
-              try { state.videoCompressor.ffmpeg.terminate(); } catch (terminateError) {}
-            }
-            state.videoCompressor.ffmpeg = null;
-            throw error;
-          });
-        }
-        return state.videoCompressor.ffmpegLoading;
-      }
-
-      async function compressVideoWithFfmpeg(file, targetBytes) {
-        const ffmpeg = await getVideoFfmpeg();
-        const { fetchFile } = await loadVideoFfmpegModules();
-        const metadata = await loadVideoMetadata(file);
-        const duration = Math.max(1, metadata.duration || 1);
-        const totalBitrate = Math.max(220000, Math.floor((targetBytes * 8) / duration));
-        const audioBitrate = Math.min(128000, Math.max(48000, Math.floor(totalBitrate * 0.16)));
-        const videoBitrate = Math.max(140000, totalBitrate - audioBitrate);
-        const token = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-        const inputName = `input-${token}.${getVideoInputExtension(file)}`;
-        const outputName = `output-${token}.mp4`;
-
-        await ffmpeg.writeFile(inputName, await fetchFile(file));
-        try {
-          await ffmpeg.exec([
-            "-i", inputName,
-            "-map", "0:v:0",
-            "-map", "0:a?",
-            "-c:v", "libx264",
-            "-preset", "veryfast",
-            "-b:v", `${Math.floor(videoBitrate / 1000)}k`,
-            "-maxrate", `${Math.floor(videoBitrate / 1000)}k`,
-            "-bufsize", `${Math.floor((videoBitrate * 2) / 1000)}k`,
-            "-pix_fmt", "yuv420p",
-            "-c:a", "aac",
-            "-b:a", `${Math.floor(audioBitrate / 1000)}k`,
-            "-movflags", "+faststart",
-            outputName
-          ]);
-          const data = await ffmpeg.readFile(outputName);
-          return new Blob([data], { type: "video/mp4" });
-        } finally {
-          try { await ffmpeg.deleteFile(inputName); } catch (error) {}
-          try { await ffmpeg.deleteFile(outputName); } catch (error) {}
-        }
-      }
-
-      async function compressVideoWithLocalServer(file, targetBytes) {
-        const data = new FormData();
-        data.append("video", file, file.name || "video");
-        data.append("targetBytes", String(targetBytes));
-        const response = await withVideoTimeout(
-          fetch(VIDEO_COMPRESSOR_API_URL, {
-            method: "POST",
-            body: data
-          }),
-          20 * 60 * 1000,
-          "O servidor de compactação demorou demais para responder."
-        );
-        if (!response.ok) {
-          let message = "Nao foi possivel compactar pelo servidor de compactação.";
-          try {
-            const errorData = await response.json();
-            if (errorData?.error) message = errorData.error;
-          } catch (error) {}
-          throw new Error(message);
-        }
-        return response.blob();
-      }
-
-      async function compressVideoToLimit(file) {
-        if (file.size <= VIDEO_MAX_BYTES && isMp4VideoFile(file)) {
-          return { blob: file, mimeType: "video/mp4", compressed: false };
-        }
-        let bestBlob = null;
-        for (const ratio of [0.86, 0.7, 0.55]) {
-          const action = file.size > VIDEO_MAX_BYTES ? "Compactando" : "Convertendo";
-          setVideoStatus(`${action} pelo servidor para MP4 ate 16MB (${Math.round(ratio * 100)}%). Voce pode mudar de aba, mas nao feche esta pagina.`);
-          const blob = await compressVideoWithLocalServer(file, Math.floor(VIDEO_MAX_BYTES * ratio));
-          if (!bestBlob || blob.size < bestBlob.size) bestBlob = blob;
-          if (blob.size <= VIDEO_MAX_BYTES) {
-            return { blob, mimeType: "video/mp4", compressed: true };
-          }
-        }
-        return { blob: bestBlob, mimeType: "video/mp4", compressed: true };
-      }
-
-      function handleVideoFileSelected() {
-        const file = el.videoFile.files?.[0] || null;
-        state.videoCompressor.file = file;
-        setVideoProgress(0, false);
-        clearVideoEta();
-        if (!file) {
-          setVideoStatus("Nenhum video selecionado.");
-          return;
-        }
-        setVideoStatus(`Selecionado: ${file.name} (${formatFileSize(file.size)}). Limite: ${formatFileSize(VIDEO_MAX_BYTES)}.`);
-      }
-
-      async function handleCompressVideo() {
-        if (state.videoCompressor.busy) return;
-        const file = state.videoCompressor.file || el.videoFile.files?.[0];
-        const name = el.videoName.value.trim();
-        if (!name) {
-          setVideoStatus("Informe o nome do video antes de salvar.", "error");
-          el.videoName.focus();
-          return;
-        }
-        if (!file) {
-          setVideoStatus("Selecione um video para compactar.", "error");
-          return;
-        }
-        const apiReady = await checkVideoCompressorAvailability();
-        if (!apiReady) return;
-
-        const detected = getSelectedVideoBrand(name);
-        state.videoCompressor.busy = true;
-        state.videoCompressor.compressionStartedAt = Date.now();
-        el.compressVideoButton.disabled = true;
-        el.selectVideoButton.disabled = true;
-        setVideoProgress(0, file.size > VIDEO_MAX_BYTES || !isMp4VideoFile(file));
-        if (file.size > VIDEO_MAX_BYTES || !isMp4VideoFile(file)) {
-          setVideoEta(1, state.videoCompressor.compressionStartedAt, "Preparando estimativa...");
-        } else {
-          clearVideoEta();
-        }
-        setVideoStatus(file.size > VIDEO_MAX_BYTES
-          ? `Compactando em segundo plano e salvando na pasta ${detected.folder}...`
-          : isMp4VideoFile(file)
-            ? `Video MP4 ja esta dentro do limite; salvando na pasta ${detected.folder}.`
-            : `Convertendo para MP4 e salvando na pasta ${detected.folder}.`);
-
-        try {
-          const record = {
-            id: window.crypto?.randomUUID?.() || `video-${Date.now()}-${Math.random().toString(16).slice(2)}`,
-            name,
-            brand: detected.brand,
-            folder: detected.folder,
-            fileName: makeSafeVideoFileName(name, detected.folder, "video/mp4"),
-            mimeType: "video/mp4",
-            size: file.size,
-            originalSize: file.size,
-            createdAt: new Date().toISOString()
-          };
-          let finalRecord = null;
-          let compressed = false;
-          if (file.size <= VIDEO_MAX_BYTES && isMp4VideoFile(file)) {
-            setVideoProgress(35, true);
-            setVideoEta(35, state.videoCompressor.compressionStartedAt, "Salvando na biblioteca...");
-            finalRecord = await uploadSharedVideoRecord(record, file);
-          } else {
-            compressed = true;
-            const job = await startSharedVideoCompressionJob(file, record);
-            finalRecord = await waitSharedVideoCompressionJob(job.id);
-          }
-          await renderVideoLibrary();
-          setVideoProgress(100, true);
-          setVideoEta(100, state.videoCompressor.compressionStartedAt, "Concluido.");
-          setVideoStatus(`${compressed ? "Video compactado" : "Video salvo"} com ${formatFileSize(finalRecord.size)} na pasta ${finalRecord.folder}. Disponivel para todos os usuarios.`, "success");
-          showToast("Video salvo na biblioteca compartilhada.");
-        } catch (error) {
-          const message = error?.message || "Nao foi possivel compactar o video.";
-          const protocolHint = location.protocol === "file:"
-            ? " Se continuar, abra o site por http://127.0.0.1 em vez de file://."
-            : "";
-          const shouldShowApiHint = /fetch|Failed|NetworkError|API offline|indisponivel|demorou demais/i.test(message)
-            && !/Compactacao nao encontrada|acima de 16MB|video ainda ficou/i.test(message);
-          const serverHint = shouldShowApiHint
-            ? ` ${getVideoApiOfflineMessage()}`
-            : "";
-          setVideoStatus(`${message}${serverHint}${protocolHint}`, "error");
-        } finally {
-          state.videoCompressor.busy = false;
-          el.compressVideoButton.disabled = false;
-          el.selectVideoButton.disabled = false;
-          window.setTimeout(() => {
-            if (state.videoCompressor.busy) return;
-            setVideoProgress(0, false);
-            clearVideoEta();
-          }, 4500);
-        }
-      }
-
-      async function handleVideoLibraryClick(event) {
-        const downloadButton = event.target.closest("[data-video-download]");
-        const deleteButton = event.target.closest("[data-video-delete]");
-        if (downloadButton) {
-          downloadStoredVideo(downloadButton.dataset.videoDownload);
-          return;
-        }
-        if (deleteButton) {
-          const video = getSelectedVideoRecord(deleteButton.dataset.videoDelete);
-          if (video?.shared && !video.localOnly) {
-            await deleteSharedVideoRecord(video.id);
-          } else {
-            await deleteVideoRecord(deleteButton.dataset.videoDelete);
-          }
-          await renderVideoLibrary();
-          showToast("Video removido da biblioteca.");
-        }
       }
 
       function cleanReceiptControlCandidate(value) {
@@ -10029,19 +9650,6 @@ _Orcamento valido por 2 dias uteis_`;
         return `${COMPLETED_ACTIVITIES_SEED_KEY}_${state.currentUser.id}`;
       }
 
-      function getDefaultCompletedActivities() {
-        if (!state.currentUser) return {};
-        return ACTIVITY_DATA
-          .filter((activity) => (
-            activity.owner === state.currentUser.id
-            && String(activity.date || "").slice(0, 10) < COMPLETED_ACTIVITIES_SEED_CUTOFF
-          ))
-          .reduce((completed, activity) => {
-            completed[String(activity.id)] = "2026-07-02T00:00:00.000Z";
-            return completed;
-          }, {});
-      }
-
       function readCompletedActivities() {
         if (!state.currentUser) return {};
         try {
@@ -10062,43 +9670,71 @@ _Orcamento valido por 2 dias uteis_`;
       function ensureCompletedActivitiesSeed() {
         if (!state.currentUser?.showUserArea) return;
         const seedKey = getCompletedActivitiesSeedStorageKey();
-        if (localStorage.getItem(seedKey) === COMPLETED_ACTIVITIES_SEED_CUTOFF) return;
-        const seeded = {
-          ...getDefaultCompletedActivities(),
-          ...readCompletedActivities()
-        };
-        writeCompletedActivities(seeded);
-        localStorage.setItem(seedKey, COMPLETED_ACTIVITIES_SEED_CUTOFF);
+        if (localStorage.getItem(seedKey) === ACTIVITY_COMPLETION_MIGRATION_VERSION) return;
+        const existing = readCompletedActivities();
+        Object.keys(existing).forEach((activityId) => {
+          if (existing[activityId] === LEGACY_ACTIVITY_SEED_VALUE) delete existing[activityId];
+        });
+        writeCompletedActivities(existing);
+        localStorage.setItem(seedKey, ACTIVITY_COMPLETION_MIGRATION_VERSION);
+      }
+
+      function getSourceActivityCompletion(activity) {
+        const completionDate = activity.completedAt
+          || activity.completed_at
+          || activity.concludedAt
+          || activity.concluded_at
+          || activity.concluidaEm
+          || activity.concluida_em;
+        const status = normalize(activity.status || activity.situacao || activity.state || "");
+        const completedStatuses = ["completed", "complete", "done", "concluida", "concluido", "feita", "feito"];
+        const flags = [activity.completed, activity.isCompleted, activity.is_completed, activity.done];
+        const explicitFlag = flags.some((value) => value === true || ["true", "1", "sim", "yes", "concluida", "concluido", "feita", "feito"].includes(normalize(value)));
+        return completionDate || explicitFlag || completedStatuses.includes(status)
+          ? completionDate || "source-done"
+          : "";
       }
 
       function getCompletedActivities() {
         ensureCompletedActivitiesSeed();
-        return readCompletedActivities();
-      }
-
-      function setActivityCompleted(activityId, completed) {
-        if (!state.currentUser) return;
-        const completedActivities = getCompletedActivities();
-        if (completed) {
-          completedActivities[String(activityId)] = new Date().toISOString();
-        } else {
-          delete completedActivities[String(activityId)];
-        }
-        writeCompletedActivities(completedActivities);
+        const completedActivities = { ...state.activityCompletions };
+        state.activityData.forEach((activity) => {
+          const sourceCompletion = getSourceActivityCompletion(activity);
+          if (sourceCompletion) completedActivities[String(activity.id)] = sourceCompletion;
+        });
+        return completedActivities;
       }
 
       function toggleActivityCompleted(activityId) {
         const completedActivities = getCompletedActivities();
         const wasCompleted = Boolean(completedActivities[String(activityId)]);
-        setActivityCompleted(activityId, !wasCompleted);
-        renderActivities(state.activityFilter);
-        showToast(wasCompleted ? "Atividade reaberta." : "Atividade marcada como feita.");
+        try {
+          if (wasCompleted) delete completedActivities[String(activityId)];
+          else completedActivities[String(activityId)] = new Date().toISOString();
+          state.activityCompletions = completedActivities;
+          writeCompletedActivities(completedActivities);
+          renderActivities(state.activityFilter);
+          showToast(wasCompleted
+            ? "Atividade reaberta neste navegador."
+            : "Atividade concluída neste navegador.");
+        } catch (error) {
+          showToast("Não foi possível salvar a conclusão neste navegador.");
+        }
       }
 
       function renderActivities(filter = state.activityFilter) {
         if (!state.currentUser?.showUserArea) return;
         state.activityFilter = filter;
-        const userActivities = ACTIVITY_DATA.filter((activity) => activity.owner === state.currentUser.id);
+        if (!state.activitiesLoaded) {
+          [el.activityOverdueCount, el.activityTodayCount, el.activityFutureCount, el.activityCompletedCount]
+            .forEach((counter) => { counter.textContent = "—"; });
+          const message = state.activitiesError
+            ? `Não foi possível carregar a agenda: ${escapeHtml(state.activitiesError)}`
+            : "Carregando atividades privadas...";
+          el.activityList.innerHTML = `<div class="activity-empty">${message}</div>`;
+          return;
+        }
+        const userActivities = state.activityData.filter((activity) => activity.owner === state.currentUser.id);
         const completedActivities = getCompletedActivities();
         const pendingActivities = userActivities.filter((activity) => !completedActivities[String(activity.id)]);
         const buckets = {
@@ -10124,7 +9760,9 @@ _Orcamento valido por 2 dias uteis_`;
 
         const activities = buckets[filter] || [];
         if (!activities.length) {
-          el.activityList.innerHTML = '<div class="activity-empty">Nenhuma atividade neste período.</div>';
+          el.activityList.innerHTML = userActivities.length
+            ? '<div class="activity-empty">Nenhuma atividade neste período.</div>'
+            : '<div class="activity-empty">Nenhuma atividade atribuída a este usuário.</div>';
           return;
         }
 
@@ -10132,12 +9770,17 @@ _Orcamento valido por 2 dias uteis_`;
           const when = formatActivityDate(activity.date);
           const contact = activity.contact || activity.deal || "Contato não informado";
           const completedAt = completedActivities[String(activity.id)];
-          const completedWhen = completedAt ? formatActivityDate(completedAt) : null;
+          const completedWhen = completedAt && completedAt !== "source-done" ? formatActivityDate(completedAt) : null;
+          const completedInSource = getSourceActivityCompletion(activity);
           const details = [
             activity.type,
             activity.phone ? `Telefone: ${activity.phone}` : "",
             activity.email ? `Email: ${activity.email}` : "",
-            activity.deal && activity.deal !== contact ? `Negócio: ${activity.deal}` : ""
+            activity.deal && activity.deal !== contact ? `Negócio: ${activity.deal}` : "",
+            activity.project ? `Projeto: ${activity.project}` : "",
+            activity.attempts ? `Tentativas: ${activity.attempts}` : "",
+            activity.completionNote ? `Conclusão: ${activity.completionNote}` : "",
+            activity.observations
           ].filter(Boolean);
           return `
             <article class="activity-item ${filter}">
@@ -10147,12 +9790,14 @@ _Orcamento valido por 2 dias uteis_`;
                 <p><b>${escapeHtml(contact)}</b></p>
                 ${details.map((detail) => `<p>${escapeHtml(detail)}</p>`).join("")}
                 <div class="activity-actions">
-                  <button
+                  ${completedInSource
+                    ? '<span class="activity-completed-at">Concluída na base</span>'
+                    : `<button
                     class="activity-done-button ${completedAt ? "reopen" : ""}"
                     data-activity-action="toggle-completed"
                     data-activity-id="${escapeHtml(String(activity.id))}"
                     type="button"
-                  >${completedAt ? "Reabrir atividade" : "Marcar como feita"}</button>
+                  >${completedAt ? "Reabrir atividade" : "Marcar como feita"}</button>`}
                   ${completedWhen ? `<span class="activity-completed-at">Concluída em ${escapeHtml(completedWhen.date)} às ${escapeHtml(completedWhen.time)}</span>` : ""}
                 </div>
               </div>
@@ -10175,12 +9820,33 @@ _Orcamento valido por 2 dias uteis_`;
         el.profileEmail.textContent = user.email;
         el.profilePhone.textContent = user.phone;
         el.profileRole.textContent = user.role;
-        const userActivityTotal = ACTIVITY_DATA.filter((activity) => activity.owner === user.id).length;
-        const activityUpdate = window.RECARGA_CLUB_ACTIVITIES_META?.importedAt?.split("-").reverse().join("/") || "24/06/2026";
-        el.activitySource.textContent = `${userActivityTotal} atividades • Base: Criado por • ${activityUpdate}`;
+        const userActivityTotal = state.activityData.filter((activity) => activity.owner === user.id).length;
+        el.activitySource.textContent = state.activitiesLoaded
+          ? `${userActivityTotal} atividades • Agenda privada no servidor`
+          : state.activitiesError ? "Falha ao carregar atividades" : "Carregando agenda privada";
         renderActivities();
         updateCommissionCalculator();
         updateGoalForecast();
+      }
+
+      async function loadActivityData() {
+        if (!state.currentUser?.showUserArea) return;
+        state.activitiesLoaded = false;
+        state.activitiesLoading = true;
+        state.activitiesError = "";
+        renderActivities(state.activityFilter);
+        try {
+          const payload = await activityApiRequest("/api/activities", { cache: "no-store" });
+          if (payload.user?.id !== state.currentUser.id) throw new Error("A sessão não corresponde ao usuário conectado.");
+          state.activityData = Array.isArray(payload.activities) ? payload.activities : [];
+          state.activityCompletions = readCompletedActivities();
+          state.activitiesLoaded = true;
+        } catch (error) {
+          state.activitiesError = error.message || "Erro de conexão com o servidor.";
+        } finally {
+          state.activitiesLoading = false;
+          if (state.currentUser) renderUserArea();
+        }
       }
 
       function switchDash(tabName) {
@@ -10189,7 +9855,6 @@ _Orcamento valido por 2 dias uteis_`;
         document.querySelectorAll(".dash-view").forEach((view) => view.classList.remove("active"));
         const target = document.getElementById(`${tabName}View`) || el.calcView || document.getElementById("calcView");
         target.classList.add("active");
-        if (tabName === "report") updateReport();
         if (tabName === "carriers") {
           const lastAddress = state.lastCarrierAddress;
           const place = getPlaceByDdd(el.carrierDdd.value);
@@ -10200,11 +9865,11 @@ _Orcamento valido por 2 dias uteis_`;
         if (tabName === "user") renderUserArea();
       }
 
-      function enterDashboard(user) {
+      function enterDashboard(user, session = state.authSession) {
         const safeUser = { ...user };
-        delete safeUser.passwordHash;
         state.currentUser = user;
-        localStorage.setItem(SESSION_KEY, JSON.stringify(safeUser));
+        state.authSession = session;
+        persistAuthSession();
         el.auth.classList.add("hidden");
         el.dashboard.classList.add("active");
         el.userBadge.textContent = safeUser.name || safeUser.email || "Usuário ativo";
@@ -10214,9 +9879,54 @@ _Orcamento valido por 2 dias uteis_`;
         switchDash("calc");
         calculate();
         scheduleUpdateTour();
+        void loadActivityData();
       }
 
       document.querySelectorAll("[data-dash-tab]").forEach((button) => button.addEventListener("click", () => switchDash(button.dataset.dashTab)));
+      el.globalSearchInput.addEventListener("input", () => renderGlobalSearchResults(el.globalSearchInput.value));
+      el.globalSearchInput.addEventListener("focus", () => renderGlobalSearchResults(el.globalSearchInput.value));
+      el.globalSearchInput.addEventListener("keydown", (event) => {
+        const matches = state.globalSearchMatches || [];
+        if (event.key === "Escape") {
+          closeGlobalSearch();
+          return;
+        }
+        if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+          if (!matches.length) return;
+          event.preventDefault();
+          const direction = event.key === "ArrowDown" ? 1 : -1;
+          state.globalSearchActiveIndex = (state.globalSearchActiveIndex + direction + matches.length) % matches.length;
+          el.globalSearchResults.querySelectorAll("[data-search-index]").forEach((button, index) => {
+            const active = index === state.globalSearchActiveIndex;
+            button.setAttribute("aria-selected", String(active));
+            if (active) {
+              el.globalSearchInput.setAttribute("aria-activedescendant", button.id);
+              button.scrollIntoView({ block: "nearest" });
+            }
+          });
+          return;
+        }
+        if (event.key === "Enter" && !el.globalSearchResults.classList.contains("hidden")) {
+          event.preventDefault();
+          chooseGlobalSearchResult(Math.max(0, state.globalSearchActiveIndex));
+        }
+      });
+      el.globalSearchResults.addEventListener("click", (event) => {
+        const option = event.target.closest("[data-search-index]");
+        if (option) chooseGlobalSearchResult(Number(option.dataset.searchIndex));
+      });
+      document.addEventListener("pointerdown", (event) => {
+        if (!event.target.closest(".global-search")) closeGlobalSearch();
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeGlobalSearch();
+        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+          if (!el.dashboard.classList.contains("active")) return;
+          event.preventDefault();
+          el.globalSearchInput.focus();
+          el.globalSearchInput.select();
+        }
+      });
       el.startUpdateTour?.addEventListener("click", startUpdateTour);
       el.nextUpdateTour?.addEventListener("click", nextUpdateTourStep);
       el.skipUpdateTour?.addEventListener("click", endUpdateTour);
@@ -10235,24 +9945,37 @@ _Orcamento valido por 2 dias uteis_`;
       el.loginForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         const email = normalizeEmail(el.loginEmail.value);
-        const user = AUTHORIZED_USERS.find((item) => normalizeEmail(item.email) === email);
-        const passwordHash = await hashPassword(el.loginPassword.value);
-        if (!user || !passwordHash || user.passwordHash !== passwordHash) {
-          showToast("Email ou senha incorretos.");
-          return;
+        const password = el.loginPassword.value;
+        try {
+          const response = await fetch(getAppServerUrl("/api/auth/login"), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok || !payload.session || !payload.user) throw new Error(payload.error || "Não foi possível entrar.");
+          if (el.rememberLogin.checked) localStorage.setItem("recarga_club_remember_email", payload.user.email);
+          else localStorage.removeItem("recarga_club_remember_email");
+          el.loginPassword.value = "";
+          state.authSession = payload.session;
+          enterDashboard(payload.user, payload.session);
+        } catch (error) {
+          const localServerUnavailable = location.protocol === "file:" && /failed to fetch|networkerror/i.test(error.message || "");
+          showToast(localServerUnavailable
+            ? "Servidor local indisponível. Execute iniciar-servidor-recarga-club.bat e acesse http://127.0.0.1:8787."
+            : error.message || "Não foi possível conectar ao serviço de autenticação.");
         }
-        if (el.rememberLogin.checked) {
-          localStorage.setItem("recarga_club_remember_email", user.email);
-        } else {
-          localStorage.removeItem("recarga_club_remember_email");
-        }
-        el.loginPassword.value = "";
-        enterDashboard(user);
       });
 
-      el.logoutBtn.addEventListener("click", () => {
-        localStorage.removeItem(SESSION_KEY);
+      el.logoutBtn.addEventListener("click", async () => {
+        try {
+          if (state.authSession?.access_token) await activityApiRequest("/api/auth/logout", { method: "POST" });
+        } catch (error) {}
+        clearAuthSession();
         state.currentUser = null;
+        state.activityData = [];
+        state.activityCompletions = {};
+        state.activitiesLoaded = false;
         el.dashboard.classList.remove("active");
         el.auth.classList.remove("hidden");
         el.loginPassword.value = "";
@@ -10304,20 +10027,15 @@ _Orcamento valido por 2 dias uteis_`;
       });
       el.investmentValue.addEventListener("input", calculateInvestment);
       el.monthlyQty.addEventListener("input", calculateInvestment);
-      el.reportValue.addEventListener("input", updateReport);
-      el.reportEntry.addEventListener("input", updateReport);
-      el.firstPayDate.addEventListener("change", () => {
-        renderReportSchedules({ preserveDates: false });
-        updateReport();
-      });
-      el.installments.addEventListener("change", () => {
-        renderReportSchedules();
-        updateReport();
-      });
-      el.ollowLink.addEventListener("input", updateReport);
-      el.resetReport.addEventListener("click", resetReport);
-      el.copyNegotiation.addEventListener("click", () => copyText(el.negotiationText.value, "Condição copiada."));
       el.copyOcrText.addEventListener("click", () => copyText(el.ocrResult.value, "Texto da imagem copiado."));
+      el.imageToolTabExtract.addEventListener("click", () => setImageToolMode("extract"));
+      el.imageToolTabEdit.addEventListener("click", () => setImageToolMode("edit"));
+      el.imageToolTabExtract.parentElement.addEventListener("keydown", (event) => {
+        if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+        event.preventDefault();
+        const mode = event.key === "Home" || event.key === "ArrowLeft" ? "extract" : "edit";
+        setImageToolMode(mode, true);
+      });
       el.pasteOcrImage.addEventListener("click", readClipboardImage);
       el.pasteOcrImage.addEventListener("paste", handleOcrPaste);
       el.quotePressName.addEventListener("input", refreshQuoteMessage);
@@ -10338,12 +10056,6 @@ _Orcamento valido por 2 dias uteis_`;
       el.inventoryCaliberSelect.addEventListener("change", drawInventoryEditedImage);
       el.inventoryQuantity.addEventListener("input", drawInventoryEditedImage);
       el.downloadInventoryImage.addEventListener("click", downloadInventoryImage);
-      el.videoName.addEventListener("input", renderVideoBrandPreview);
-      el.videoBrandPreview.addEventListener("click", handleVideoFolderClick);
-      el.selectVideoButton.addEventListener("click", () => el.videoFile.click());
-      el.videoFile.addEventListener("change", handleVideoFileSelected);
-      el.compressVideoButton.addEventListener("click", handleCompressVideo);
-      el.videoLibrary.addEventListener("click", handleVideoLibraryClick);
       el.carrierDdd.addEventListener("input", updateCarrierByDdd);
       el.carrierCep.addEventListener("input", updateCarrierByCep);
       el.editWatermark.addEventListener("click", openWatermarkModal);
@@ -10394,28 +10106,35 @@ _Orcamento valido por 2 dias uteis_`;
       if (last.monthlyQty) el.monthlyQty.value = last.monthlyQty;
 
       applyWatermarkSettings();
-      resetReport();
+      updateDealSaver();
       renderCarrierEmpty();
-      renderVideoBrandPreview();
-      renderVideoLibrary();
       loadSheet();
       updateCommissionCalculator();
       updateGoalForecast();
-      let session = null;
-      try {
-        session = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
-      } catch (error) {
-        localStorage.removeItem(SESSION_KEY);
-      }
-      const authorizedSession = session
-        ? AUTHORIZED_USERS.find((user) => user.id === session.id && normalizeEmail(user.email) === normalizeEmail(session.email))
-        : null;
-      if (authorizedSession) {
-        enterDashboard(authorizedSession);
-      } else if (session) {
-        localStorage.removeItem(SESSION_KEY);
-      }
+      localStorage.removeItem("recarga_club_session_v3");
+      void restoreActivitySession();
       calculate();
+
+      async function restoreActivitySession() {
+        let session = null;
+        try {
+          session = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+        } catch (error) {
+          clearAuthSession();
+        }
+        if (!session?.access_token || !session?.refresh_token) {
+          clearAuthSession();
+          return;
+        }
+        state.authSession = session;
+        try {
+          const payload = await activityApiRequest("/api/auth/session", { cache: "no-store" });
+          enterDashboard(payload.user, state.authSession);
+        } catch (error) {
+          clearAuthSession();
+          state.currentUser = null;
+        }
+      }
     </script>
   </body>
 </html>

@@ -7,7 +7,5 @@ services:
     dockerContext: .
     healthCheckPath: /health
     envVars:
-      - key: VIDEO_LIBRARY_DIR
-        value: /data/videos
-      - key: SUPABASE_BUCKET
-        value: videos
+      - key: ACTIVITY_DATA_FILE
+        value: /etc/secrets/recarga-agenda.json
