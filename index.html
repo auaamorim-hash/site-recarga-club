@@ -8077,15 +8077,27 @@ _Orcamento valido por 2 dias uteis_`;
           const lineHeight = Math.max(...line.words.map((word) => word.bbox.y1 - word.bbox.y0), 10);
           const checkboxSizeHint = Math.max(12, Math.min(17, lineHeight * 0.92));
           const firstLabelWord = labelWords.find((word) => /[A-Za-zÀ-ÿ]/.test(word.text)) || labelWords[0];
-          const labelStartX = firstLabelWord?.bbox?.x0 || bitmap.width * 0.14;
+          const hasLabelAnchor = Boolean(firstLabelWord?.bbox?.x0);
+          const labelStartX = firstLabelWord?.bbox?.x0 || bitmap.width * 0.12;
+          const labelTextHeights = labelWords
+            .filter((word) => /[A-Za-zÀ-ÿ]/.test(word.text))
+            .map((word) => word.bbox.y1 - word.bbox.y0)
+            .filter((height) => height > 0)
+            .sort((a, b) => a - b);
+          const rowTextHeight = labelTextHeights.length
+            ? labelTextHeights[Math.floor(labelTextHeights.length / 2)]
+            : lineHeight;
 
           rows.push({
             label,
             quantity,
             quantityBox: quantityWord.bbox,
             lineY: line.y,
+            rowTextHeight,
             labelStartX,
-            checkboxCenterX: Math.max(checkboxSizeHint, labelStartX - Math.max(14, checkboxSizeHint * 1.05))
+            checkboxCenterX: hasLabelAnchor
+              ? Math.max(checkboxSizeHint, labelStartX - Math.max(20, checkboxSizeHint * 1.65))
+              : bitmap.width * 0.095
           });
         });
 
@@ -8122,8 +8134,8 @@ _Orcamento valido por 2 dias uteis_`;
 
       function findInventoryCheckboxBox(ctx, selected, checkboxSize, canvas) {
         const labelStartX = selected.labelStartX || canvas.width * 0.14;
-        const expectedCenterX = selected.checkboxCenterX || (labelStartX - Math.max(14, checkboxSize));
-        const searchWidth = Math.max(46, checkboxSize * 4.2);
+        const expectedCenterX = selected.checkboxCenterX || (labelStartX - Math.max(20, checkboxSize * 1.65));
+        const searchWidth = Math.max(42, checkboxSize * 3.6);
         const sx = Math.max(0, Math.round(expectedCenterX - searchWidth / 2));
         const ex = Math.min(canvas.width, Math.round(Math.min(labelStartX - 3, expectedCenterX + searchWidth / 2)));
         const sy = Math.max(0, Math.round(selected.lineY - checkboxSize * 1.55));
@@ -8227,13 +8239,15 @@ _Orcamento valido por 2 dias uteis_`;
 
         const box = selected.quantityBox;
         const sourceHeight = Math.max(8, box.y1 - box.y0);
-        const fontSize = Math.max(9, Math.round(sourceHeight * 0.82));
-        ctx.font = `400 ${fontSize}px Arial, Helvetica, sans-serif`;
+        const rowTextHeight = Math.max(sourceHeight, selected.rowTextHeight || sourceHeight);
+        const fontSize = Math.max(13, Math.round(rowTextHeight * 1.08));
+        const checkboxSize = Math.max(11, Math.min(17, rowTextHeight * 0.82));
+        const detectedCheckbox = findInventoryCheckboxBox(ctx, selected, checkboxSize, canvas);
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
         const centerX = (box.x0 + box.x1) / 2;
-        const centerY = (box.y0 + box.y1) / 2;
+        const centerY = selected.lineY || (box.y0 + box.y1) / 2;
         const textWidth = ctx.measureText(quantity).width;
         const coverWidth = Math.max(box.x1 - box.x0 + 3, textWidth + 3);
         const coverHeight = Math.max(sourceHeight + 3, fontSize + 2);
@@ -8258,8 +8272,6 @@ _Orcamento valido por 2 dias uteis_`;
         ctx.fillStyle = "#50545a";
         ctx.fillText(quantity, centerX, centerY);
 
-        const checkboxSize = Math.max(11, Math.min(16, sourceHeight * 0.92));
-        const detectedCheckbox = findInventoryCheckboxBox(ctx, selected, checkboxSize, canvas);
         const checkboxCenterX = detectedCheckbox?.cx || selected.checkboxCenterX || (selected.labelStartX - Math.max(14, checkboxSize));
         const checkboxCenterY = detectedCheckbox?.cy || selected.lineY;
         const checkSize = Math.max(11, Math.min(16, detectedCheckbox?.size || checkboxSize));
