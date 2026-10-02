@@ -518,136 +518,6 @@
         gap: 10px;
       }
 
-      .goal-top-pulse {
-        flex: 1 1 420px;
-        min-width: min(100%, 320px);
-        max-width: 680px;
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        padding: 9px 14px 9px 10px;
-        border: 1px solid rgba(254, 195, 43, 0.34);
-        border-radius: 999px;
-        color: var(--text);
-        background: linear-gradient(135deg, rgba(254, 195, 43, 0.14), rgba(57, 255, 136, 0.08));
-        box-shadow: 0 14px 36px rgba(254, 195, 43, 0.12);
-        animation: goalPulseGlow 2.6s ease-in-out infinite;
-        overflow: hidden;
-      }
-
-      .goal-top-pulse.hidden {
-        display: none;
-      }
-
-      .goal-pulse-icon {
-        flex: 0 0 auto;
-        display: grid;
-        place-items: center;
-        width: 34px;
-        height: 34px;
-        border-radius: 999px;
-        color: #111111;
-        background: var(--yellow);
-        font-family: Saira, "Segoe UI", system-ui, sans-serif;
-        font-size: 0.78rem;
-        font-weight: 800;
-        line-height: 1;
-        letter-spacing: 0;
-        font-variant-numeric: tabular-nums;
-        box-shadow: 0 0 0 0 rgba(254, 195, 43, 0.44);
-        animation: pulse 1.8s infinite;
-        transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
-      }
-
-      .goal-pulse-text {
-        min-width: 0;
-        color: var(--text);
-        font-size: 0.88rem;
-        font-weight: 900;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .goal-pulse-text strong {
-        color: var(--green);
-        transition: color 0.25s ease;
-      }
-
-      .goal-top-pulse.goal-pace-danger {
-        border-color: rgba(255, 66, 66, 0.32);
-        background: linear-gradient(135deg, rgba(255, 66, 66, 0.12), rgba(254, 195, 43, 0.05));
-        box-shadow: 0 14px 36px rgba(255, 66, 66, 0.12);
-      }
-
-      .goal-top-pulse.goal-pace-danger .goal-pulse-icon {
-        color: #ffffff;
-        background: var(--red);
-        box-shadow: 0 0 0 0 rgba(255, 66, 66, 0.38);
-      }
-
-      .goal-top-pulse.goal-pace-danger .goal-pulse-text strong {
-        color: var(--red);
-      }
-
-      .goal-top-pulse.goal-pace-warning {
-        border-color: rgba(254, 195, 43, 0.42);
-        background: linear-gradient(135deg, rgba(254, 195, 43, 0.16), rgba(254, 195, 43, 0.06));
-        box-shadow: 0 14px 36px rgba(254, 195, 43, 0.14);
-      }
-
-      .goal-top-pulse.goal-pace-warning .goal-pulse-icon {
-        color: #171717;
-        background: var(--yellow);
-        box-shadow: 0 0 0 0 rgba(254, 195, 43, 0.42);
-      }
-
-      .goal-top-pulse.goal-pace-warning .goal-pulse-text strong {
-        color: #d89b00;
-      }
-
-      .goal-top-pulse.goal-pace-ok {
-        border-color: rgba(134, 239, 172, 0.34);
-        background: linear-gradient(135deg, rgba(134, 239, 172, 0.14), rgba(57, 255, 136, 0.06));
-        box-shadow: 0 14px 36px rgba(34, 197, 94, 0.12);
-      }
-
-      .goal-top-pulse.goal-pace-ok .goal-pulse-icon {
-        color: #052e16;
-        background: #86efac;
-        box-shadow: 0 0 0 0 rgba(134, 239, 172, 0.38);
-      }
-
-      .goal-top-pulse.goal-pace-ok .goal-pulse-text strong {
-        color: #16a34a;
-      }
-
-      .goal-top-pulse.goal-pace-ahead {
-        border-color: rgba(22, 101, 52, 0.36);
-        background: linear-gradient(135deg, rgba(22, 101, 52, 0.15), rgba(34, 197, 94, 0.07));
-        box-shadow: 0 14px 36px rgba(22, 101, 52, 0.14);
-      }
-
-      .goal-top-pulse.goal-pace-ahead .goal-pulse-icon {
-        color: #ffffff;
-        background: #166534;
-        box-shadow: 0 0 0 0 rgba(22, 101, 52, 0.42);
-      }
-
-      .goal-top-pulse.goal-pace-ahead .goal-pulse-text strong {
-        color: #166534;
-      }
-
-      .goal-top-pulse.goal-top-success {
-        border-color: rgba(22, 163, 74, 0.32);
-        background: linear-gradient(135deg, rgba(22, 163, 74, 0.14), rgba(254, 195, 43, 0.08));
-      }
-
-      .goal-top-pulse.goal-top-success .goal-pulse-icon {
-        color: #ffffff;
-        background: var(--green);
-      }
-
       .badge {
         min-height: 34px;
         display: inline-flex;
@@ -1651,6 +1521,221 @@
 
       .quote-installment-item b {
         color: #0f9f5a;
+      }
+
+      .quote-commission-controls,
+      .quote-commission-result {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+      }
+
+      .quote-commission-result > div {
+        display: grid;
+        gap: 5px;
+        min-width: 0;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: rgba(255, 255, 255, 0.035);
+      }
+
+      .quote-commission-result span {
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+
+      .quote-commission-result strong {
+        color: var(--text);
+        overflow-wrap: anywhere;
+      }
+
+      .quote-primary-actions {
+        margin-top: 10px;
+      }
+
+      .quote-commission-toggle {
+        width: auto;
+        justify-self: start;
+        margin-top: 10px;
+      }
+
+      .quote-commission-panel {
+        gap: 12px;
+      }
+
+      .quote-commission-summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 0;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .quote-commission-amount {
+        display: grid;
+        align-content: center;
+        gap: 6px;
+        min-width: 0;
+      }
+
+      .quote-commission-amount strong {
+        color: var(--green);
+        font-size: 1.45rem;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .quote-commission-amount small {
+        overflow-wrap: anywhere;
+      }
+
+      .quote-commission-amount span,
+      .quote-commission-amount small {
+        color: var(--muted);
+      }
+
+      .commission-rules-details {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+      }
+
+      .commission-rules-heading {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .commission-rules-heading h4 {
+        margin: 0;
+        font-size: 1rem;
+      }
+
+      .commission-rules-heading span {
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .commission-rules-table-wrap {
+        max-height: 460px;
+        overflow: auto;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: var(--surface, rgba(0, 0, 0, 0.12));
+      }
+
+      .commission-rules-table {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+        border-collapse: collapse;
+        text-align: left;
+        font-size: 0.9rem;
+      }
+
+      .commission-rules-table th:first-child,
+      .commission-rules-table td:first-child {
+        width: 38%;
+      }
+
+      .commission-rules-table th:nth-child(2),
+      .commission-rules-table td:nth-child(2) {
+        width: 36%;
+      }
+
+      .commission-rules-table th:last-child,
+      .commission-rules-table td:last-child {
+        width: 26%;
+      }
+
+      .commission-rules-table caption {
+        padding: 12px 14px;
+        color: var(--muted);
+        text-align: left;
+      }
+
+      .commission-rules-table th,
+      .commission-rules-table td {
+        padding: 11px 14px;
+        border-top: 1px solid var(--line);
+        vertical-align: middle;
+      }
+
+      .commission-rules-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: var(--panel, #191e21);
+        color: var(--muted);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+      }
+
+      .commission-rules-table td {
+        overflow-wrap: anywhere;
+      }
+
+      .commission-rules-table .commission-rule-current {
+        background: rgba(254, 195, 43, 0.12);
+        color: var(--text);
+        font-weight: 700;
+      }
+
+      .commission-rules-table .commission-rule-current td:last-child strong {
+        color: var(--text);
+      }
+
+      .commission-current-label {
+        display: block;
+        margin-top: 4px;
+        border-left: 2px solid var(--gold, #ffc72c);
+        padding-left: 6px;
+        color: var(--gold, #ffc72c);
+        font-size: 0.75rem;
+        line-height: 1.25;
+      }
+
+      .quote-commission-footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 12px;
+      }
+
+      .btn.btn-compact {
+        width: auto;
+        min-height: 34px;
+        flex: 0 0 auto;
+        padding: 7px 12px;
+        font-size: 0.88rem;
+      }
+
+      @media (max-width: 560px) {
+        .quote-commission-summary {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .commission-rules-heading {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .commission-rules-table th,
+        .commission-rules-table td {
+          padding: 9px 7px;
+          font-size: 0.78rem;
+        }
+
+        .commission-rules-table th {
+          font-size: 0.68rem;
+        }
       }
 
       .deal-saver-box {
@@ -2713,23 +2798,6 @@
         background: rgba(240, 180, 0, 0.1);
       }
 
-      .goal-calendar-note {
-        display: block;
-        margin-top: 8px;
-        color: var(--muted);
-        font-size: 0.76rem;
-        line-height: 1.45;
-      }
-
-      .goal-calendar-note b {
-        color: var(--yellow);
-      }
-
-      .goal-days-auto {
-        color: #3f4652;
-        background: rgba(240, 180, 0, 0.08);
-      }
-
       .activity-tabs {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -2868,8 +2936,7 @@
       }
 
       .compact-grid,
-      .result-summary-grid,
-      .forecast-grid {
+      .result-summary-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
@@ -2986,6 +3053,64 @@
         display: block;
       }
 
+      .commission-split-toggle {
+        margin-top: 2px;
+      }
+
+      .commission-split-fields {
+        display: grid;
+        gap: 10px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.025);
+      }
+
+      .commission-split-reconciliation {
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      .commission-split-reconciliation.is-match {
+        border-color: rgba(34, 197, 94, 0.35);
+        color: #4ade80;
+        background: rgba(34, 197, 94, 0.07);
+      }
+
+      .commission-split-reconciliation.is-mismatch {
+        border-color: rgba(248, 113, 113, 0.38);
+        color: #fca5a5;
+        background: rgba(248, 113, 113, 0.07);
+      }
+
+      .commission-split-prize-breakdown {
+        grid-column: 1 / -1;
+        display: grid;
+        gap: 0;
+        margin-top: 4px;
+        border-top: 1px solid var(--line);
+      }
+
+      .commission-split-prize-breakdown > div {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .commission-split-prize-breakdown span {
+        color: var(--muted);
+      }
+
+      .commission-split-prize-breakdown strong {
+        color: var(--green);
+        font-variant-numeric: tabular-nums;
+      }
+
       .detail-list {
         display: grid;
         gap: 0;
@@ -3009,72 +3134,6 @@
       .detail-row strong {
         color: var(--text);
         text-align: right;
-      }
-
-      .progress-track {
-        position: relative;
-        height: 12px;
-        border-radius: 999px;
-        background: rgba(20, 20, 20, 0.08);
-      }
-
-      .progress-fill {
-        width: 0;
-        height: 100%;
-        border-radius: inherit;
-        background: var(--red);
-        transition: width 0.3s ease, background 0.3s ease;
-      }
-
-      .progress-marker {
-        position: absolute;
-        top: -3px;
-        bottom: -3px;
-        left: 0;
-        z-index: 2;
-        width: 0;
-        border-left: 2px dashed rgba(20, 20, 20, 0.68);
-        transform: translateX(-1px);
-        transition: left 0.3s ease, opacity 0.2s ease;
-      }
-
-      .goal-pace-row {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 12px;
-        margin-top: 8px;
-        color: var(--muted);
-        font-size: 0.84rem;
-      }
-
-      .goal-pace-row strong {
-        color: var(--text);
-        text-align: right;
-      }
-
-      .forecast-highlight {
-        margin-top: 14px;
-        padding: 20px;
-        border: 1px solid rgba(240, 180, 0, 0.3);
-        border-radius: 6px;
-        background: rgba(240, 180, 0, 0.08);
-      }
-
-      .forecast-highlight span {
-        display: block;
-        color: var(--muted);
-        font-size: 0.76rem;
-        font-weight: 800;
-        text-transform: uppercase;
-      }
-
-      .forecast-highlight strong {
-        display: block;
-        margin-top: 4px;
-        color: var(--text);
-        font-size: clamp(2rem, 5vw, 4rem);
-        line-height: 1;
       }
 
       .note {
@@ -3164,12 +3223,6 @@
         .topbar {
           align-items: flex-start;
           flex-direction: column;
-        }
-
-        .goal-top-pulse {
-          width: 100%;
-          flex: 0 0 auto;
-          max-width: none;
         }
 
         .top-actions {
@@ -3296,8 +3349,7 @@
 
         .activity-tabs,
         .compact-grid,
-        .result-summary-grid,
-        .forecast-grid {
+        .result-summary-grid {
           grid-template-columns: 1fr;
         }
 
@@ -3518,8 +3570,6 @@
         border-color: var(--line);
         background: #20262a;
       }
-
-      .goal-days-auto { color: #dbe2e6; background: rgba(246, 185, 0, 0.09); }
 
       .activity-filter {
         color: #c0c8ce;
@@ -3825,10 +3875,6 @@
             <img src="logo-recarga-club-icon.png" alt="RECARGA CLUB" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex';" />
             <span class="brand-fallback"><span>RC</span><span>RECARGA CLUB</span></span>
           </a>
-          <div id="goalTopPulse" class="goal-top-pulse hidden" aria-live="polite">
-            <span class="goal-pulse-icon">R$</span>
-            <span id="goalTopPulseText" class="goal-pulse-text">Venda hoje para ficar na meta.</span>
-          </div>
           <div class="global-search">
             <label class="global-search-field" for="globalSearchInput">
               <svg class="search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -4102,9 +4148,42 @@
                 </div>
                 <button id="quotePasteZone" class="btn ghost image-paste-button quote-drop-zone" type="button">Colar ou arrastar orçamento/PDF</button>
                 <textarea id="quoteResult" placeholder="A mensagem do orçamento aparece aqui..."></textarea>
-                <div class="copy-row">
+                <div class="copy-row quote-primary-actions">
                   <button id="copyQuoteMessage" class="btn" type="button">Copiar orçamento</button>
                   <button id="quoteInstallmentsButton" class="btn ghost" type="button">Parcelas</button>
+                </div>
+                <button id="quoteCommissionToggle" class="btn ghost quote-commission-toggle hidden" type="button" aria-expanded="false" aria-controls="quoteCommissionPanel">Quanto vou ganhar?</button>
+                <div id="quoteCommissionPanel" class="quote-installments-panel quote-commission-panel hidden" aria-live="polite">
+                  <div class="quote-installments-head">
+                    <strong>Simulação de comissão</strong>
+                  </div>
+                  <div class="quote-commission-controls">
+                    <div class="field">
+                      <label for="quoteCommissionPayment">Pagamento</label>
+                      <select id="quoteCommissionPayment">
+                        <option value="pix">PIX</option>
+                        <option value="card">Cartão</option>
+                      </select>
+                    </div>
+                    <div id="quoteCommissionInstallmentsRow" class="field hidden">
+                      <label for="quoteCommissionInstallments">Parcelas</label>
+                      <select id="quoteCommissionInstallments"></select>
+                    </div>
+                    <div class="field">
+                      <label for="quoteCommissionDiscount">Desconto aplicado</label>
+                      <input id="quoteCommissionDiscount" inputmode="decimal" placeholder="0,0%" />
+                    </div>
+                  </div>
+                  <div class="quote-commission-summary">
+                    <div class="quote-commission-amount">
+                      <span>Comissão estimada</span>
+                      <strong id="quoteCommissionValue">R$ 0,00</strong>
+                      <small id="quoteCommissionRate">0,40% base + 0,00% prêmio = 0,40%</small>
+                    </div>
+                  </div>
+                  <div class="quote-commission-footer">
+                    <button id="quoteCommissionDetailsButton" class="btn ghost btn-compact" type="button">Mostrar detalhes</button>
+                  </div>
                 </div>
                 <div id="quoteInstallmentsPreview" class="quote-installments-panel hidden" aria-live="polite"></div>
               </div>
@@ -4221,7 +4300,7 @@
               <div id="activityList" class="activity-list" aria-live="polite"></div>
             </div>
 
-            <div class="panel user-section">
+            <div id="commissionCalculatorPanel" class="panel user-section">
               <div class="section-heading">
                 <div>
                   <p class="eyebrow">Simulação individual</p>
@@ -4250,6 +4329,31 @@
                         <option value="other">Boleto / Outro</option>
                       </select>
                     </div>
+                    <div id="commissionInstallmentsRow" class="field hidden">
+                      <label for="commissionInstallments">Parcelas no cartão</label>
+                      <select id="commissionInstallments"></select>
+                    </div>
+                  </div>
+                  <label class="switch-row commission-split-toggle">
+                    <input id="commissionSplitMode" type="checkbox" />
+                    <span>Pagamento dividido entre modalidades</span>
+                  </label>
+                  <div id="commissionSplitFields" class="commission-split-fields hidden">
+                    <div class="compact-grid">
+                      <div class="field">
+                        <label for="commissionSplitPixAmount">Valor pago via PIX</label>
+                        <input id="commissionSplitPixAmount" inputmode="decimal" placeholder="R$ 0,00" />
+                      </div>
+                      <div class="field">
+                        <label for="commissionSplitCardAmount">Valor pago no cartão</label>
+                        <input id="commissionSplitCardAmount" inputmode="decimal" placeholder="R$ 0,00" />
+                      </div>
+                      <div class="field">
+                        <label for="commissionSplitCardInstallments">Parcelas no cartão</label>
+                        <select id="commissionSplitCardInstallments"></select>
+                      </div>
+                    </div>
+                    <div id="commissionSplitReconciliation" class="commission-split-reconciliation" aria-live="polite"></div>
                   </div>
                   <div class="field">
                     <label for="commissionFreight">Frete incluído no pedido — opcional</label>
@@ -4259,12 +4363,7 @@
                     <input id="commissionPaid" type="checkbox" checked />
                     <span>Pedido já está totalmente pago</span>
                   </label>
-                  <label id="commissionPixEligibilityRow" class="switch-row">
-                    <input id="commissionPixEligible" type="checkbox" checked />
-                    <span>Pedido elegível para PIX: pelo menos 80% pagos via PIX e tag “Pix” registrada no pedido</span>
-                  </label>
                   <div id="commissionPaymentWarning" class="inline-alert">Estimativa: a comissão é efetivada somente após o pagamento integral do pedido.</div>
-                  <div id="commissionPixWarning" class="inline-alert">Pedido não elegível para prêmio PIX. Apenas a comissão base será considerada.</div>
                 </div>
 
                 <div>
@@ -4300,80 +4399,22 @@
                     <div class="detail-row"><span>Frete</span><strong id="commissionFreightResult">R$ 0,00</strong></div>
                     <div class="detail-row"><span>Forma de pagamento</span><strong id="commissionPaymentResult">PIX</strong></div>
                     <div class="detail-row"><span>Percentual de prêmio aplicado</span><strong id="commissionPrizePercent">2,0%</strong></div>
+                    <div class="detail-row"><span>Percentual total aplicado</span><strong id="commissionTotalPercent">0,40% + 0,00% = 0,40%</strong></div>
+                    <div id="commissionSplitPrizeBreakdown" class="commission-split-prize-breakdown hidden">
+                      <div><span>Prêmio sobre o valor pago via PIX</span><strong id="commissionSplitPixPrize">R$ 0,00</strong></div>
+                      <div><span>Prêmio sobre o valor pago no cartão</span><strong id="commissionSplitCardPrize">R$ 0,00</strong></div>
+                    </div>
                   </div>
                   <p class="note">A estimativa considera o pedido pago, sem cancelamento ou devolução. O valor efetivo depende do relatório de pedidos pagos e das regras vigentes no período.</p>
                 </div>
               </div>
-            </div>
-
-            <div class="panel user-section">
-              <div class="section-heading">
-                <div>
-                  <p class="eyebrow">Ritmo comercial</p>
-                  <h3>Previsão de Meta Mensal</h3>
-                  <p class="muted">Informe sua meta, o valor já vendido e quantos dias ainda restam para saber quanto precisa vender por dia.</p>
+              <section class="commission-rules-details" aria-labelledby="commissionRulesHeading">
+                <div class="commission-rules-heading">
+                  <h4 id="commissionRulesHeading">Faixas da comissão</h4>
+                  <span id="commissionRulesCurrent">Aguardando simulação</span>
                 </div>
-                <button id="clearGoal" class="btn ghost" type="button">Limpar meta</button>
-              </div>
-
-              <div class="calculator-layout">
-                <div class="stack">
-                  <div class="field">
-                    <label for="goalMonthly">Meta mensal</label>
-                    <input id="goalMonthly" inputmode="decimal" placeholder="R$ 300.000,00" />
-                  </div>
-                  <div class="field">
-                    <label for="goalSold">Valor vendido até agora</label>
-                    <input id="goalSold" inputmode="decimal" placeholder="R$ 125.000,00" />
-                  </div>
-                  <div class="field">
-                    <div class="field-label-row">
-                      <label for="goalRemainingDays">Dias úteis restantes para a meta</label>
-                      <button id="toggleGoalDaysManual" class="mini-action" type="button">Editar dias úteis</button>
-                    </div>
-                    <input id="goalRemainingDays" type="number" min="0" step="1" placeholder="Ex.: 10" readonly />
-                    <small id="goalHolidayInfo" class="goal-calendar-note">Calculando dias úteis do mês...</small>
-                  </div>
-                  <p class="note">O sistema calcula os dias úteis restantes do mês e desconta feriados nacionais. Use o botão para ajustar manualmente quando necessário.</p>
-                  <div id="goalValidation" class="inline-alert"></div>
-                </div>
-
-                <div>
-                  <div class="forecast-highlight">
-                    <span>Necessário por dia para atingir a meta</span>
-                    <strong id="goalNeededDailyHighlight">R$ 0,00</strong>
-                  </div>
-                  <div style="margin: 14px 0 8px; display: flex; justify-content: space-between; gap: 12px">
-                    <span id="goalProgressText" class="muted">0,00% da meta atingida</span>
-                    <strong id="goalMetaResult">R$ 0,00</strong>
-                  </div>
-                  <div class="progress-track">
-                    <div id="goalProgress" class="progress-fill"></div>
-                    <div id="goalExpectedMarker" class="progress-marker hidden"></div>
-                  </div>
-                  <div class="goal-pace-row">
-                    <span id="goalPaceText">Ritmo esperado: aguardando meta</span>
-                    <strong id="goalExpectedText">Esperado até hoje: R$ 0,00</strong>
-                  </div>
-                  <div style="margin-top: 14px">
-                    <span id="goalStatusBadge" class="status-badge status-neutral">Informe sua meta mensal</span>
-                    <h3 id="goalStatusTitle" style="margin-top: 10px">Informe sua meta mensal</h3>
-                    <p id="goalStatusMessage" class="muted">Preencha os dados para visualizar sua projeção.</p>
-                  </div>
-
-                  <div class="forecast-grid">
-                    <div class="result-card"><span>Vendido até agora</span><strong id="goalSoldResult">R$ 0,00</strong></div>
-                    <div class="result-card"><span>Falta para a meta</span><strong id="goalRemainingAmount">R$ 0,00</strong></div>
-                    <div class="result-card"><span>Dias restantes</span><strong id="goalDaysResult">0</strong></div>
-                    <div class="result-card"><span>Percentual atingido</span><strong id="goalForecastPercent">0,00%</strong></div>
-                  </div>
-                  <div class="detail-list">
-                    <div class="detail-row"><span>Plano diário</span><strong id="goalDailyPlanText">Aguardando dados</strong></div>
-                    <div class="detail-row"><span>Progresso atual</span><strong id="goalProgressSummary">Aguardando dados</strong></div>
-                    <div class="detail-row"><span>Prazo restante</span><strong id="goalDeadlineSummary">Aguardando dados</strong></div>
-                  </div>
-                </div>
-              </div>
+                <div id="commissionRulesTable" class="commission-rules-table-wrap"></div>
+              </section>
             </div>
           </section>
 
@@ -4444,8 +4485,7 @@
       const COMPLETED_ACTIVITIES_SEED_KEY = "recarga_club_completed_activities_seed_v1";
       const ACTIVITY_COMPLETION_MIGRATION_VERSION = "render-local-v1";
       const LEGACY_ACTIVITY_SEED_VALUE = "2026-07-02T00:00:00.000Z";
-      const GOAL_FORECAST_KEY = "recarga_club_goal_forecast_v1";
-      const UPDATE_TOUR_VERSION = "2026-09-29-tour-v7";
+      const UPDATE_TOUR_VERSION = "2026-10-02-tour-v9";
       const UPDATE_TOUR_KEY = `recarga_club_update_tour_${UPDATE_TOUR_VERSION}`;
       const WATERMARK_PASSWORD = "Ben10301030@";
       const CACHE_TTL = 1000 * 60 * 60 * 6;
@@ -4457,16 +4497,41 @@
       const COMMISSION_RULES = Object.freeze({
         commissionRate: 0.004,
         pix: [
-          { maxDiscount: 5.0, prizeRate: 0.02, label: "PIX — desconto de 0% a 5%" },
-          { maxDiscount: 6.5, prizeRate: 0.015, label: "PIX — desconto de 5,1% a 6,5%" },
-          { maxDiscount: 8.0, prizeRate: 0.01, label: "PIX — desconto de 6,6% a 8%" },
-          { maxDiscount: Infinity, prizeRate: 0, label: "PIX — desconto acima de 8%" }
+          { maxDiscount: 10, prizeRate: 0.015, label: "PIX — desconto até 10%" },
+          { maxDiscount: 12, prizeRate: 0.012, label: "PIX — desconto acima de 10% até 12%" },
+          { maxDiscount: 15, prizeRate: 0.01, label: "PIX — desconto acima de 12% até 15%" },
+          { maxDiscount: 20, prizeRate: 0.008, label: "PIX — desconto acima de 15% até 20%" },
+          { maxDiscount: Infinity, prizeRate: 0, label: "PIX — desconto acima de 20%" }
         ],
         card: [
-          { maxDiscount: 5.0, prizeRate: 0.007, label: "Cartão — desconto de 0% a 5%" },
-          { maxDiscount: 6.5, prizeRate: 0.005, label: "Cartão — desconto de 5,1% a 6,5%" },
-          { maxDiscount: 8.0, prizeRate: 0.003, label: "Cartão — desconto de 6,6% a 8%" },
-          { maxDiscount: Infinity, prizeRate: 0, label: "Cartão — desconto acima de 8%" }
+          { minInstallments: 1, maxInstallments: 3, tiers: [
+            { maxDiscount: 5, prizeRate: 0.014 }, { maxDiscount: 6.5, prizeRate: 0.012 },
+            { maxDiscount: 8, prizeRate: 0.009 }, { maxDiscount: Infinity, prizeRate: 0 }
+          ] },
+          { minInstallments: 4, maxInstallments: 6, tiers: [
+            { maxDiscount: 5, prizeRate: 0.012 }, { maxDiscount: 6.5, prizeRate: 0.01 },
+            { maxDiscount: 8, prizeRate: 0.008 }, { maxDiscount: Infinity, prizeRate: 0 }
+          ] },
+          { minInstallments: 7, maxInstallments: 9, tiers: [
+            { maxDiscount: 5, prizeRate: 0.01 }, { maxDiscount: 6.5, prizeRate: 0.008 },
+            { maxDiscount: 8, prizeRate: 0.006 }, { maxDiscount: Infinity, prizeRate: 0 }
+          ] },
+          { minInstallments: 10, maxInstallments: 12, tiers: [
+            { maxDiscount: 5, prizeRate: 0.009 }, { maxDiscount: 6.5, prizeRate: 0.007 },
+            { maxDiscount: 8, prizeRate: 0.005 }, { maxDiscount: Infinity, prizeRate: 0 }
+          ] },
+          { minInstallments: 13, maxInstallments: 15, tiers: [
+            { maxDiscount: 5, prizeRate: 0.006 }, { maxDiscount: 6.5, prizeRate: 0.004 },
+            { maxDiscount: 8, prizeRate: 0.002 }, { maxDiscount: Infinity, prizeRate: 0 }
+          ] },
+          { minInstallments: 16, maxInstallments: 18, tiers: [
+            { maxDiscount: 5, prizeRate: 0.005 }, { maxDiscount: 6.5, prizeRate: 0.003 },
+            { maxDiscount: Infinity, prizeRate: 0 }
+          ] },
+          { minInstallments: 19, maxInstallments: 21, tiers: [
+            { maxDiscount: 5, prizeRate: 0.003 }, { maxDiscount: 6.5, prizeRate: 0.002 },
+            { maxDiscount: Infinity, prizeRate: 0 }
+          ] }
         ],
         other: [
           { maxDiscount: Infinity, prizeRate: 0, label: "Boleto / Outro — sem prêmio por negociação" }
@@ -5040,7 +5105,7 @@
       const ids = [
         "auth", "dashboard", "calcView", "reportView", "carriersView", "userView", "loginForm", "loginEmail", "loginPassword", "rememberLogin",
         "updateNote", "startUpdateTour", "updateTourOverlay", "updateTourStep", "updateTourTitle", "updateTourText", "updateTourVisual", "updateTourCursor", "updateTourFile", "skipUpdateTour", "nextUpdateTour",
-        "sheetBadge", "userBadge", "logoutBtn", "goalTopPulse", "goalTopPulseText", "globalSearchInput", "globalSearchResults", "sourceStatus", "sourceHint", "cacheBadge", "lastUpdateTop",
+        "sheetBadge", "userBadge", "logoutBtn", "globalSearchInput", "globalSearchResults", "sourceStatus", "sourceHint", "cacheBadge", "lastUpdateTop",
         "ddd", "caliber", "desiredQty", "locationBadge", "autoNote", "autoState", "warningNote",
         "reloadUnit", "reload100", "factoryBox", "boxQtyLabel", "factoryUnit", "saveUnit", "factoryTotal", "reloadTotal", "saveTotal", "savePercent",
         "factoryBar", "reloadBar", "factoryBarLabel", "reloadBarLabel", "save1000", "save4000", "save10000",
@@ -5049,18 +5114,17 @@
         "copyOcrText", "ocrFilterCpf", "ocrFilterName", "ocrImage", "pasteOcrImage", "ocrPasteZone", "ocrResult",
         "imageToolsTitle", "imageToolTabExtract", "imageToolTabEdit", "imageToolPanelExtract", "imageToolPanelEdit",
         "quotePressName", "quotePasteZone", "quoteResult", "copyQuoteMessage", "quoteInstallmentsButton", "quoteInstallmentsPreview",
+        "quoteCommissionToggle", "quoteCommissionPanel", "quoteCommissionPayment", "quoteCommissionInstallmentsRow", "quoteCommissionInstallments", "quoteCommissionDiscount",
+        "quoteCommissionValue", "quoteCommissionRate", "quoteCommissionDetailsButton",
         "dealSaverGroup", "dealSaverPayment", "dealSaverValue", "dealSaverEntry", "dealSaverResult",
         "inventoryPasteZone", "inventoryEditorStatus", "inventoryEditorControls", "inventoryCaliberSelect", "inventoryQuantity", "inventoryPreview", "inventoryCanvas", "downloadInventoryImage",
         "carrierDdd", "carrierCep", "carrierCepResult", "carrierLocation", "militaryRegionBadge", "sfpcResult", "ufGrid", "carrierTitle", "carrierCount", "carrierList",
         "userTabButton", "profileAvatar", "profileName", "profileEmail", "profilePhone", "profileRole", "activitiesPanel", "activitySource", "activityList",
         "activityOverdueCount", "activityTodayCount", "activityFutureCount", "activityCompletedCount",
-        "commissionSaleValue", "commissionDiscount", "commissionPayment", "commissionFreight", "commissionPaid", "commissionPixEligibilityRow", "commissionPixEligible",
-        "clearCommission", "commissionPaymentWarning", "commissionPixWarning", "commissionNetValue", "commissionBase", "commissionPrizeValue", "commissionPrizeRule",
+        "commissionCalculatorPanel", "commissionSaleValue", "commissionDiscount", "commissionPayment", "commissionInstallmentsRow", "commissionInstallments", "commissionFreight", "commissionPaid", "commissionSplitMode", "commissionSplitFields", "commissionSplitPixAmount", "commissionSplitCardAmount", "commissionSplitCardInstallments", "commissionSplitReconciliation", "commissionSplitPrizeBreakdown", "commissionSplitPixPrize", "commissionSplitCardPrize", "commissionRulesTable", "commissionRulesCurrent",
+        "clearCommission", "commissionPaymentWarning", "commissionNetValue", "commissionBase", "commissionPrizeValue", "commissionPrizeRule",
         "commissionTotal", "commissionStatusBadge", "commissionOriginal", "commissionDiscountPercent", "commissionDiscountValue", "commissionFreightResult",
-        "commissionPaymentResult", "commissionPrizePercent",
-        "goalMonthly", "goalSold", "goalRemainingDays", "toggleGoalDaysManual", "goalHolidayInfo", "clearGoal", "goalValidation", "goalNeededDailyHighlight", "goalProgressText", "goalMetaResult",
-        "goalProgress", "goalExpectedMarker", "goalPaceText", "goalExpectedText", "goalStatusBadge", "goalStatusTitle", "goalStatusMessage", "goalSoldResult", "goalRemainingAmount", "goalDaysResult",
-        "goalForecastPercent", "goalDailyPlanText", "goalProgressSummary", "goalDeadlineSummary",
+        "commissionPaymentResult", "commissionPrizePercent", "commissionTotalPercent",
         "editWatermark", "watermarkNameDisplay", "watermarkContactDisplay", "watermarkModal", "watermarkName", "watermarkContact", "saveWatermark", "closeWatermark", "toast"
       ];
 
@@ -5098,108 +5162,47 @@
         },
         receiptControls: {},
         quoteValues: null,
+        quoteCommissionDiscountEdited: false,
+        quoteCommissionOpen: false,
         inventoryEditor: {
           file: null,
           imageBitmap: null,
           rows: []
         },
         lastCarrierAddress: null,
-        goalDaysManual: false,
-        goalStorageReady: false,
         updateTourActive: false,
         updateTourIndex: 0,
         updateTourTimers: [],
         updateTourSnapshot: null
       };
 
-      const GOAL_DAILY_PROMPTS = [
-        (amount) => `Venda <strong>${amount}</strong> hoje para ficar na meta.`,
-        (amount) => `E aí? Vai ficar verde não? Vende <strong>${amount}</strong> pra acompanhar a meta.`,
-        (amount) => `Meta no radar: <strong>${amount}</strong> hoje deixa o mês no trilho.`,
-        (amount) => `Hoje o alvo é <strong>${amount}</strong>. Bate isso e acompanha a meta.`,
-        (amount) => `Dia de acelerar: venda <strong>${amount}</strong> para seguir na meta.`,
-        (amount) => `Foco no verde: <strong>${amount}</strong> hoje mantém a meta respirando.`
-      ];
-
       const UPDATE_TOUR_STEPS = [
         {
-          tab: "calc",
-          target: "#globalSearchInput",
-          title: "Visual renovado e busca rápida",
-          text: "As áreas foram reorganizadas em tema escuro. Digite o que precisa na lupa e escolha o resultado para ir direto à função.",
-          status: "Simulação: a busca localiza ferramentas pelo nome ou pelo que você quer fazer.",
-          action: "searchFunctions"
-        },
-        {
-          tab: "calc",
-          target: "#caliber",
-          title: "Custos de munição atualizados",
-          text: "Entraram as referências de espoleta e pólvora do catálogo 09/2026, além de projéteis compatíveis por calibre. Itens sem preço no catálogo mantêm os demais custos da base.",
-          status: "Referências do Catálogo de Insumos Recarga Club v1.0 aplicadas ao cálculo.",
-          action: "showAmmoCosts"
+          tab: "report",
+          target: "#quoteCommissionToggle",
+          title: "Veja quanto vai ganhar no orçamento",
+          text: "Escolha pagamento, parcelas e desconto para ver só o valor estimado e o percentual total. A faixa aplicada e a tabela completa ficam em Mostrar detalhes.",
+          status: "Resumo enxuto: cartão em 6x, 5% de desconto e comissão estimada.",
+          action: "showQuoteCommission"
         },
         {
           tab: "report",
-          target: "#quotePasteZone",
-          title: "Orçamento com 10% no Pix",
-          text: "Arraste o PDF para o campo. O sistema lê os valores e calcula 10% de desconto Pix sobre o subtotal, somando o frete depois.",
-          status: "Simulação: o PDF entra no campo de orçamento e a leitura começa.",
-          action: "dragPdf",
-          duration: 5200
-        },
-        {
-          tab: "report",
-          target: "#quoteResult",
-          title: "Mensagem pronta para o cliente",
-          text: "Confira a mensagem com o total no cartão e o preço à vista com 10% de desconto aplicado ao subtotal.",
-          status: "Simulação: a mensagem vai sendo montada no campo de resultado.",
-          action: "typeQuote",
-          duration: 5200
-        },
-        {
-          tab: "report",
-          target: "#copyQuoteMessage",
-          title: "Copiar e enviar",
-          text: "Depois de conferir, clique em Copiar orçamento e mande para o cliente pelo WhatsApp ou pelo atendimento.",
-          status: "Simulação: o cursor confirma o botão correto para copiar a mensagem.",
-          action: "copyQuote",
-          duration: 3600
-        },
-        {
-          tab: "user",
-          target: "#activitiesPanel",
-          title: "Agenda privada e atividades pessoais",
-          text: "Entre com as credenciais atuais, sem convites. A lista mostra as tarefas do perfil conectado. Marque uma atividade como feita para vê-la em Concluídas neste navegador; essa marcação não sincroniza com outros dispositivos.",
-          status: "A agenda fica privada no servidor; as conclusões ficam neste navegador.",
-          action: "showActivities"
-        },
-        {
-          tab: "report",
-          target: "#imageToolTabExtract",
-          title: "Ferramentas de imagem organizadas",
-          text: "Extração de texto e edição do estoque agora ficam na mesma área. Alterne pelas abas para escolher o que fazer com a imagem.",
-          status: "A demonstração alterna entre os dois modos de imagem.",
-          action: "showImageToolModes"
-        },
-        {
-          tab: "report",
-          target: "#inventoryPasteZone",
-          title: "Editar itens do estoque",
-          text: "Cole um print e escolha qualquer produto identificado, seja calibre, acessório ou item comum. A quantidade é localizada pela coluna ou pelo alinhamento das linhas.",
-          status: "O seletor mostra o item e a quantidade encontrada no print.",
-          action: "showInventoryEditor"
+          target: "#quoteCommissionDetailsButton",
+          requiresUserArea: true,
+          title: "Abra os detalhes do cálculo",
+          text: "O botão Mostrar detalhes leva à calculadora completa, já preenchida com o orçamento, pagamento, parcelas e desconto que você acabou de simular.",
+          status: "A calculadora completa discrimina valor líquido, comissão-base, prêmio e situação da venda.",
+          action: "showCommissionDetails"
         }
       ];
 
-      const UPDATE_TOUR_DEMO_MESSAGE = `*Tipo O*
+      const UPDATE_TOUR_DEMO_MESSAGE = `*Orçamento demonstrativo*
 
-R$3.810,08 em ate 21X sem juros de R$181,43
+Total da negociação: R$ 10.200,00
 
-ou
+À vista com 10% no Pix: R$ 9.200,00
 
-A vista por R$3.454,08
-
-_Orcamento valido por 2 dias uteis_`;
+_Valores apenas para demonstrar a comissão_`;
 
       const columns = {
         estado: ["estado", "uf", "local", "regiao"],
@@ -5332,7 +5335,6 @@ _Orcamento valido por 2 dias uteis_`;
         { tab: "carriers", target: "#carrierCep", title: "Buscar endereço e região por CEP", detail: "Localizar UF, cidade e atendimento SFPC", category: "Transportadoras", terms: "cep endereço endereco sfpc rm cidade estado" },
         { tab: "user", target: "#activitiesPanel", title: "Ver atividades do usuário", detail: "Acompanhar atrasadas, hoje, futuras e concluídas", category: "Usuário", terms: "agenda tarefas atividade atividades compromissos acompanhamento" },
         { tab: "user", target: "#commissionSaleValue", title: "Calcular comissão da venda", detail: "Estimar comissão e prêmio por negociação", category: "Usuário", terms: "comissão comissao prêmio premio venda pagamento pix" },
-        { tab: "user", target: "#goalMonthly", title: "Acompanhar meta mensal", detail: "Calcular ritmo de vendas por dia útil", category: "Usuário", terms: "meta mensal objetivo previsão previsao dias úteis vendas" },
         { tab: "user", target: "#profileName", title: "Ver perfil conectado", detail: "Conferir usuário e dados de contato", category: "Usuário", terms: "perfil conta usuario usuário telefone email" }
       ];
 
@@ -5474,7 +5476,10 @@ _Orcamento valido por 2 dias uteis_`;
       }
 
       function getAvailableUpdateTourSteps() {
-        return UPDATE_TOUR_STEPS.filter((step) => step.tab !== "user" || state.currentUser?.showUserArea);
+        return UPDATE_TOUR_STEPS.filter((step) => (
+          (!step.requiresUserArea || state.currentUser?.showUserArea)
+          && (step.tab !== "user" || state.currentUser?.showUserArea)
+        ));
       }
 
       function clearUpdateTourTimers() {
@@ -5651,6 +5656,38 @@ _Orcamento valido por 2 dias uteis_`;
           }, 1500);
           return;
         }
+        if (step.action === "showQuoteCommission") {
+          moveTourCursorToTarget("#quoteCommissionToggle", 50, 18);
+          queueUpdateTour(() => {
+            clickTourTarget("#quoteCommissionToggle");
+            state.quoteCommissionOpen = true;
+            updateQuoteCommissionCalculator();
+            moveTourCursorToTarget("#quoteCommissionPayment", 50, 18);
+            setUpdateTourStatus("Aqui ficam apenas o ganho estimado e o percentual total aplicado.");
+          }, 1000);
+          queueUpdateTour(() => moveTourCursorToTarget("#quoteCommissionInstallments", 50, 18), 1900);
+          queueUpdateTour(() => moveTourCursorToTarget("#quoteCommissionDiscount", 50, 18), 2700);
+          queueUpdateTour(() => moveTourCursorToTarget("#quoteCommissionValue", 80, 18), 3500);
+          return;
+        }
+        if (step.action === "showCommissionDetails") {
+          moveTourCursorToTarget("#quoteCommissionDetailsButton", 80, 18);
+          queueUpdateTour(() => {
+            clickTourTarget("#quoteCommissionDetailsButton");
+            showQuoteCommissionDetails();
+            queueUpdateTour(() => {
+              highlightUpdateTourTarget("#commissionRulesTable");
+              moveTourCursorToTarget("#commissionRulesCurrent", 70, 18);
+              setUpdateTourStatus("A faixa usada fica destacada aqui; as outras condições permanecem visíveis para comparação.");
+            }, 500);
+          }, 1200);
+          return;
+        }
+        if (step.action === "showInventoryEditor") {
+          setImageToolMode("edit");
+          moveTourCursorToTarget("#inventoryPasteZone", 85, 20);
+          return;
+        }
         if (step.action === "openForm") {
           moveTourCursorToTarget(step.target, 72, 28);
           queueUpdateTour(() => {
@@ -5664,7 +5701,24 @@ _Orcamento valido por 2 dias uteis_`;
         if (state.updateTourSnapshot) return;
         state.updateTourSnapshot = {
           quoteResult: el.quoteResult?.value || "",
-          searchValue: el.globalSearchInput?.value || ""
+          searchValue: el.globalSearchInput?.value || "",
+          quoteValues: state.quoteValues ? { ...state.quoteValues } : null,
+          quoteCommissionDiscountEdited: state.quoteCommissionDiscountEdited,
+          quoteCommissionOpen: state.quoteCommissionOpen,
+          quoteCommissionPayment: el.quoteCommissionPayment?.value || "pix",
+          quoteCommissionInstallments: el.quoteCommissionInstallments?.value || "1",
+          quoteCommissionDiscount: el.quoteCommissionDiscount?.value || "",
+          commissionSaleValue: el.commissionSaleValue?.value || "",
+          commissionDiscount: el.commissionDiscount?.value || "",
+          commissionPayment: el.commissionPayment?.value || "pix",
+          commissionInstallments: el.commissionInstallments?.value || "1",
+          commissionFreight: el.commissionFreight?.value || "",
+          commissionPaid: Boolean(el.commissionPaid?.checked),
+          commissionSplitMode: Boolean(el.commissionSplitMode?.checked),
+          commissionSplitPixAmount: el.commissionSplitPixAmount?.value || "",
+          commissionSplitCardAmount: el.commissionSplitCardAmount?.value || "",
+          commissionSplitCardInstallments: el.commissionSplitCardInstallments?.value || "1",
+          activeTab: document.querySelector(".dash-view.active")?.id?.replace(/View$/, "") || "calc",
         };
       }
 
@@ -5672,7 +5726,26 @@ _Orcamento valido por 2 dias uteis_`;
         if (!state.updateTourSnapshot) return;
         if (el.quoteResult) el.quoteResult.value = state.updateTourSnapshot.quoteResult || "";
         if (el.globalSearchInput) el.globalSearchInput.value = state.updateTourSnapshot.searchValue || "";
+        state.quoteValues = state.updateTourSnapshot.quoteValues;
+        state.quoteCommissionDiscountEdited = state.updateTourSnapshot.quoteCommissionDiscountEdited;
+        state.quoteCommissionOpen = state.updateTourSnapshot.quoteCommissionOpen;
+        el.quoteCommissionPayment.value = state.updateTourSnapshot.quoteCommissionPayment;
+        el.quoteCommissionInstallments.value = state.updateTourSnapshot.quoteCommissionInstallments;
+        el.quoteCommissionDiscount.value = state.updateTourSnapshot.quoteCommissionDiscount;
+        el.commissionSaleValue.value = state.updateTourSnapshot.commissionSaleValue;
+        el.commissionDiscount.value = state.updateTourSnapshot.commissionDiscount;
+        el.commissionPayment.value = state.updateTourSnapshot.commissionPayment;
+        el.commissionInstallments.value = state.updateTourSnapshot.commissionInstallments;
+        el.commissionFreight.value = state.updateTourSnapshot.commissionFreight;
+        el.commissionPaid.checked = state.updateTourSnapshot.commissionPaid;
+        el.commissionSplitMode.checked = state.updateTourSnapshot.commissionSplitMode;
+        el.commissionSplitPixAmount.value = state.updateTourSnapshot.commissionSplitPixAmount;
+        el.commissionSplitCardAmount.value = state.updateTourSnapshot.commissionSplitCardAmount;
+        el.commissionSplitCardInstallments.value = state.updateTourSnapshot.commissionSplitCardInstallments;
+        updateQuoteCommissionCalculator();
+        updateCommissionCalculator();
         closeGlobalSearch();
+        switchDash(state.updateTourSnapshot.activeTab);
         state.updateTourSnapshot = null;
       }
 
@@ -5695,6 +5768,17 @@ _Orcamento valido por 2 dias uteis_`;
         el.updateTourText.textContent = step.text;
         setUpdateTourStatus(step.status);
         el.nextUpdateTour.textContent = state.updateTourIndex === steps.length - 1 ? "Concluir" : "Próximo passo";
+        if (step.action === "showQuoteCommission") {
+          state.quoteValues = { subtotal: 10000, freight: 200, total: 10200 };
+          state.quoteCommissionDiscountEdited = true;
+          state.quoteCommissionOpen = false;
+          el.quoteCommissionPayment.value = "card";
+          el.quoteCommissionInstallments.value = "6";
+          el.quoteCommissionDiscount.value = "5%";
+          el.quoteResult.value = UPDATE_TOUR_DEMO_MESSAGE;
+          updateQuoteCommissionCalculator();
+        }
+        if (step.action === "showCommissionDetails") setCommissionCalculatorFromQuote();
         highlightUpdateTourTarget(step.target);
         queueUpdateTour(() => runUpdateTourAction(step), 880);
       }
@@ -5890,106 +5974,6 @@ _Orcamento valido por 2 dias uteis_`;
       function formatDateBR(value) {
         const date = value instanceof Date ? value : parseDate(value);
         return new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Fortaleza" }).format(date);
-      }
-
-      function addDays(date, days) {
-        const next = new Date(date);
-        next.setDate(next.getDate() + days);
-        return next;
-      }
-
-      function getEasterDate(year) {
-        const a = year % 19;
-        const b = Math.floor(year / 100);
-        const c = year % 100;
-        const d = Math.floor(b / 4);
-        const e = b % 4;
-        const f = Math.floor((b + 8) / 25);
-        const g = Math.floor((b - f + 1) / 3);
-        const h = (19 * a + b - d - g + 15) % 30;
-        const i = Math.floor(c / 4);
-        const k = c % 4;
-        const l = (32 + 2 * e + 2 * i - h - k) % 7;
-        const m = Math.floor((a + 11 * h + 22 * l) / 451);
-        const month = Math.floor((h + l - 7 * m + 114) / 31);
-        const day = ((h + l - 7 * m + 114) % 31) + 1;
-        return new Date(year, month - 1, day);
-      }
-
-      function getBrazilNationalHolidays(year) {
-        const fixed = [
-          ["01-01", "Confraternização Universal"],
-          ["04-21", "Tiradentes"],
-          ["05-01", "Dia do Trabalhador"],
-          ["09-07", "Independência do Brasil"],
-          ["10-12", "Nossa Senhora Aparecida"],
-          ["11-02", "Finados"],
-          ["11-15", "Proclamação da República"],
-          ["11-20", "Consciência Negra"],
-          ["12-25", "Natal"]
-        ].map(([monthDay, name]) => {
-          const [month, day] = monthDay.split("-").map(Number);
-          return { date: new Date(year, month - 1, day), name };
-        });
-        const easter = getEasterDate(year);
-        return [
-          ...fixed,
-          { date: addDays(easter, -2), name: "Sexta-feira Santa" }
-        ].map((holiday) => ({
-          ...holiday,
-          iso: toDateInput(holiday.date)
-        }));
-      }
-
-      function isBusinessDay(date, holidaySet = new Set()) {
-        const day = date.getDay();
-        return day !== 0 && day !== 6 && !holidaySet.has(toDateInput(date));
-      }
-
-      function getGoalCalendarInfo(referenceDate = new Date()) {
-        const today = new Date(referenceDate.getFullYear(), referenceDate.getMonth(), referenceDate.getDate());
-        const year = today.getFullYear();
-        const month = today.getMonth();
-        const monthStart = new Date(year, month, 1);
-        const monthEnd = new Date(year, month + 1, 0);
-        const holidays = getBrazilNationalHolidays(year).filter((holiday) => holiday.date.getMonth() === month);
-        const holidaySet = new Set(holidays.map((holiday) => holiday.iso));
-        const discountedHolidays = holidays.filter((holiday) => {
-          const day = holiday.date.getDay();
-          return day !== 0 && day !== 6;
-        });
-        let totalBusinessDays = 0;
-        let remainingBusinessDays = 0;
-        let elapsedBusinessDays = 0;
-        const todayIsBusinessDay = isBusinessDay(today, holidaySet);
-
-        for (let cursor = new Date(monthStart); cursor <= monthEnd; cursor = addDays(cursor, 1)) {
-          if (!isBusinessDay(cursor, holidaySet)) continue;
-          totalBusinessDays += 1;
-          if (cursor < today) elapsedBusinessDays += 1;
-          if (cursor >= today) remainingBusinessDays += 1;
-        }
-
-        const expectedBusinessDayIndex = Math.min(
-          totalBusinessDays,
-          elapsedBusinessDays + (todayIsBusinessDay ? 1 : 0)
-        );
-
-        const monthLabel = new Intl.DateTimeFormat("pt-BR", {
-          month: "long",
-          year: "numeric"
-        }).format(today);
-
-        return {
-          monthLabel,
-          totalBusinessDays,
-          remainingBusinessDays,
-          elapsedBusinessDays,
-          expectedBusinessDayIndex,
-          todayIsBusinessDay,
-          holidays,
-          discountedHolidays
-        };
       }
 
       function escapeHtml(value) {
@@ -7625,6 +7609,7 @@ _Orcamento valido por 2 dias uteis_`;
         const message = buildQuoteMessage(state.quoteValues, el.quotePressName.value);
         if (message) el.quoteResult.value = message;
         renderQuoteInstallments(false);
+        updateQuoteCommissionCalculator();
       }
 
       async function readQuoteTextFromImage(file) {
@@ -7721,7 +7706,10 @@ _Orcamento valido por 2 dias uteis_`;
 
       function resetQuoteFailure(message = "Nao consegui identificar subtotal e total. Confira se o orçamento mostra a area de pagamento.") {
         state.quoteValues = null;
+        state.quoteCommissionDiscountEdited = false;
+        state.quoteCommissionOpen = false;
         el.quoteResult.value = message;
+        updateQuoteCommissionCalculator();
         if (el.quoteInstallmentsPreview) {
           el.quoteInstallmentsPreview.innerHTML = "";
           el.quoteInstallmentsPreview.classList.add("hidden");
@@ -7738,12 +7726,18 @@ _Orcamento valido por 2 dias uteis_`;
         }
 
         state.quoteValues = values;
+        state.quoteCommissionDiscountEdited = false;
+        state.quoteCommissionOpen = false;
+        el.quoteCommissionPayment.value = "pix";
+        el.quoteCommissionInstallments.value = "1";
+        el.quoteCommissionDiscount.value = "10%";
         el.quoteResult.value = message;
         if (el.dealSaverValue && !el.dealSaverValue.value.trim()) {
           el.dealSaverValue.value = formatCurrencyCompact(values.total);
         }
         updateDealSaver();
         renderQuoteInstallments(false);
+        updateQuoteCommissionCalculator();
         showToast("Mensagem de orçamento gerada.");
         return true;
       }
@@ -7958,6 +7952,7 @@ _Orcamento valido por 2 dias uteis_`;
         return String(value || "")
           .replace(/[^\wÀ-ÖØ-öø-ÿ/&.+\-\s]/g, " ")
           .replace(/\b(?:produto|disponivel|disponível|preco|preço|brl|r\$|selecionar|pesquisar|todos|adicionar|filtro)\b/ig, " ")
+          .replace(/^\s*[xv]\s+(?=\S)/i, "")
           .replace(/\s+/g, " ")
           .trim()
           .replace(/^(\d{1,2})\s+(?=\d{2,3}\s*[A-Za-z])/, "")
@@ -8076,7 +8071,7 @@ _Orcamento valido por 2 dias uteis_`;
           if (!isLikelyInventoryItem(label)) return;
           const lineHeight = Math.max(...line.words.map((word) => word.bbox.y1 - word.bbox.y0), 10);
           const checkboxSizeHint = Math.max(12, Math.min(17, lineHeight * 0.92));
-          const firstLabelWord = labelWords.find((word) => /[A-Za-zÀ-ÿ]/.test(word.text)) || labelWords[0];
+          const firstLabelWord = labelWords.find((word) => (/[A-Za-zÀ-ÿ]/.test(word.text) || /\d{2,}/.test(word.text)) && !/^[xv]$/i.test(word.text.trim())) || labelWords[0];
           const hasLabelAnchor = Boolean(firstLabelWord?.bbox?.x0);
           const labelStartX = firstLabelWord?.bbox?.x0 || bitmap.width * 0.12;
           const labelTextHeights = labelWords
@@ -8085,7 +8080,7 @@ _Orcamento valido por 2 dias uteis_`;
             .filter((height) => height > 0)
             .sort((a, b) => a - b);
           const rowTextHeight = labelTextHeights.length
-            ? labelTextHeights[Math.floor(labelTextHeights.length / 2)]
+            ? Math.max(...labelTextHeights)
             : lineHeight;
 
           rows.push({
@@ -8096,8 +8091,8 @@ _Orcamento valido por 2 dias uteis_`;
             rowTextHeight,
             labelStartX,
             checkboxCenterX: hasLabelAnchor
-              ? Math.max(checkboxSizeHint, labelStartX - Math.max(20, checkboxSizeHint * 1.65))
-              : bitmap.width * 0.095
+              ? Math.max(bitmap.width * 0.035, Math.min(bitmap.width * 0.11, labelStartX - Math.max(checkboxSizeHint * 4, rowTextHeight * 4.1)))
+              : bitmap.width * 0.062
           });
         });
 
@@ -8132,95 +8127,6 @@ _Orcamento valido por 2 dias uteis_`;
         ctx.closePath();
       }
 
-      function findInventoryCheckboxBox(ctx, selected, checkboxSize, canvas) {
-        const labelStartX = selected.labelStartX || canvas.width * 0.14;
-        const expectedCenterX = selected.checkboxCenterX || (labelStartX - Math.max(20, checkboxSize * 1.65));
-        const searchWidth = Math.max(42, checkboxSize * 3.6);
-        const sx = Math.max(0, Math.round(expectedCenterX - searchWidth / 2));
-        const ex = Math.min(canvas.width, Math.round(Math.min(labelStartX - 3, expectedCenterX + searchWidth / 2)));
-        const sy = Math.max(0, Math.round(selected.lineY - checkboxSize * 1.55));
-        const ey = Math.min(canvas.height, Math.round(selected.lineY + checkboxSize * 1.55));
-        const width = ex - sx;
-        const height = ey - sy;
-        if (width < 8 || height < 8) return null;
-
-        const image = ctx.getImageData(sx, sy, width, height);
-        const visited = new Uint8Array(width * height);
-        const isMarkedPixel = (index) => {
-          const offset = index * 4;
-          const r = image.data[offset];
-          const g = image.data[offset + 1];
-          const b = image.data[offset + 2];
-          const a = image.data[offset + 3];
-          if (a < 20) return false;
-          return Math.min(r, g, b) < 232;
-        };
-
-        let best = null;
-        for (let y = 0; y < height; y += 1) {
-          for (let x = 0; x < width; x += 1) {
-            const start = y * width + x;
-            if (visited[start] || !isMarkedPixel(start)) continue;
-
-            const stack = [start];
-            visited[start] = 1;
-            let minX = x;
-            let maxX = x;
-            let minY = y;
-            let maxY = y;
-            let pixels = 0;
-
-            while (stack.length) {
-              const current = stack.pop();
-              const cx = current % width;
-              const cy = Math.floor(current / width);
-              pixels += 1;
-              minX = Math.min(minX, cx);
-              maxX = Math.max(maxX, cx);
-              minY = Math.min(minY, cy);
-              maxY = Math.max(maxY, cy);
-
-              const neighbors = [
-                current - 1,
-                current + 1,
-                current - width,
-                current + width
-              ];
-              neighbors.forEach((next) => {
-                if (next < 0 || next >= width * height || visited[next] || !isMarkedPixel(next)) return;
-                const nx = next % width;
-                const ny = Math.floor(next / width);
-                if (Math.abs(nx - cx) + Math.abs(ny - cy) !== 1) return;
-                visited[next] = 1;
-                stack.push(next);
-              });
-            }
-
-            const boxWidth = maxX - minX + 1;
-            const boxHeight = maxY - minY + 1;
-            if (boxWidth < 7 || boxHeight < 7 || boxWidth > 24 || boxHeight > 24) continue;
-            if (Math.abs(boxWidth - boxHeight) > 8) continue;
-            if (pixels < 12) continue;
-
-            const cx = sx + minX + boxWidth / 2;
-            const cy = sy + minY + boxHeight / 2;
-            const score = Math.abs(cx - expectedCenterX)
-              + Math.abs(cy - selected.lineY) * 1.8
-              + Math.abs(boxWidth - boxHeight) * 2;
-            if (!best || score < best.score) {
-              best = {
-                cx,
-                cy,
-                size: Math.max(boxWidth, boxHeight),
-                score
-              };
-            }
-          }
-        }
-
-        return best;
-      }
-
       function drawInventoryEditedImage() {
         const bitmap = state.inventoryEditor.imageBitmap;
         const rows = state.inventoryEditor.rows || [];
@@ -8240,14 +8146,13 @@ _Orcamento valido por 2 dias uteis_`;
         const box = selected.quantityBox;
         const sourceHeight = Math.max(8, box.y1 - box.y0);
         const rowTextHeight = Math.max(sourceHeight, selected.rowTextHeight || sourceHeight);
-        const fontSize = Math.max(13, Math.round(rowTextHeight * 1.08));
-        const checkboxSize = Math.max(11, Math.min(17, rowTextHeight * 0.82));
-        const detectedCheckbox = findInventoryCheckboxBox(ctx, selected, checkboxSize, canvas);
+        const fontSize = Math.max(12, Math.round(rowTextHeight * 1.25));
+        ctx.font = `400 ${fontSize}px Arial, Helvetica, sans-serif`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
         const centerX = (box.x0 + box.x1) / 2;
-        const centerY = selected.lineY || (box.y0 + box.y1) / 2;
+        const centerY = box.cy || (box.y0 + box.y1) / 2;
         const textWidth = ctx.measureText(quantity).width;
         const coverWidth = Math.max(box.x1 - box.x0 + 3, textWidth + 3);
         const coverHeight = Math.max(sourceHeight + 3, fontSize + 2);
@@ -8272,9 +8177,10 @@ _Orcamento valido por 2 dias uteis_`;
         ctx.fillStyle = "#50545a";
         ctx.fillText(quantity, centerX, centerY);
 
-        const checkboxCenterX = detectedCheckbox?.cx || selected.checkboxCenterX || (selected.labelStartX - Math.max(14, checkboxSize));
-        const checkboxCenterY = detectedCheckbox?.cy || selected.lineY;
-        const checkSize = Math.max(11, Math.min(16, detectedCheckbox?.size || checkboxSize));
+        const estimatedCheckboxX = selected.checkboxCenterX || (selected.labelStartX - Math.max(25, rowTextHeight * 4.1));
+        const checkboxCenterX = Math.min(bitmap.width * 0.11, Math.max(bitmap.width * 0.035, estimatedCheckboxX));
+        const checkboxCenterY = box.cy || selected.lineY;
+        const checkSize = Math.max(12, Math.min(24, rowTextHeight * 1.15));
         const checkX = checkboxCenterX - checkSize / 2;
         const checkY = checkboxCenterY - checkSize / 2;
         ctx.fillStyle = "#ffffff";
@@ -9287,6 +9193,10 @@ _Orcamento valido por 2 dias uteis_`;
         return Number.isFinite(parsed) ? Math.min(100, Math.max(0, parsed)) : 0;
       }
 
+      function formatPercentageInput(value) {
+        return `${String(parsePercentageInput(value)).replace(".", ",")}%`;
+      }
+
       function parseIntegerInput(value) {
         const parsed = Number.parseInt(String(value || "").replace(/[^\d-]/g, ""), 10);
         return Number.isFinite(parsed) ? Math.max(0, parsed) : 0;
@@ -9296,14 +9206,26 @@ _Orcamento valido por 2 dias uteis_`;
         return `${(Number(value) || 0).toFixed(2).replace(".", ",")}%`;
       }
 
-      function getPrizeRule(paymentMethod, discountPercent) {
-        const rules = paymentMethod === "pix"
-          ? COMMISSION_RULES.pix
-          : paymentMethod === "card"
-            ? COMMISSION_RULES.card
-            : COMMISSION_RULES.other;
-        return rules.find((rule) => discountPercent <= rule.maxDiscount)
-          ?? rules[rules.length - 1];
+      function getPrizeRule(paymentMethod, discountPercent, installments = 1) {
+        if (paymentMethod === "card") {
+          const safeInstallments = Math.min(21, Math.max(1, parseIntegerInput(installments) || 1));
+          const group = COMMISSION_RULES.card.find((rule) => (
+            safeInstallments >= rule.minInstallments && safeInstallments <= rule.maxInstallments
+          )) || COMMISSION_RULES.card[0];
+          const tier = group.tiers.find((rule) => discountPercent <= rule.maxDiscount) || group.tiers[group.tiers.length - 1];
+          let discountLabel = "desconto acima de 8%";
+          if (discountPercent <= 5) discountLabel = "desconto até 5%";
+          else if (discountPercent <= 6.5) discountLabel = "desconto acima de 5% até 6,5%";
+          else if (group.maxInstallments < 16 && discountPercent <= 8) discountLabel = "desconto acima de 6,5% até 8%";
+          else discountLabel = `desconto acima de ${group.maxInstallments >= 16 ? "6,5" : "8"}%`;
+          return {
+            ...tier,
+            label: `Cartão ${group.minInstallments}x a ${group.maxInstallments}x — ${discountLabel}`
+          };
+        }
+
+        const rules = paymentMethod === "pix" ? COMMISSION_RULES.pix : COMMISSION_RULES.other;
+        return rules.find((rule) => discountPercent <= rule.maxDiscount) ?? rules[rules.length - 1];
       }
 
       function calculateCommissionValues({
@@ -9311,7 +9233,8 @@ _Orcamento valido por 2 dias uteis_`;
         descontoPercentual,
         frete,
         formaPagamento,
-        pixElegivel,
+        parcelas = 1,
+        paymentSplit = null,
         canceladoOuDevolvido = false
       }) {
         const safeOriginal = Math.max(0, Number(valorOriginal) || 0);
@@ -9320,17 +9243,38 @@ _Orcamento valido por 2 dias uteis_`;
         const valorDesconto = safeOriginal * (safeDiscount / 100);
         const valorProdutosComDesconto = safeOriginal - valorDesconto;
         const valorLiquidoPedido = valorProdutosComDesconto + safeFreight;
-        const prizeRule = getPrizeRule(formaPagamento, safeDiscount);
+        const safeInstallments = Math.min(21, Math.max(1, parseIntegerInput(parcelas) || 1));
+        let prizeRule = getPrizeRule(formaPagamento, safeDiscount, safeInstallments);
         let percentualPremio = prizeRule.prizeRate;
+        let premioPix = 0;
+        let premioCartao = 0;
+        let valorPagoPix = 0;
+        let valorPagoCartao = 0;
 
-        if (formaPagamento === "pix" && !pixElegivel) percentualPremio = 0;
+        if (paymentSplit) {
+          valorPagoPix = Math.max(0, Number(paymentSplit.pixAmount) || 0);
+          valorPagoCartao = Math.max(0, Number(paymentSplit.cardAmount) || 0);
+          const pixRule = getPrizeRule("pix", safeDiscount, 1);
+          const cardRule = getPrizeRule("card", safeDiscount, paymentSplit.cardInstallments);
+          premioPix = valorPagoPix * pixRule.prizeRate;
+          premioCartao = valorPagoCartao * cardRule.prizeRate;
+          percentualPremio = valorLiquidoPedido > 0 ? (premioPix + premioCartao) / valorLiquidoPedido : 0;
+          prizeRule = {
+            prizeRate: percentualPremio,
+            label: "Pagamento dividido por modalidade",
+            pixRule,
+            cardRule
+          };
+        }
 
         const comissaoBase = canceladoOuDevolvido
           ? 0
           : valorLiquidoPedido * COMMISSION_RULES.commissionRate;
         const premioNegociacao = canceladoOuDevolvido
           ? 0
-          : valorLiquidoPedido * percentualPremio;
+          : paymentSplit
+            ? premioPix + premioCartao
+            : valorLiquidoPedido * percentualPremio;
 
         return {
           valorOriginal: safeOriginal,
@@ -9339,57 +9283,251 @@ _Orcamento valido por 2 dias uteis_`;
           valorProdutosComDesconto,
           frete: safeFreight,
           valorLiquidoPedido,
+          parcelas: safeInstallments,
           comissaoBase,
           prizeRule,
           percentualPremio,
+          premioPix: canceladoOuDevolvido ? 0 : premioPix,
+          premioCartao: canceladoOuDevolvido ? 0 : premioCartao,
+          valorPagoPix,
+          valorPagoCartao,
+          valorTotalModalidades: valorPagoPix + valorPagoCartao,
           premioNegociacao,
           totalVariavelVenda: comissaoBase + premioNegociacao
         };
       }
 
-      function getCommissionStatus(paymentMethod, discountPercent, pixEligible, paid) {
+      function populateCommissionInstallments(select) {
+        select.innerHTML = Array.from({ length: 21 }, (_, index) => {
+          const installments = index + 1;
+          return `<option value="${installments}">${installments}x</option>`;
+        }).join("");
+      }
+
+      function renderCommissionRulesTable(paymentMethod, discountPercent, installments, hasSaleValue = true, paymentSplit = null) {
+        const selectedDiscount = Math.min(100, Math.max(0, Number(discountPercent) || 0));
+        const rows = [];
+        const addPixRows = (selected) => {
+          const selectedTier = COMMISSION_RULES.pix.find((tier) => selectedDiscount <= tier.maxDiscount) || COMMISSION_RULES.pix[COMMISSION_RULES.pix.length - 1];
+          COMMISSION_RULES.pix.forEach((tier, index) => {
+            const previous = COMMISSION_RULES.pix[index - 1]?.maxDiscount;
+            const discountRange = Number.isFinite(tier.maxDiscount)
+              ? `${previous === undefined ? "Até" : `Acima de ${String(previous).replace(".", ",")}% até`} ${String(tier.maxDiscount).replace(".", ",")}%`
+              : `Acima de ${String(previous).replace(".", ",")}%`;
+            rows.push({
+              payment: "PIX",
+              discountRange,
+              prizeRate: tier.prizeRate,
+              selected: hasSaleValue && selected && tier === selectedTier
+            });
+          });
+        };
+        const addCardRows = (cardInstallments, selected) => {
+          const safeInstallments = Math.min(21, Math.max(1, parseIntegerInput(cardInstallments) || 1));
+          const selectedGroup = COMMISSION_RULES.card.find((group) => safeInstallments >= group.minInstallments && safeInstallments <= group.maxInstallments) || COMMISSION_RULES.card[0];
+          const selectedTier = selectedGroup.tiers.find((tier) => selectedDiscount <= tier.maxDiscount) || selectedGroup.tiers[selectedGroup.tiers.length - 1];
+          COMMISSION_RULES.card.forEach((group) => group.tiers.forEach((tier, index) => {
+            const previous = group.tiers[index - 1]?.maxDiscount;
+            const discountRange = Number.isFinite(tier.maxDiscount)
+              ? `${previous === undefined ? "Até" : `Acima de ${String(previous).replace(".", ",")}% até`} ${String(tier.maxDiscount).replace(".", ",")}%`
+              : `Acima de ${String(previous).replace(".", ",")}%`;
+            rows.push({
+              payment: `Cartão ${group.minInstallments}x a ${group.maxInstallments}x`,
+              discountRange,
+              prizeRate: tier.prizeRate,
+              selected: hasSaleValue && selected && group === selectedGroup && tier === selectedTier
+            });
+          }));
+        };
+
+        if (paymentSplit) {
+          addPixRows(Number(paymentSplit.pixAmount) > 0);
+          addCardRows(paymentSplit.cardInstallments, Number(paymentSplit.cardAmount) > 0);
+        } else if (paymentMethod === "pix") {
+          addPixRows(true);
+        } else if (paymentMethod === "card") {
+          addCardRows(installments, true);
+        } else {
+          rows.push({
+            payment: "Boleto / Outro",
+            discountRange: "Qualquer desconto",
+            prizeRate: COMMISSION_RULES.other[0].prizeRate,
+            selected: hasSaleValue
+          });
+        }
+
+        const paymentLabel = paymentSplit
+          ? `PIX + Cartão ${Math.min(21, Math.max(1, parseIntegerInput(paymentSplit.cardInstallments) || 1))}x`
+          : paymentMethod === "pix"
+          ? "PIX"
+          : paymentMethod === "card"
+            ? `Cartão ${Math.min(21, Math.max(1, parseIntegerInput(installments) || 1))}x`
+            : "Boleto / Outro";
+        el.commissionRulesCurrent.textContent = hasSaleValue
+          ? `${paymentLabel} · ${formatDetailedPercent(selectedDiscount)} de desconto`
+          : "Preencha o valor da venda para identificar a faixa";
+        const paymentHeader = paymentSplit || paymentMethod === "card" ? "Pagamento e parcelas" : "Pagamento";
+        el.commissionRulesTable.innerHTML = `
+          <table class="commission-rules-table">
+            <caption>${paymentSplit ? "As linhas destacadas mostram a faixa aplicada ao valor pago em cada modalidade." : hasSaleValue ? "A linha destacada identifica exatamente a regra aplicada a esta simulação." : "Informe o valor da venda para destacar a regra correspondente."}</caption>
+            <thead><tr><th>${paymentHeader}</th><th>Desconto</th><th>Prêmio e indicação</th></tr></thead>
+            <tbody>${rows.map((row) => `
+              <tr class="${row.selected ? "commission-rule-current" : ""}"${row.selected ? ' aria-current="true"' : ""}>
+                <td>${escapeHtml(row.payment)}</td>
+                <td>${escapeHtml(row.discountRange)}</td>
+                <td><strong>${formatDetailedPercent(row.prizeRate * 100)}</strong>${row.selected ? '<span class="commission-current-label">Orçamento atual</span>' : ""}</td>
+              </tr>`).join("")}
+            </tbody>
+          </table>`;
+      }
+
+      function updateQuoteCommissionCalculator() {
+        if (!state.quoteValues?.subtotal || !state.quoteValues?.total) {
+          el.quoteCommissionToggle.classList.add("hidden");
+          el.quoteCommissionPanel.classList.add("hidden");
+          el.quoteCommissionToggle.setAttribute("aria-expanded", "false");
+          return;
+        }
+
+        el.quoteCommissionToggle.classList.remove("hidden");
+        el.quoteCommissionToggle.setAttribute("aria-expanded", String(state.quoteCommissionOpen));
+        el.quoteCommissionPanel.classList.toggle("hidden", !state.quoteCommissionOpen);
+        el.quoteCommissionDetailsButton.classList.toggle("hidden", !state.currentUser?.showUserArea);
+        const formaPagamento = el.quoteCommissionPayment.value;
+        const parcelas = parseIntegerInput(el.quoteCommissionInstallments.value) || 1;
+        const descontoPercentual = parsePercentageInput(el.quoteCommissionDiscount.value);
+        const result = calculateCommissionValues({
+          valorOriginal: state.quoteValues.subtotal,
+          descontoPercentual,
+          frete: state.quoteValues.freight,
+          formaPagamento,
+          parcelas
+        });
+        const totalRatePercent = (COMMISSION_RULES.commissionRate + result.percentualPremio) * 100;
+
+        el.quoteCommissionInstallmentsRow.classList.toggle("hidden", formaPagamento !== "card");
+        el.quoteCommissionValue.textContent = formatCurrency(result.totalVariavelVenda);
+        el.quoteCommissionRate.textContent = `${formatDetailedPercent(COMMISSION_RULES.commissionRate * 100)} base + ${formatDetailedPercent(result.percentualPremio * 100)} prêmio = ${formatDetailedPercent(totalRatePercent)}`;
+      }
+
+      function toggleQuoteCommissionPanel() {
+        if (!state.quoteValues) return;
+        state.quoteCommissionOpen = !state.quoteCommissionOpen;
+        updateQuoteCommissionCalculator();
+        if (state.quoteCommissionOpen) {
+          el.quoteCommissionPayment.focus({ preventScroll: true });
+        }
+      }
+
+      function setCommissionCalculatorFromQuote() {
+        if (!state.quoteValues) return false;
+        el.commissionSaleValue.value = formatCurrency(state.quoteValues.subtotal);
+        el.commissionDiscount.value = formatPercentageInput(el.quoteCommissionDiscount.value);
+        el.commissionPayment.value = el.quoteCommissionPayment.value;
+        el.commissionInstallments.value = el.quoteCommissionInstallments.value || "1";
+        el.commissionFreight.value = formatCurrency(state.quoteValues.freight || 0);
+        el.commissionPaid.checked = false;
+        el.commissionSplitMode.checked = false;
+        el.commissionSplitPixAmount.value = "";
+        el.commissionSplitCardAmount.value = "";
+        el.commissionSplitCardInstallments.value = "1";
+        updateCommissionCalculator();
+        return true;
+      }
+
+      function showQuoteCommissionDetails() {
+        if (!state.currentUser?.showUserArea || !setCommissionCalculatorFromQuote()) return;
+        switchDash("user");
+        requestAnimationFrame(() => {
+          el.commissionCalculatorPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+          el.commissionSaleValue.focus({ preventScroll: true });
+        });
+      }
+
+      function getCommissionStatus(paymentMethod, discountPercent, paid, installments = 1, splitPrizeRate = 0, splitAmountsMatch = true) {
         if (!paid) return { label: "Valor projetado, ainda não efetivado", className: "status-warning" };
-        if (paymentMethod === "pix" && !pixEligible) return { label: "PIX sem elegibilidade de prêmio", className: "status-warning" };
+        if (paymentMethod === "split") {
+          if (!splitAmountsMatch) return { label: "Valores por modalidade não fecham o pedido", className: "status-warning" };
+          return splitPrizeRate > 0
+            ? { label: "Prêmio calculado por modalidade", className: "status-good" }
+            : { label: "Sem prêmio nas faixas atuais", className: "status-danger" };
+        }
         if (paymentMethod === "other") return { label: "Somente comissão base", className: "status-neutral" };
-        if (discountPercent > 8) return { label: "Sem prêmio por negociação", className: "status-danger" };
-        if (paymentMethod === "pix" && discountPercent <= 5) return { label: "Premiação máxima", className: "status-good" };
-        if (paymentMethod === "pix" && discountPercent <= 6.5) return { label: "Premiação reduzida", className: "status-warning" };
-        if (paymentMethod === "pix") return { label: "Premiação mínima", className: "status-minimum" };
-        if (paymentMethod === "card" && discountPercent <= 5) return { label: "Boa faixa de premiação", className: "status-good" };
-        if (paymentMethod === "card" && discountPercent <= 6.5) return { label: "Premiação reduzida", className: "status-warning" };
-        return { label: "Premiação mínima", className: "status-minimum" };
+        const appliedRate = getPrizeRule(paymentMethod, discountPercent, installments).prizeRate;
+        if (!appliedRate) return { label: "Sem prêmio por negociação", className: "status-danger" };
+        const maximumRate = getPrizeRule(paymentMethod, 0, installments).prizeRate;
+        if (appliedRate === maximumRate) return { label: "Premiação máxima da faixa", className: "status-good" };
+        return { label: "Premiação reduzida", className: "status-warning" };
       }
 
       function updateCommissionCalculator() {
-        const formaPagamento = el.commissionPayment.value;
-        const pixElegivel = el.commissionPixEligible.checked;
+        const splitMode = el.commissionSplitMode.checked;
+        const formaPagamento = splitMode ? "split" : el.commissionPayment.value;
+        const parcelas = splitMode
+          ? parseIntegerInput(el.commissionSplitCardInstallments.value) || 1
+          : parseIntegerInput(el.commissionInstallments.value) || 1;
+        const paymentSplit = splitMode ? {
+          pixAmount: parseCurrencyInput(el.commissionSplitPixAmount.value),
+          cardAmount: parseCurrencyInput(el.commissionSplitCardAmount.value),
+          cardInstallments: parcelas
+        } : null;
         const pedidoPago = el.commissionPaid.checked;
         const result = calculateCommissionValues({
           valorOriginal: parseCurrencyInput(el.commissionSaleValue.value),
           descontoPercentual: parsePercentageInput(el.commissionDiscount.value),
           frete: parseCurrencyInput(el.commissionFreight.value),
           formaPagamento,
-          pixElegivel
+          parcelas,
+          paymentSplit
         });
         const paymentLabels = { pix: "PIX", card: "Cartão", other: "Boleto / Outro" };
-        const status = getCommissionStatus(formaPagamento, result.descontoPercentual, pixElegivel, pedidoPago);
+        const amountDifference = Math.abs(result.valorTotalModalidades - result.valorLiquidoPedido);
+        const splitAmountsMatch = !splitMode || amountDifference <= 0.01;
+        const status = getCommissionStatus(
+          formaPagamento,
+          result.descontoPercentual,
+          pedidoPago,
+          parcelas,
+          result.percentualPremio,
+          splitAmountsMatch
+        );
 
-        el.commissionPixEligibilityRow.classList.toggle("hidden", formaPagamento !== "pix");
-        el.commissionPaymentWarning.classList.toggle("active", !pedidoPago);
-        el.commissionPixWarning.classList.toggle("active", formaPagamento === "pix" && !pixElegivel);
+        el.commissionPayment.closest(".field").classList.toggle("hidden", splitMode);
+        el.commissionInstallmentsRow.classList.toggle("hidden", splitMode || formaPagamento !== "card");
+        el.commissionSplitFields.classList.toggle("hidden", !splitMode);
+        el.commissionSplitPrizeBreakdown.classList.toggle("hidden", !splitMode);
+        el.commissionPaymentWarning.textContent = splitMode && !splitAmountsMatch
+          ? `PIX + cartão totalizam ${formatCurrency(result.valorTotalModalidades)}; o valor líquido do pedido é ${formatCurrency(result.valorLiquidoPedido)}.`
+          : "Estimativa: a comissão é efetivada somente após o pagamento integral do pedido.";
+        el.commissionPaymentWarning.classList.toggle("active", !pedidoPago || (splitMode && !splitAmountsMatch));
+        if (splitMode) {
+          el.commissionSplitReconciliation.textContent = splitAmountsMatch
+            ? `Valores conferidos: ${formatCurrency(result.valorTotalModalidades)} de ${formatCurrency(result.valorLiquidoPedido)}.`
+            : `Diferença de ${formatCurrency(amountDifference)} entre os valores informados e o total líquido do pedido.`;
+          el.commissionSplitReconciliation.classList.toggle("is-match", splitAmountsMatch);
+          el.commissionSplitReconciliation.classList.toggle("is-mismatch", !splitAmountsMatch);
+        }
         el.commissionOriginal.textContent = formatCurrency(result.valorOriginal);
         el.commissionDiscountPercent.textContent = formatPercent(result.descontoPercentual);
         el.commissionDiscountValue.textContent = formatCurrency(result.valorDesconto);
         el.commissionFreightResult.textContent = formatCurrency(result.frete);
         el.commissionNetValue.textContent = formatCurrency(result.valorLiquidoPedido);
         el.commissionBase.textContent = formatCurrency(result.comissaoBase);
-        el.commissionPaymentResult.textContent = paymentLabels[formaPagamento];
+        el.commissionPaymentResult.textContent = splitMode
+          ? `PIX ${formatCurrency(result.valorPagoPix)} + Cartão ${formatCurrency(result.valorPagoCartao)} em ${parcelas}x`
+          : formaPagamento === "card"
+            ? `${paymentLabels[formaPagamento]} em ${result.parcelas}x`
+            : paymentLabels[formaPagamento];
         el.commissionPrizeRule.textContent = result.prizeRule.label;
         el.commissionPrizePercent.textContent = formatPercent(result.percentualPremio * 100);
+        el.commissionTotalPercent.textContent = `${formatDetailedPercent(COMMISSION_RULES.commissionRate * 100)} base + ${formatDetailedPercent(result.percentualPremio * 100)} prêmio = ${formatDetailedPercent((COMMISSION_RULES.commissionRate + result.percentualPremio) * 100)}`;
         el.commissionPrizeValue.textContent = formatCurrency(result.premioNegociacao);
+        el.commissionSplitPixPrize.textContent = formatCurrency(result.premioPix);
+        el.commissionSplitCardPrize.textContent = formatCurrency(result.premioCartao);
         el.commissionTotal.textContent = formatCurrency(result.totalVariavelVenda);
         el.commissionStatusBadge.textContent = status.label;
         el.commissionStatusBadge.className = `status-badge ${status.className}`;
+        renderCommissionRulesTable(formaPagamento, result.descontoPercentual, parcelas, result.valorOriginal > 0, paymentSplit);
       }
 
       function clearCommissionCalculator() {
@@ -9397,245 +9535,13 @@ _Orcamento valido por 2 dias uteis_`;
         el.commissionDiscount.value = "";
         el.commissionFreight.value = "";
         el.commissionPayment.value = "pix";
+        el.commissionInstallments.value = "1";
         el.commissionPaid.checked = true;
-        el.commissionPixEligible.checked = true;
+        el.commissionSplitMode.checked = false;
+        el.commissionSplitPixAmount.value = "";
+        el.commissionSplitCardAmount.value = "";
+        el.commissionSplitCardInstallments.value = "1";
         updateCommissionCalculator();
-      }
-
-      function getGoalStorageKey() {
-        return state.currentUser
-          ? `${GOAL_FORECAST_KEY}_${state.currentUser.id}`
-          : GOAL_FORECAST_KEY;
-      }
-
-      function loadGoalSettings() {
-        state.goalStorageReady = false;
-        let saved = {};
-        try {
-          saved = JSON.parse(localStorage.getItem(getGoalStorageKey()) || "{}");
-        } catch (error) {
-          saved = {};
-        }
-        el.goalMonthly.value = saved.monthly || "";
-        el.goalSold.value = saved.sold || "";
-        state.goalDaysManual = Boolean(saved.manualDays);
-        el.goalRemainingDays.value = state.goalDaysManual ? (saved.remainingDays || "") : "";
-        state.goalStorageReady = true;
-        updateGoalForecast({ skipSave: true });
-      }
-
-      function saveGoalSettings() {
-        if (!state.currentUser || !state.goalStorageReady) return;
-        localStorage.setItem(getGoalStorageKey(), JSON.stringify({
-          monthly: el.goalMonthly.value,
-          sold: el.goalSold.value,
-          remainingDays: el.goalRemainingDays.value,
-          manualDays: state.goalDaysManual,
-          savedAt: new Date().toISOString()
-        }));
-      }
-
-      function applyGoalDaysMode() {
-        const calendar = getGoalCalendarInfo();
-        const holidayCount = calendar.discountedHolidays.length;
-        const holidayNames = calendar.discountedHolidays.map((holiday) => holiday.name).join(", ");
-        const holidayText = holidayCount === 1
-          ? "1 feriado nacional descontado"
-          : `${holidayCount} feriados nacionais descontados`;
-
-        if (!state.goalDaysManual) {
-          el.goalRemainingDays.value = String(calendar.remainingBusinessDays);
-        }
-
-        el.goalRemainingDays.readOnly = !state.goalDaysManual;
-        el.goalRemainingDays.classList.toggle("goal-days-auto", !state.goalDaysManual);
-        el.toggleGoalDaysManual.textContent = state.goalDaysManual
-          ? "Usar cálculo automático"
-          : "Editar dias úteis";
-        el.goalHolidayInfo.innerHTML = state.goalDaysManual
-          ? `Modo manual ativo. Automático de ${escapeHtml(calendar.monthLabel)}: <b>${calendar.remainingBusinessDays}</b> dias úteis restantes; ${holidayText}.`
-          : `Automático para ${escapeHtml(calendar.monthLabel)}: <b>${calendar.remainingBusinessDays}</b> dias úteis restantes de ${calendar.totalBusinessDays}; ${holidayText}${holidayNames ? ` (${escapeHtml(holidayNames)})` : ""}.`;
-      }
-
-      function getGoalPulsePaceClass(result, expectedValueToday, hasPaceReference) {
-        if (result.faltaParaMeta <= 0) return "goal-pace-ahead";
-        if (!hasPaceReference || expectedValueToday <= 0) return "goal-pace-warning";
-        const paceRatio = result.vendidoNoMes / expectedValueToday;
-        if (paceRatio < 0.85) return "goal-pace-danger";
-        if (paceRatio < 1) return "goal-pace-warning";
-        if (paceRatio < 1.15) return "goal-pace-ok";
-        return "goal-pace-ahead";
-      }
-
-      function updateGoalTopPulse(result, paceInfo = {}) {
-        if (!el.goalTopPulse || !el.goalTopPulseText) return;
-        const paceClasses = ["goal-top-success", "goal-pace-danger", "goal-pace-warning", "goal-pace-ok", "goal-pace-ahead"];
-        el.goalTopPulse.classList.remove(...paceClasses);
-        if (result.metaMensal <= 0) {
-          el.goalTopPulse.classList.add("hidden");
-          return;
-        }
-
-        let message = "";
-        const paceClass = getGoalPulsePaceClass(
-          result,
-          Number(paceInfo.expectedValueToday) || 0,
-          Boolean(paceInfo.hasPaceReference)
-        );
-        if (result.faltaParaMeta <= 0) {
-          message = `Meta verde: você já passou da meta em <strong>${formatCurrency(result.vendidoNoMes - result.metaMensal)}</strong>.`;
-        } else if (result.diasUteisRestantes <= 0) {
-          message = `Prazo zerado: faltam <strong>${formatCurrency(result.faltaParaMeta)}</strong> para a meta.`;
-        } else {
-          const prompt = GOAL_DAILY_PROMPTS[new Date().getDate() % GOAL_DAILY_PROMPTS.length];
-          message = prompt(formatCurrency(result.necessarioPorDiaRestante));
-        }
-
-        el.goalTopPulseText.innerHTML = message;
-        el.goalTopPulse.classList.remove("hidden");
-        el.goalTopPulse.classList.add(paceClass);
-      }
-
-      function getMetaForecastStatus({
-        metaMensal,
-        vendidoNoMes,
-        diasUteisRestantes
-      }) {
-        if (metaMensal <= 0) {
-          return {
-            type: "neutral",
-            title: "Informe sua meta mensal",
-            message: "Preencha os dados para visualizar sua projeção."
-          };
-        }
-        if (vendidoNoMes >= metaMensal) {
-          return {
-            type: "achieved",
-            title: "Meta já atingida",
-            message: "Você já alcançou ou superou sua meta mensal."
-          };
-        }
-        if (diasUteisRestantes === 0) {
-          return {
-            type: "closed",
-            title: "Prazo encerrado abaixo da meta",
-            message: "Não há mais dias restantes informados para alcançar a meta."
-          };
-        }
-        return {
-          type: "active",
-          title: "Meta em andamento",
-          message: "Use o valor diário calculado para distribuir o que falta nos dias restantes."
-        };
-      }
-
-      function calculateGoalForecast({
-        metaMensal,
-        vendidoNoMes,
-        diasUteisRestantes
-      }) {
-        const safeMeta = Math.max(0, Number(metaMensal) || 0);
-        const safeSold = Math.max(0, Number(vendidoNoMes) || 0);
-        const safeRemainingDays = Math.max(0, Math.floor(Number(diasUteisRestantes) || 0));
-        const percentualMetaAtingido = safeMeta > 0 ? (safeSold / safeMeta) * 100 : 0;
-        const faltaParaMeta = Math.max(safeMeta - safeSold, 0);
-        const necessarioPorDiaRestante = safeRemainingDays > 0 ? faltaParaMeta / safeRemainingDays : 0;
-        const status = getMetaForecastStatus({
-          metaMensal: safeMeta,
-          vendidoNoMes: safeSold,
-          diasUteisRestantes: safeRemainingDays
-        });
-
-        return {
-          metaMensal: safeMeta,
-          vendidoNoMes: safeSold,
-          diasUteisRestantes: safeRemainingDays,
-          percentualMetaAtingido,
-          faltaParaMeta,
-          necessarioPorDiaRestante,
-          status
-        };
-      }
-
-      function updateGoalForecast(options = {}) {
-        applyGoalDaysMode();
-        const result = calculateGoalForecast({
-          metaMensal: parseCurrencyInput(el.goalMonthly.value),
-          vendidoNoMes: parseCurrencyInput(el.goalSold.value),
-          diasUteisRestantes: parseIntegerInput(el.goalRemainingDays.value)
-        });
-        const progressWidth = Math.min(result.percentualMetaAtingido, 100);
-        const paceCalendar = getGoalCalendarInfo();
-        const expectedPercentToday = result.metaMensal > 0 && paceCalendar.totalBusinessDays > 0
-          ? (paceCalendar.expectedBusinessDayIndex / paceCalendar.totalBusinessDays) * 100
-          : 0;
-        const expectedValueToday = result.metaMensal * (expectedPercentToday / 100);
-        const expectedMarkerWidth = Math.min(Math.max(expectedPercentToday, 0), 100);
-        const hasPaceReference = result.metaMensal > 0 && paceCalendar.totalBusinessDays > 0;
-        const isOnDailyPace = hasPaceReference && result.vendidoNoMes + 0.005 >= expectedValueToday;
-        const progressColor = hasPaceReference && isOnDailyPace ? "var(--green)" : "var(--red)";
-        const statusClasses = {
-          neutral: "status-neutral",
-          achieved: "status-good",
-          closed: "status-danger",
-          active: "status-warning"
-        };
-
-        const missingDays = result.metaMensal > result.vendidoNoMes && result.diasUteisRestantes === 0;
-        el.goalValidation.textContent = missingDays
-          ? "Informe quantos dias ainda restam para calcular o valor necessário por dia."
-          : "";
-        el.goalValidation.classList.toggle("active", missingDays);
-        el.goalNeededDailyHighlight.textContent = formatCurrency(result.necessarioPorDiaRestante);
-        el.goalMetaResult.textContent = formatCurrency(result.metaMensal);
-        el.goalProgressText.textContent = `${formatDetailedPercent(result.percentualMetaAtingido)} da meta atingida`;
-        el.goalProgress.style.width = `${progressWidth}%`;
-        el.goalProgress.style.background = progressColor;
-        el.goalExpectedMarker.style.left = `${expectedMarkerWidth}%`;
-        el.goalExpectedMarker.classList.toggle("hidden", !hasPaceReference);
-        el.goalPaceText.textContent = !hasPaceReference
-          ? "Ritmo esperado: aguardando meta"
-          : isOnDailyPace
-            ? "No ritmo: realizado alcançou a linha esperada de hoje"
-            : "Abaixo do ritmo: realizado ainda está antes da linha esperada";
-        el.goalExpectedText.textContent = hasPaceReference
-          ? `Esperado até hoje: ${formatCurrency(expectedValueToday)} (${formatDetailedPercent(expectedPercentToday)})`
-          : "Esperado até hoje: R$ 0,00";
-        el.goalStatusBadge.textContent = result.status.title;
-        el.goalStatusBadge.className = `status-badge ${statusClasses[result.status.type] || "status-neutral"}`;
-        el.goalStatusTitle.textContent = result.status.title;
-        el.goalStatusMessage.textContent = result.status.type === "active"
-          ? `${isOnDailyPace ? "Você está dentro do previsto para hoje." : "Você está abaixo do previsto para hoje."} Esperado até hoje: ${formatCurrency(expectedValueToday)}. Para atingir a meta, venda ${formatCurrency(result.necessarioPorDiaRestante)} por dia durante os próximos ${result.diasUteisRestantes} dias.`
-          : result.status.message;
-        el.goalSoldResult.textContent = formatCurrency(result.vendidoNoMes);
-        el.goalRemainingAmount.textContent = formatCurrency(result.faltaParaMeta);
-        el.goalDaysResult.textContent = String(result.diasUteisRestantes);
-        el.goalForecastPercent.textContent = formatDetailedPercent(result.percentualMetaAtingido);
-        el.goalDailyPlanText.textContent = result.faltaParaMeta <= 0
-          ? "A meta já foi atingida. Não há valor diário pendente."
-          : result.diasUteisRestantes > 0
-            ? `${formatCurrency(result.necessarioPorDiaRestante)} por dia para completar a meta.`
-            : "Informe os dias restantes para gerar o plano diário.";
-        el.goalProgressSummary.textContent = result.metaMensal > 0
-          ? `${formatDetailedPercent(result.percentualMetaAtingido)} concluído; linha esperada em ${formatDetailedPercent(expectedPercentToday)}; faltam ${formatCurrency(result.faltaParaMeta)}.`
-          : "Informe a meta mensal.";
-        el.goalDeadlineSummary.textContent = result.diasUteisRestantes === 1
-          ? "Resta 1 dia para alcançar a meta."
-          : `Restam ${result.diasUteisRestantes} dias para alcançar a meta.`;
-        updateGoalTopPulse(result, {
-          expectedValueToday,
-          hasPaceReference
-        });
-        if (!options.skipSave) saveGoalSettings();
-      }
-
-      function clearGoalForecast() {
-        el.goalMonthly.value = "";
-        el.goalSold.value = "";
-        el.goalRemainingDays.value = "";
-        state.goalDaysManual = false;
-        localStorage.removeItem(getGoalStorageKey());
-        updateGoalForecast({ skipSave: true });
       }
 
       function getActivityStatus(activity, today = todayIso()) {
@@ -9838,7 +9744,6 @@ _Orcamento valido por 2 dias uteis_`;
           : state.activitiesError ? "Falha ao carregar atividades" : "Carregando agenda privada";
         renderActivities();
         updateCommissionCalculator();
-        updateGoalForecast();
       }
 
       async function loadActivityData() {
@@ -9886,7 +9791,6 @@ _Orcamento valido por 2 dias uteis_`;
         el.dashboard.classList.add("active");
         el.userBadge.textContent = safeUser.name || safeUser.email || "Usuário ativo";
         applyWatermarkSettings();
-        loadGoalSettings();
         renderUserArea();
         switchDash("calc");
         calculate();
@@ -10003,33 +9907,43 @@ _Orcamento valido por 2 dias uteis_`;
 
       bindCurrencyField(el.commissionSaleValue, updateCommissionCalculator);
       bindCurrencyField(el.commissionFreight, updateCommissionCalculator);
+      bindCurrencyField(el.commissionSplitPixAmount, updateCommissionCalculator);
+      bindCurrencyField(el.commissionSplitCardAmount, updateCommissionCalculator);
+      populateCommissionInstallments(el.commissionInstallments);
+      populateCommissionInstallments(el.commissionSplitCardInstallments);
+      populateCommissionInstallments(el.quoteCommissionInstallments);
       el.commissionDiscount.addEventListener("input", updateCommissionCalculator);
       el.commissionDiscount.addEventListener("blur", () => {
         if (el.commissionDiscount.value.trim()) {
-          el.commissionDiscount.value = `${parsePercentageInput(el.commissionDiscount.value).toFixed(1).replace(".", ",")}%`;
+          el.commissionDiscount.value = formatPercentageInput(el.commissionDiscount.value);
         }
         updateCommissionCalculator();
       });
       el.commissionPayment.addEventListener("change", updateCommissionCalculator);
+      el.commissionInstallments.addEventListener("change", updateCommissionCalculator);
       el.commissionPaid.addEventListener("change", updateCommissionCalculator);
-      el.commissionPixEligible.addEventListener("change", updateCommissionCalculator);
+      el.commissionSplitMode.addEventListener("change", updateCommissionCalculator);
+      el.commissionSplitCardInstallments.addEventListener("change", updateCommissionCalculator);
       el.clearCommission.addEventListener("click", clearCommissionCalculator);
-
-      bindCurrencyField(el.goalMonthly, updateGoalForecast);
-      bindCurrencyField(el.goalSold, updateGoalForecast);
-      el.goalRemainingDays.addEventListener("input", () => {
-        state.goalDaysManual = true;
-        updateGoalForecast();
-      });
-      el.toggleGoalDaysManual.addEventListener("click", () => {
-        state.goalDaysManual = !state.goalDaysManual;
-        updateGoalForecast();
-        if (state.goalDaysManual) {
-          el.goalRemainingDays.focus();
-          el.goalRemainingDays.select();
+      el.quoteCommissionPayment.addEventListener("change", () => {
+        if (!state.quoteCommissionDiscountEdited) {
+          el.quoteCommissionDiscount.value = el.quoteCommissionPayment.value === "pix" ? "10%" : "0%";
         }
+        updateQuoteCommissionCalculator();
       });
-      el.clearGoal.addEventListener("click", clearGoalForecast);
+      el.quoteCommissionToggle.addEventListener("click", toggleQuoteCommissionPanel);
+      el.quoteCommissionDetailsButton.addEventListener("click", showQuoteCommissionDetails);
+      el.quoteCommissionInstallments.addEventListener("change", updateQuoteCommissionCalculator);
+      el.quoteCommissionDiscount.addEventListener("input", () => {
+        state.quoteCommissionDiscountEdited = true;
+        updateQuoteCommissionCalculator();
+      });
+      el.quoteCommissionDiscount.addEventListener("blur", () => {
+        if (el.quoteCommissionDiscount.value.trim()) {
+          el.quoteCommissionDiscount.value = formatPercentageInput(el.quoteCommissionDiscount.value);
+        }
+        updateQuoteCommissionCalculator();
+      });
 
       el.ddd.addEventListener("input", findAndCalculate);
       el.caliber.addEventListener("change", findAndCalculate);
@@ -10122,7 +10036,6 @@ _Orcamento valido por 2 dias uteis_`;
       renderCarrierEmpty();
       loadSheet();
       updateCommissionCalculator();
-      updateGoalForecast();
       localStorage.removeItem("recarga_club_session_v3");
       void restoreActivitySession();
       calculate();
