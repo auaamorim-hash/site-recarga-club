@@ -1622,82 +1622,189 @@
       }
 
       .commission-rules-table-wrap {
-        max-height: 460px;
-        overflow: auto;
-        border: 1px solid var(--line);
-        border-radius: 7px;
-        background: var(--surface, rgba(0, 0, 0, 0.12));
+        min-width: 0;
       }
 
-      .commission-rules-table {
-        width: 100%;
+      .commission-matrix-intro,
+      .commission-matrix-note {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .commission-matrix-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.95fr);
+        gap: 12px;
+      }
+
+      .commission-matrix-panel {
         min-width: 0;
-        table-layout: fixed;
+        padding: 14px;
+        border: 1px solid rgba(226, 232, 238, 0.1);
+        border-radius: 6px;
+        background: #201f1d;
+      }
+
+      .commission-matrix-panel h5 {
+        margin: 0 0 10px;
+        color: var(--yellow, #f6b900);
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .commission-matrix-scroll {
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+      }
+
+      .commission-matrix-table {
+        width: 100%;
+        min-width: 490px;
         border-collapse: collapse;
         text-align: left;
         font-size: 0.9rem;
       }
 
-      .commission-rules-table th:first-child,
-      .commission-rules-table td:first-child {
-        width: 38%;
-      }
-
-      .commission-rules-table th:nth-child(2),
-      .commission-rules-table td:nth-child(2) {
-        width: 36%;
-      }
-
-      .commission-rules-table th:last-child,
-      .commission-rules-table td:last-child {
-        width: 26%;
-      }
-
-      .commission-rules-table caption {
-        padding: 12px 14px;
-        color: var(--muted);
-        text-align: left;
-      }
-
-      .commission-rules-table th,
-      .commission-rules-table td {
-        padding: 11px 14px;
-        border-top: 1px solid var(--line);
+      .commission-matrix-table th,
+      .commission-matrix-table td {
+        padding: 9px 7px;
+        border-bottom: 1px solid rgba(226, 232, 238, 0.08);
         vertical-align: middle;
       }
 
-      .commission-rules-table thead th {
-        position: sticky;
-        top: 0;
-        z-index: 1;
-        background: var(--panel, #191e21);
-        color: var(--muted);
-        font-size: 0.78rem;
+      .commission-matrix-table thead th {
+        color: #aab2b7;
+        font-size: 0.68rem;
         text-transform: uppercase;
+        font-weight: 500;
       }
 
-      .commission-rules-table td {
-        overflow-wrap: anywhere;
+      .commission-matrix-table tbody th {
+        color: #f0f0ef;
+        font-weight: 700;
+        white-space: nowrap;
       }
 
-      .commission-rules-table .commission-rule-current {
-        background: rgba(254, 195, 43, 0.12);
-        color: var(--text);
+      .commission-matrix-table td {
+        color: #c1c6c9;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      .commission-matrix-table td.commission-matrix-current {
+        background: rgba(246, 185, 0, 0.32);
+        color: #fff;
+        font-weight: 800;
+        box-shadow: inset 0 0 0 1px rgba(246, 185, 0, 0.24);
+      }
+
+      .commission-matrix-current-label {
+        display: block;
+        margin-top: 2px;
+        color: #ffe08a;
+        font-size: 0.62rem;
+        font-weight: 700;
+        text-align: center;
+        text-transform: uppercase;
+        white-space: normal;
+      }
+
+      .commission-golden-rule {
+        margin-top: 10px;
+        padding: 10px 12px;
+        border-left: 3px solid var(--yellow, #f6b900);
+        background: #201f1d;
+      }
+
+      .commission-golden-rule strong {
+        display: block;
+        margin-bottom: 3px;
+        color: #f1f1ef;
+      }
+
+      .commission-golden-rule span {
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .deal-saver-policy {
+        margin-top: 14px;
+        border-top: 1px solid var(--line);
+        padding-top: 12px;
+      }
+
+      .deal-saver-policy summary {
+        width: fit-content;
+        color: var(--yellow, #f6b900);
+        cursor: pointer;
         font-weight: 700;
       }
 
-      .commission-rules-table .commission-rule-current td:last-child strong {
+      .deal-saver-policy-layout {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .deal-saver-policy-panel {
+        min-width: 0;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: rgba(13, 17, 19, 0.42);
+      }
+
+      .deal-saver-policy-panel h4 {
+        margin: 0 0 8px;
+        color: var(--yellow, #f6b900);
+        font-size: 0.82rem;
+        text-transform: uppercase;
+      }
+
+      .deal-saver-policy-scroll {
+        overflow-x: auto;
+      }
+
+      .deal-saver-policy-table {
+        width: 100%;
+        min-width: 510px;
+        border-collapse: collapse;
+        font-size: 0.82rem;
+      }
+
+      .deal-saver-policy-table th,
+      .deal-saver-policy-table td {
+        padding: 9px 7px;
+        border-bottom: 1px solid rgba(226, 232, 238, 0.08);
+        text-align: right;
+        white-space: nowrap;
+      }
+
+      .deal-saver-policy-table thead th {
+        color: var(--muted);
+        font-size: 0.68rem;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      .deal-saver-policy-table th:first-child,
+      .deal-saver-policy-table td:first-child {
+        text-align: left;
+      }
+
+      .deal-saver-policy-table tbody th {
         color: var(--text);
       }
 
-      .commission-current-label {
-        display: block;
-        margin-top: 4px;
-        border-left: 2px solid var(--gold, #ffc72c);
-        padding-left: 6px;
-        color: var(--gold, #ffc72c);
-        font-size: 0.75rem;
-        line-height: 1.25;
+      .deal-saver-policy-note {
+        margin: 9px 0 0;
+        color: var(--muted);
+        font-size: 0.86rem;
+        line-height: 1.45;
       }
 
       .quote-commission-footer {
@@ -1727,14 +1834,13 @@
           flex-direction: column;
         }
 
-        .commission-rules-table th,
-        .commission-rules-table td {
-          padding: 9px 7px;
-          font-size: 0.78rem;
+        .commission-matrix-layout,
+        .deal-saver-policy-layout {
+          grid-template-columns: minmax(0, 1fr);
         }
 
-        .commission-rules-table th {
-          font-size: 0.68rem;
+        .commission-matrix-panel {
+          padding: 11px;
         }
       }
 
@@ -4191,19 +4297,29 @@
                 <h3>Proibido perder venda</h3>
                 <div class="deal-saver-grid">
                   <div class="field">
-                    <label for="dealSaverGroup">Grupo</label>
-                    <select id="dealSaverGroup">
-                      <option value="lee">Lee Precision (Prensas e Dies)</option>
-                      <option value="pressesDies">Prensas e Dies</option>
-                      <option value="accessories">Acessórios</option>
+                    <label for="dealSaverProductType">Tipo de produto</label>
+                    <select id="dealSaverProductType">
+                      <option value="pce">Produto PCE</option>
+                      <option value="nonPce">Produto não PCE</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="dealSaverBrand">Marca</label>
+                    <select id="dealSaverBrand">
+                      <option value="lee">Lee</option>
+                      <option value="frankford">Frankford</option>
+                      <option value="other">Outras marcas</option>
+                      <option value="dillon">Dillon</option>
+                      <option value="recargaClub">Recarga Club</option>
                     </select>
                   </div>
                   <div class="field">
                     <label for="dealSaverPayment">Pagamento</label>
                     <select id="dealSaverPayment">
                       <option value="pix">Pix / Transferência</option>
-                      <option value="card">Cartão até 12x</option>
-                      <option value="card21">Cartão 21x</option>
+                      <option value="card1to6">Cartão 1x a 6x</option>
+                      <option value="card7to12">Cartão 7x a 12x</option>
+                      <option value="card13to21">Cartão 13x a 21x</option>
                       <option value="boleto">Boleto</option>
                     </select>
                   </div>
@@ -4217,6 +4333,10 @@
                   </div>
                 </div>
                 <div id="dealSaverResult" class="deal-saver-result"></div>
+                <details class="deal-saver-policy">
+                  <summary>Consultar tabela completa de descontos</summary>
+                  <div id="dealSaverPolicyTable"></div>
+                </details>
               </div>
               </div>
             </div>
@@ -4410,9 +4530,10 @@
               </div>
               <section class="commission-rules-details" aria-labelledby="commissionRulesHeading">
                 <div class="commission-rules-heading">
-                  <h4 id="commissionRulesHeading">Faixas da comissão</h4>
+                  <h4 id="commissionRulesHeading">Quanto eu ganho</h4>
                   <span id="commissionRulesCurrent">Aguardando simulação</span>
                 </div>
+                <p class="commission-matrix-intro">Percentuais sobre o total pago pelo cliente. Soma-se a comissão base de 0,40%, que não muda.</p>
                 <div id="commissionRulesTable" class="commission-rules-table-wrap"></div>
               </section>
             </div>
@@ -5116,7 +5237,7 @@
         "quotePressName", "quotePasteZone", "quoteResult", "copyQuoteMessage", "quoteInstallmentsButton", "quoteInstallmentsPreview",
         "quoteCommissionToggle", "quoteCommissionPanel", "quoteCommissionPayment", "quoteCommissionInstallmentsRow", "quoteCommissionInstallments", "quoteCommissionDiscount",
         "quoteCommissionValue", "quoteCommissionRate", "quoteCommissionDetailsButton",
-        "dealSaverGroup", "dealSaverPayment", "dealSaverValue", "dealSaverEntry", "dealSaverResult",
+        "dealSaverProductType", "dealSaverBrand", "dealSaverPayment", "dealSaverValue", "dealSaverEntry", "dealSaverResult", "dealSaverPolicyTable",
         "inventoryPasteZone", "inventoryEditorStatus", "inventoryEditorControls", "inventoryCaliberSelect", "inventoryQuantity", "inventoryPreview", "inventoryCanvas", "downloadInventoryImage",
         "carrierDdd", "carrierCep", "carrierCepResult", "carrierLocation", "militaryRegionBadge", "sfpcResult", "ufGrid", "carrierTitle", "carrierCount", "carrierList",
         "userTabButton", "profileAvatar", "profileName", "profileEmail", "profilePhone", "profileRole", "activitiesPanel", "activitySource", "activityList",
@@ -5329,7 +5450,7 @@ _Valores apenas para demonstrar a comissão_`;
         { tab: "report", target: "#quotePasteZone", title: "Gerar mensagem para cliente", detail: "Colar ou arrastar orçamento PDF; calcula 10% no Pix", category: "Mensagem de orçamento", terms: "orçamento orcamento pdf proposta cotação cotacao cliente whatsapp pix a vista desconto mensagem 10 porcento" },
         { tab: "report", target: "#copyQuoteMessage", title: "Copiar mensagem de orçamento", detail: "Copiar o texto pronto para enviar", category: "Mensagem de orçamento", terms: "copiar enviar cliente whatsapp proposta texto" },
         { tab: "report", target: "#quoteInstallmentsButton", title: "Simular parcelas do orçamento", detail: "Ver opções de 1x até 21x sem juros", category: "Mensagem de orçamento", terms: "parcelamento parcelas cartão credito 1x 12x 21x sem juros" },
-        { tab: "report", target: "#dealSaverGroup", title: "Proibido perder venda", detail: "Consultar desconto, boleto e entrada mínima", category: "Negociação", terms: "desconto limite desconto máximo desconto maximo entrada boleto reservar pix cartão preservar venda" },
+        { tab: "report", target: "#dealSaverProductType", title: "Proibido perder venda", detail: "Consultar desconto por produto, marca e parcelas", category: "Negociação", terms: "desconto limite desconto máximo desconto maximo entrada boleto reservar pix cartão marca PCE produto parcelas preservar venda" },
         { tab: "report", target: "#inventoryPasteZone", imageTool: "edit", title: "Editar quantidade do print", detail: "Colar estoque e ajustar item ou variante", category: "Ferramentas", terms: "estoque imagem print editar quantidade calibre item variante acessório acessorio" },
         { tab: "carriers", target: "#carrierDdd", title: "Consultar transportadora por DDD", detail: "Ver opções de envio pela região", category: "Transportadoras", terms: "frete envio transportadora ddd região estado mapa" },
         { tab: "carriers", target: "#carrierCep", title: "Buscar endereço e região por CEP", detail: "Localizar UF, cidade e atendimento SFPC", category: "Transportadoras", terms: "cep endereço endereco sfpc rm cidade estado" },
@@ -7235,36 +7356,80 @@ _Valores apenas para demonstrar a comissão_`;
         return formatCurrencyCompact(truncateQuoteCents(value));
       }
 
+      const DEAL_SAVER_BRANDS = {
+        lee: "Lee",
+        frankford: "Frankford",
+        other: "Outras marcas",
+        dillon: "Dillon",
+        recargaClub: "Recarga Club"
+      };
+      const DEAL_SAVER_CARD_RANGES = ["card1to6", "card7to12", "card13to21"];
       const DEAL_SAVER_RULES = {
-        lee: {
-          label: "Lee Precision (Prensas e Dies)",
-          kind: "press",
-          pix: 0.15,
-          card: 0.10
+        pce: {
+          lee: { label: "Lee", kind: "press", pix: { totalRate: 0.20, siteRate: 0.10 }, card: { card1to6: 0.20, card7to12: 0.20, card13to21: 0.10 } },
+          frankford: { label: "Frankford", kind: "press", pix: { totalRate: 0.20, siteRate: 0.10 }, card: { card1to6: 0.20, card7to12: 0.20, card13to21: 0.10 } },
+          other: { label: "Outras marcas", kind: "accessory", pix: { totalRate: 0.20, siteRate: 0.10 }, card: { card1to6: 0.10, card7to12: 0.05, card13to21: 0.05 } },
+          dillon: { label: "Dillon", kind: "press", pix: { totalRate: 0.10, siteRate: 0.10 }, card: { card1to6: 0.05, card7to12: 0.05, card13to21: 0.05 } }
         },
-        pressesDies: {
-          label: "Prensas e Dies",
-          kind: "press",
-          pix: 0.10,
-          card: 0.05
-        },
-        accessories: {
-          label: "Acessórios",
-          kind: "accessory",
-          pix: 0.15,
-          card: 0.10
+        nonPce: {
+          lee: { label: "Lee", kind: "press", pix: { totalRate: 0.20, siteRate: 0.10 }, card: { card1to6: 0.10, card7to12: 0.05, card13to21: 0.05 } },
+          frankford: { label: "Frankford", kind: "press", pix: { totalRate: 0.10, siteRate: 0.10 }, card: { card1to6: 0.05, card7to12: 0.05, card13to21: 0.05 } },
+          dillon: { label: "Dillon", kind: "press", pix: { totalRate: 0.10, siteRate: 0.10 }, card: { card1to6: 0.05, card7to12: 0.05, card13to21: 0.05 } },
+          recargaClub: { label: "Recarga Club", kind: "accessory", pix: { totalRate: 0.10, siteRate: 0.10 }, card: { card1to6: 0.05, card7to12: 0.05, card13to21: 0.05 } },
+          other: { label: "Outras marcas", kind: "accessory", pix: { totalRate: 0.10, siteRate: 0.10 }, card: { card1to6: 0.05, card7to12: 0.05, card13to21: 0.05 } }
         }
       };
 
       function getDealSaverRule() {
-        return DEAL_SAVER_RULES[el.dealSaverGroup?.value] || DEAL_SAVER_RULES.lee;
+        const productType = el.dealSaverProductType?.value === "nonPce" ? "nonPce" : "pce";
+        const brand = el.dealSaverBrand?.value || "lee";
+        return DEAL_SAVER_RULES[productType][brand] || DEAL_SAVER_RULES[productType].lee;
       }
 
       function getDealSaverPaymentLabel(payment) {
         if (payment === "pix") return "Pix / Transferência";
-        if (payment === "card") return "Cartão até 12x";
-        if (payment === "card21") return "Cartão 21x";
+        if (payment === "card1to6") return "Cartão de 1x a 6x";
+        if (payment === "card7to12") return "Cartão de 7x a 12x";
+        if (payment === "card13to21") return "Cartão de 13x a 21x";
         return "Boleto";
+      }
+
+      function renderDealSaverPolicyTable() {
+        const renderProductTable = (productType, heading) => {
+          const rows = Object.entries(DEAL_SAVER_RULES[productType]).map(([brand, rule]) => {
+            const pixText = rule.pix.totalRate === rule.pix.siteRate
+              ? "Só os 10% do site"
+              : `${formatPercent(rule.pix.totalRate * 100)}*`;
+            return `<tr>
+              <th scope="row">${escapeHtml(DEAL_SAVER_BRANDS[brand])}</th>
+              <td>${escapeHtml(pixText)}</td>
+              ${DEAL_SAVER_CARD_RANGES.map((range) => `<td>${formatPercent(rule.card[range] * 100)}</td>`).join("")}
+            </tr>`;
+          }).join("");
+          return `<section class="deal-saver-policy-panel">
+            <h4>${heading}</h4>
+            <div class="deal-saver-policy-scroll"><table class="deal-saver-policy-table">
+              <thead><tr><th>Marca</th><th>PIX</th><th>Cartão<br>1x a 6x</th><th>Cartão<br>7x a 12x</th><th>Cartão<br>13x a 21x</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table></div>
+          </section>`;
+        };
+        return `<div class="deal-saver-policy-layout">
+          ${renderProductTable("pce", "Produtos PCE")}
+          ${renderProductTable("nonPce", "Produtos não PCE")}
+        </div>
+        <p class="deal-saver-policy-note">* No PIX, o percentual total já inclui os 10% de desconto do site. Ex.: 20% = 10% do site + até 10% adicional. “Só os 10% do site” não permite desconto extra.</p>
+        <p class="deal-saver-policy-note">Válida para vendas pagas a partir de 01/10/2026.</p>`;
+      }
+
+      function updateDealSaverBrandOptions() {
+        const productType = el.dealSaverProductType.value === "nonPce" ? "nonPce" : "pce";
+        const brands = Object.keys(DEAL_SAVER_RULES[productType]);
+        const selectedBrand = brands.includes(el.dealSaverBrand.value) ? el.dealSaverBrand.value : brands[0];
+        el.dealSaverBrand.innerHTML = brands.map((brand) => (
+          `<option value="${brand}">${escapeHtml(DEAL_SAVER_BRANDS[brand])}</option>`
+        )).join("");
+        el.dealSaverBrand.value = selectedBrand;
       }
 
       function getDealSaverGiftItems(rule, total) {
@@ -7318,17 +7483,22 @@ _Valores apenas para demonstrar a comissão_`;
             </div>
           `);
         } else {
-          const rate = payment === "card21" ? 0.05 : payment === "pix" ? rule.pix : rule.card;
+          const isPix = payment === "pix";
+          const rate = isPix ? rule.pix.totalRate : rule.card[payment];
+          const siteRate = isPix ? rule.pix.siteRate : 0;
+          const sellerRate = Math.max(0, rate - siteRate);
           const maxDiscount = total * rate;
+          const sellerDiscount = total * sellerRate;
           const limitPrice = total - maxDiscount;
           const reserveMinimum = total * 0.2;
           cards.push(`
             <div class="deal-saver-card deal-saver-ok">
               <strong>Desconto máximo permitido</strong>
-              <p>${payment === "card21" ? "Regra genérica" : rule.label} • ${getDealSaverPaymentLabel(payment)}</p>
+              <p>${rule.label} • ${getDealSaverPaymentLabel(payment)}</p>
               <ul class="deal-saver-list">
                 <li>Limite: ${formatPercent(rate * 100)}.</li>
-                <li>Desconto máximo: ${formatCurrencyCompact(maxDiscount)}.</li>
+                <li>${isPix ? "Desconto total máximo" : "Desconto máximo"}: ${formatCurrencyCompact(maxDiscount)}.</li>
+                ${isPix ? `<li>Desconto do site: ${formatCurrencyCompact(total * siteRate)}; adicional máximo por você: ${formatCurrencyCompact(sellerDiscount)} (${formatPercent(sellerRate * 100)}).</li>` : ""}
                 <li>Valor mínimo após desconto: ${formatCurrencyCompact(limitPrice)}.</li>
                 <li>Valor mínimo para reservar: ${formatCurrencyCompact(reserveMinimum)}.</li>
               </ul>
@@ -7348,10 +7518,14 @@ _Valores apenas para demonstrar a comissão_`;
 
       function updateDealSaver() {
         if (!el.dealSaverResult) return;
+        updateDealSaverBrandOptions();
         const isBoleto = el.dealSaverPayment?.value === "boleto";
         if (el.dealSaverEntry) {
           el.dealSaverEntry.disabled = !isBoleto;
           el.dealSaverEntry.placeholder = isBoleto ? "Ex.: 1200,00" : "Usado apenas no boleto";
+        }
+        if (!el.dealSaverPolicyTable.innerHTML) {
+          el.dealSaverPolicyTable.innerHTML = renderDealSaverPolicyTable();
         }
         el.dealSaverResult.innerHTML = buildDealSaverHtml();
       }
@@ -9306,79 +9480,73 @@ _Valores apenas para demonstrar a comissão_`;
 
       function renderCommissionRulesTable(paymentMethod, discountPercent, installments, hasSaleValue = true, paymentSplit = null) {
         const selectedDiscount = Math.min(100, Math.max(0, Number(discountPercent) || 0));
-        const rows = [];
-        const addPixRows = (selected) => {
-          const selectedTier = COMMISSION_RULES.pix.find((tier) => selectedDiscount <= tier.maxDiscount) || COMMISSION_RULES.pix[COMMISSION_RULES.pix.length - 1];
-          COMMISSION_RULES.pix.forEach((tier, index) => {
-            const previous = COMMISSION_RULES.pix[index - 1]?.maxDiscount;
-            const discountRange = Number.isFinite(tier.maxDiscount)
-              ? `${previous === undefined ? "Até" : `Acima de ${String(previous).replace(".", ",")}% até`} ${String(tier.maxDiscount).replace(".", ",")}%`
-              : `Acima de ${String(previous).replace(".", ",")}%`;
-            rows.push({
-              payment: "PIX",
-              discountRange,
-              prizeRate: tier.prizeRate,
-              selected: hasSaleValue && selected && tier === selectedTier
-            });
-          });
-        };
-        const addCardRows = (cardInstallments, selected) => {
-          const safeInstallments = Math.min(21, Math.max(1, parseIntegerInput(cardInstallments) || 1));
-          const selectedGroup = COMMISSION_RULES.card.find((group) => safeInstallments >= group.minInstallments && safeInstallments <= group.maxInstallments) || COMMISSION_RULES.card[0];
-          const selectedTier = selectedGroup.tiers.find((tier) => selectedDiscount <= tier.maxDiscount) || selectedGroup.tiers[selectedGroup.tiers.length - 1];
-          COMMISSION_RULES.card.forEach((group) => group.tiers.forEach((tier, index) => {
-            const previous = group.tiers[index - 1]?.maxDiscount;
-            const discountRange = Number.isFinite(tier.maxDiscount)
-              ? `${previous === undefined ? "Até" : `Acima de ${String(previous).replace(".", ",")}% até`} ${String(tier.maxDiscount).replace(".", ",")}%`
-              : `Acima de ${String(previous).replace(".", ",")}%`;
-            rows.push({
-              payment: `Cartão ${group.minInstallments}x a ${group.maxInstallments}x`,
-              discountRange,
-              prizeRate: tier.prizeRate,
-              selected: hasSaleValue && selected && group === selectedGroup && tier === selectedTier
-            });
-          }));
-        };
-
-        if (paymentSplit) {
-          addPixRows(Number(paymentSplit.pixAmount) > 0);
-          addCardRows(paymentSplit.cardInstallments, Number(paymentSplit.cardAmount) > 0);
-        } else if (paymentMethod === "pix") {
-          addPixRows(true);
-        } else if (paymentMethod === "card") {
-          addCardRows(installments, true);
-        } else {
-          rows.push({
-            payment: "Boleto / Outro",
-            discountRange: "Qualquer desconto",
-            prizeRate: COMMISSION_RULES.other[0].prizeRate,
-            selected: hasSaleValue
-          });
-        }
-
-        const paymentLabel = paymentSplit
-          ? `PIX + Cartão ${Math.min(21, Math.max(1, parseIntegerInput(paymentSplit.cardInstallments) || 1))}x`
+        const cardColumns = [
+          { maxDiscount: 5, label: "Até 5%" },
+          { maxDiscount: 6.5, label: "Até 6,5%" },
+          { maxDiscount: 8, label: "Até 8%" },
+          { maxDiscount: Infinity, label: "Acima de 8%" }
+        ];
+        const rateForDiscount = (tiers, discount) => (
+          tiers.find((tier) => discount <= tier.maxDiscount) || tiers[tiers.length - 1]
+        );
+        const safeCardInstallments = Math.min(21, Math.max(1, parseIntegerInput(paymentSplit?.cardInstallments ?? installments) || 1));
+        const selectedCardGroup = COMMISSION_RULES.card.find((group) => (
+          safeCardInstallments >= group.minInstallments && safeCardInstallments <= group.maxInstallments
+        )) || COMMISSION_RULES.card[0];
+        const selectedCardColumn = cardColumns.findIndex((column) => selectedDiscount <= column.maxDiscount);
+        const selectedPixTier = rateForDiscount(COMMISSION_RULES.pix, selectedDiscount);
+        const shouldMarkPix = hasSaleValue && (paymentSplit ? Number(paymentSplit.pixAmount) > 0 : paymentMethod === "pix");
+        const shouldMarkCard = hasSaleValue && (paymentSplit ? Number(paymentSplit.cardAmount) > 0 : paymentMethod === "card");
+        const selectedPixIndex = COMMISSION_RULES.pix.indexOf(selectedPixTier);
+        const pixLabel = paymentSplit
+          ? `PIX + Cartão ${safeCardInstallments}x`
           : paymentMethod === "pix"
-          ? "PIX"
-          : paymentMethod === "card"
-            ? `Cartão ${Math.min(21, Math.max(1, parseIntegerInput(installments) || 1))}x`
-            : "Boleto / Outro";
+            ? "PIX"
+            : paymentMethod === "card"
+              ? `Cartão ${safeCardInstallments}x`
+              : "Boleto / outro";
         el.commissionRulesCurrent.textContent = hasSaleValue
-          ? `${paymentLabel} · ${formatDetailedPercent(selectedDiscount)} de desconto`
+          ? `${pixLabel} · ${formatDetailedPercent(selectedDiscount)} de desconto`
           : "Preencha o valor da venda para identificar a faixa";
-        const paymentHeader = paymentSplit || paymentMethod === "card" ? "Pagamento e parcelas" : "Pagamento";
+
+        const cardRows = COMMISSION_RULES.card.map((group) => {
+          const currentGroup = shouldMarkCard && group === selectedCardGroup;
+          const cells = cardColumns.map((column, columnIndex) => {
+            const tier = group.tiers.find((candidate) => candidate.maxDiscount >= column.maxDiscount) || group.tiers[group.tiers.length - 1];
+            const selected = currentGroup && columnIndex === selectedCardColumn;
+            return `<td${selected ? ' class="commission-matrix-current" aria-current="true" title="Orçamento atual"' : ""}>${formatDetailedPercent(tier.prizeRate * 100)}${selected ? '<span class="commission-matrix-current-label">Orçamento atual</span>' : ""}</td>`;
+          }).join("");
+          return `<tr><th scope="row">${group.minInstallments}x a ${group.maxInstallments}x</th>${cells}</tr>`;
+        }).join("");
+        const pixRows = COMMISSION_RULES.pix.map((tier, index) => {
+          const selected = shouldMarkPix && index === selectedPixIndex;
+          const range = Number.isFinite(tier.maxDiscount)
+            ? `Até ${String(tier.maxDiscount).replace(".", ",")}%`
+            : `Acima de ${String(COMMISSION_RULES.pix[index - 1]?.maxDiscount).replace(".", ",")}%`;
+          return `<tr><th scope="row">${range}</th><td${selected ? ' class="commission-matrix-current" aria-current="true" title="Orçamento atual"' : ""}>${formatDetailedPercent(tier.prizeRate * 100)}${selected ? '<span class="commission-matrix-current-label">Orçamento atual</span>' : ""}</td></tr>`;
+        }).join("");
+
         el.commissionRulesTable.innerHTML = `
-          <table class="commission-rules-table">
-            <caption>${paymentSplit ? "As linhas destacadas mostram a faixa aplicada ao valor pago em cada modalidade." : hasSaleValue ? "A linha destacada identifica exatamente a regra aplicada a esta simulação." : "Informe o valor da venda para destacar a regra correspondente."}</caption>
-            <thead><tr><th>${paymentHeader}</th><th>Desconto</th><th>Prêmio e indicação</th></tr></thead>
-            <tbody>${rows.map((row) => `
-              <tr class="${row.selected ? "commission-rule-current" : ""}"${row.selected ? ' aria-current="true"' : ""}>
-                <td>${escapeHtml(row.payment)}</td>
-                <td>${escapeHtml(row.discountRange)}</td>
-                <td><strong>${formatDetailedPercent(row.prizeRate * 100)}</strong>${row.selected ? '<span class="commission-current-label">Orçamento atual</span>' : ""}</td>
-              </tr>`).join("")}
-            </tbody>
-          </table>`;
+          <div class="commission-matrix-layout">
+            <section class="commission-matrix-panel" aria-label="Prêmio por cartão e parcelas">
+              <h5>Cartão · prêmio por parcelas e desconto</h5>
+              <div class="commission-matrix-scroll"><table class="commission-matrix-table">
+                <thead><tr><th>Parcelas</th>${cardColumns.map((column) => `<th>${column.label}</th>`).join("")}</tr></thead>
+                <tbody>${cardRows}</tbody>
+              </table></div>
+            </section>
+            <div>
+              <section class="commission-matrix-panel" aria-label="Prêmio por PIX">
+                <h5>PIX · seu prêmio</h5>
+                <div class="commission-matrix-scroll"><table class="commission-matrix-table">
+                  <thead><tr><th>Desconto total no PIX</th><th>Seu prêmio</th></tr></thead>
+                  <tbody>${pixRows}</tbody>
+                </table></div>
+              </section>
+              <aside class="commission-golden-rule"><strong>A regra de ouro</strong><span>Menos parcelas e menos desconto = mais prêmio para você. PIX pode ser a melhor venda.</span></aside>
+            </div>
+          </div>
+          <p class="commission-matrix-note">${paymentSplit ? "As células destacadas mostram a faixa aplicada ao valor pago em cada modalidade." : hasSaleValue ? "A célula destacada indica exatamente onde este orçamento se encaixa." : "Informe o valor da venda para destacar a faixa correspondente."} A faixa acima de 20% no PIX não gera prêmio.</p>`;
       }
 
       function updateQuoteCommissionCalculator() {
@@ -9973,7 +10141,11 @@ _Valores apenas para demonstrar a comissão_`;
       el.quotePasteZone.addEventListener("drop", handleQuoteDrop);
       el.copyQuoteMessage.addEventListener("click", () => copyText(el.quoteResult.value, "Mensagem de orçamento copiada."));
       el.quoteInstallmentsButton.addEventListener("click", toggleQuoteInstallments);
-      el.dealSaverGroup.addEventListener("change", updateDealSaver);
+      el.dealSaverProductType.addEventListener("change", () => {
+        updateDealSaverBrandOptions();
+        updateDealSaver();
+      });
+      el.dealSaverBrand.addEventListener("change", updateDealSaver);
       el.dealSaverPayment.addEventListener("change", updateDealSaver);
       bindCurrencyField(el.dealSaverValue, updateDealSaver);
       bindCurrencyField(el.dealSaverEntry, updateDealSaver);

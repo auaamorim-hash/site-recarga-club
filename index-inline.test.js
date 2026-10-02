@@ -196,7 +196,7 @@ test("comissão do orçamento fica recolhida até o clique e o botão de copiar 
   assert.match(html, /state\.quoteCommissionOpen = false;[\s\S]*el\.quoteCommissionPayment\.value = "pix"/);
 });
 
-test("tabela de comissão destaca somente a faixa de pagamento, parcelas e desconto selecionados", () => {
+test("matriz de comissão destaca a faixa atual e mostra as regras completas", () => {
   const rulesStart = html.indexOf("      const COMMISSION_RULES = Object.freeze({");
   const rulesEnd = html.indexOf("\n\n      const RECARGA_LOGO_DATA_URI", rulesStart);
   const tableStart = html.indexOf("      function renderCommissionRulesTable(");
@@ -218,30 +218,67 @@ test("tabela de comissão destaca somente a faixa de pagamento, parcelas e desco
   ].join("\n"), sandbox);
 
   sandbox.render("card", 5, 6);
-  const cardRows = [...sandbox.output.innerHTML.matchAll(/<tr class="commission-rule-current" aria-current="true">([\s\S]*?)<\/tr>/g)];
-  assert.equal(cardRows.length, 1);
-  assert.match(cardRows[0][1], /Cartão 4x a 6x/);
-  assert.match(cardRows[0][1], /Até 5%/);
-  assert.match(cardRows[0][1], /1\.20%/);
-  assert.match(cardRows[0][1], /Orçamento atual/);
+  const cardCells = [...sandbox.output.innerHTML.matchAll(/<td class="commission-matrix-current" aria-current="true"[^>]*>([\s\S]*?)<\/td>/g)];
+  assert.equal(cardCells.length, 1);
+  assert.match(sandbox.output.innerHTML, /<tr><th scope="row">4x a 6x<\/th>/);
+  assert.match(sandbox.output.innerHTML, /Até 5%/);
+  assert.match(cardCells[0][1], /1\.20%/);
+  assert.match(cardCells[0][1], /Orçamento atual/);
 
   sandbox.render("pix", 10, 1);
-  const pixRows = [...sandbox.output.innerHTML.matchAll(/<tr class="commission-rule-current" aria-current="true">([\s\S]*?)<\/tr>/g)];
-  assert.equal(pixRows.length, 1);
-  assert.match(pixRows[0][1], /PIX/);
-  assert.match(pixRows[0][1], /Até 10%/);
-  assert.match(pixRows[0][1], /1\.50%/);
+  const pixCells = [...sandbox.output.innerHTML.matchAll(/<td class="commission-matrix-current" aria-current="true"[^>]*>([\s\S]*?)<\/td>/g)];
+  assert.equal(pixCells.length, 1);
+  assert.match(sandbox.output.innerHTML, /<th scope="row">Até 10%<\/th>/);
+  assert.match(pixCells[0][1], /1\.50%/);
+  assert.match(sandbox.output.innerHTML, /Acima de 20%/);
 
   sandbox.render("card", 5, 6, false);
   assert.doesNotMatch(sandbox.output.innerHTML, /aria-current="true"/);
   assert.match(sandbox.el.commissionRulesCurrent.textContent, /Preencha o valor da venda/);
 
   sandbox.render("split", 5, 6, true, { pixAmount: 1000, cardAmount: 1000, cardInstallments: 6 });
-  const splitRows = [...sandbox.output.innerHTML.matchAll(/<tr class="commission-rule-current" aria-current="true">([\s\S]*?)<\/tr>/g)];
-  assert.equal(splitRows.length, 2);
-  assert.match(splitRows[0][1], /PIX/);
-  assert.match(splitRows[1][1], /Cartão 4x a 6x/);
+  const splitCells = [...sandbox.output.innerHTML.matchAll(/<td class="commission-matrix-current" aria-current="true"[^>]*>([\s\S]*?)<\/td>/g)];
+  assert.equal(splitCells.length, 2);
+  assert.match(sandbox.output.innerHTML, /<th scope="row">Até 10%<\/th>/);
+  assert.match(sandbox.output.innerHTML, /<tr><th scope="row">4x a 6x<\/th>/);
   assert.match(sandbox.output.innerHTML, /cada modalidade/);
+
+  sandbox.render("card", 8, 18);
+  const longCardRow = sandbox.output.innerHTML.match(/<tr><th scope="row">16x a 18x<\/th>([\s\S]*?)<\/tr>/)[1];
+  assert.match(longCardRow, /0\.30%/);
+  assert.match(longCardRow, /0\.00%/);
+  assert.equal([...longCardRow.matchAll(/0\.00%/g)].length, 2);
+});
+
+test("descontos máximos seguem a tabela PCE e não PCE por marca", () => {
+  const rulesStart = html.indexOf("      const DEAL_SAVER_BRANDS = {");
+  const rulesEnd = html.indexOf("      function getDealSaverRule()", rulesStart);
+  const rendererStart = rulesEnd;
+  const rendererEnd = html.indexOf("      function updateDealSaverBrandOptions()", rendererStart);
+  assert.ok(rulesStart >= 0 && rulesEnd > rulesStart && rendererEnd > rendererStart);
+  const sandbox = {
+    escapeHtml: (value) => String(value),
+    formatPercent: (value) => `${Number(value).toFixed(0)}%`
+  };
+  vm.runInNewContext([
+    html.slice(rulesStart, rulesEnd),
+    html.slice(rendererStart, rendererEnd),
+    "globalThis.rules = DEAL_SAVER_RULES; globalThis.renderPolicy = renderDealSaverPolicyTable;"
+  ].join("\n"), sandbox);
+  const { pce, nonPce } = sandbox.rules;
+  assert.deepEqual([pce.lee.pix.totalRate, pce.lee.card.card1to6, pce.lee.card.card7to12, pce.lee.card.card13to21], [0.2, 0.2, 0.2, 0.1]);
+  assert.deepEqual([pce.other.pix.totalRate, pce.other.card.card1to6, pce.other.card.card7to12, pce.other.card.card13to21], [0.2, 0.1, 0.05, 0.05]);
+  assert.deepEqual([pce.dillon.pix.totalRate, pce.dillon.card.card1to6], [0.1, 0.05]);
+  assert.deepEqual([nonPce.lee.pix.totalRate, nonPce.lee.card.card1to6, nonPce.lee.card.card7to12, nonPce.lee.card.card13to21], [0.2, 0.1, 0.05, 0.05]);
+  assert.deepEqual([nonPce.frankford.pix.totalRate, nonPce.recargaClub.pix.totalRate, nonPce.other.card.card13to21], [0.1, 0.1, 0.05]);
+  const policy = sandbox.renderPolicy();
+  assert.match(policy, /Produtos PCE/);
+  assert.match(policy, /Produtos não PCE/);
+  assert.match(policy, /Só os 10% do site/);
+  assert.match(policy, /20% = 10% do site \+ até 10% adicional/);
+  assert.match(policy, /01\/10\/2026/);
+  assert.doesNotMatch(html, /dealSaverGroup/);
+  assert.match(html, /target: "#dealSaverProductType"/);
 });
 
 test("tutorial de atualização se limita à comissão e preenche os detalhes a partir do orçamento", () => {
