@@ -4328,6 +4328,14 @@
                     <input id="dealSaverValue" inputmode="decimal" placeholder="Ex.: 6000,00" />
                   </div>
                   <div class="field">
+                    <label for="dealSaverAppliedDiscount">Desconto/cupom aplicado</label>
+                    <input id="dealSaverAppliedDiscount" inputmode="decimal" placeholder="Ex.: 10%" />
+                  </div>
+                  <div class="field">
+                    <label for="dealSaverFreeFreight">Frete grátis</label>
+                    <input id="dealSaverFreeFreight" inputmode="decimal" placeholder="Ex.: 150,00" />
+                  </div>
+                  <div class="field">
                     <label for="dealSaverEntry">Entrada boleto</label>
                     <input id="dealSaverEntry" inputmode="decimal" placeholder="Ex.: 1200,00" />
                   </div>
@@ -4606,7 +4614,7 @@
       const COMPLETED_ACTIVITIES_SEED_KEY = "recarga_club_completed_activities_seed_v1";
       const ACTIVITY_COMPLETION_MIGRATION_VERSION = "render-local-v1";
       const LEGACY_ACTIVITY_SEED_VALUE = "2026-07-02T00:00:00.000Z";
-      const UPDATE_TOUR_VERSION = "2026-10-02-tour-v9";
+      const UPDATE_TOUR_VERSION = "2026-10-07-tour-v10";
       const UPDATE_TOUR_KEY = `recarga_club_update_tour_${UPDATE_TOUR_VERSION}`;
       const WATERMARK_PASSWORD = "Ben10301030@";
       const CACHE_TTL = 1000 * 60 * 60 * 6;
@@ -4618,9 +4626,9 @@
       const COMMISSION_RULES = Object.freeze({
         commissionRate: 0.004,
         pix: [
-          { maxDiscount: 10, prizeRate: 0.015, label: "PIX — desconto até 10%" },
-          { maxDiscount: 12, prizeRate: 0.012, label: "PIX — desconto acima de 10% até 12%" },
-          { maxDiscount: 15, prizeRate: 0.01, label: "PIX — desconto acima de 12% até 15%" },
+          { maxDiscount: 10, prizeRate: 0.02, label: "PIX — desconto até 10%" },
+          { maxDiscount: 11, prizeRate: 0.015, label: "PIX — desconto acima de 10% até 11%" },
+          { maxDiscount: 15, prizeRate: 0.01, label: "PIX — desconto acima de 11% até 15%" },
           { maxDiscount: 20, prizeRate: 0.008, label: "PIX — desconto acima de 15% até 20%" },
           { maxDiscount: Infinity, prizeRate: 0, label: "PIX — desconto acima de 20%" }
         ],
@@ -5237,7 +5245,7 @@
         "quotePressName", "quotePasteZone", "quoteResult", "copyQuoteMessage", "quoteInstallmentsButton", "quoteInstallmentsPreview",
         "quoteCommissionToggle", "quoteCommissionPanel", "quoteCommissionPayment", "quoteCommissionInstallmentsRow", "quoteCommissionInstallments", "quoteCommissionDiscount",
         "quoteCommissionValue", "quoteCommissionRate", "quoteCommissionDetailsButton",
-        "dealSaverProductType", "dealSaverBrand", "dealSaverPayment", "dealSaverValue", "dealSaverEntry", "dealSaverResult", "dealSaverPolicyTable",
+        "dealSaverProductType", "dealSaverBrand", "dealSaverPayment", "dealSaverValue", "dealSaverAppliedDiscount", "dealSaverFreeFreight", "dealSaverEntry", "dealSaverResult", "dealSaverPolicyTable",
         "inventoryPasteZone", "inventoryEditorStatus", "inventoryEditorControls", "inventoryCaliberSelect", "inventoryQuantity", "inventoryPreview", "inventoryCanvas", "downloadInventoryImage",
         "carrierDdd", "carrierCep", "carrierCepResult", "carrierLocation", "militaryRegionBadge", "sfpcResult", "ufGrid", "carrierTitle", "carrierCount", "carrierList",
         "userTabButton", "profileAvatar", "profileName", "profileEmail", "profilePhone", "profileRole", "activitiesPanel", "activitySource", "activityList",
@@ -5314,6 +5322,14 @@
           text: "O botão Mostrar detalhes leva à calculadora completa, já preenchida com o orçamento, pagamento, parcelas e desconto que você acabou de simular.",
           status: "A calculadora completa discrimina valor líquido, comissão-base, prêmio e situação da venda.",
           action: "showCommissionDetails"
+        },
+        {
+          tab: "report",
+          target: "#dealSaverFreeFreight",
+          title: "Confira cupom e frete dentro do limite",
+          text: "O cupom continua válido, mas consome o teto. Frete grátis também conta como desconto: compare o percentual total com a tabela por produto, marca e parcelas.",
+          status: "Exemplo do guia: Lee PCE, R$ 3.000, cartão 12x, 20% de desconto e R$ 150 de frete = 25%; o teto é 20%.",
+          action: "showDealSaverRules"
         }
       ];
 
@@ -5370,10 +5386,16 @@ _Valores apenas para demonstrar a comissão_`;
       }
 
       const SUPPLY_CATALOG = Object.freeze({
-        version: "2026-09",
+        version: "2026-10-19",
         primerPerUnit: 1.2795,
         powderPerKg: 1156.22,
         grainsPerKg: 15432.3583529,
+        ammunitionCostReferences: [
+          { aliases: ["9mm", "9x19"], projectileUnitPrice: 0.435, projectileLabel: "Eagle Ogival 116 gr", primerPerUnit: 0.9, charge: 4.5, factoryBox: 686.38 },
+          { aliases: ["38 tpc"], projectileUnitPrice: 0.435, projectileLabel: "Eagle Ogival 116 gr", primerPerUnit: 0.9, charge: 4.2, factoryBox: 632.43 },
+          { aliases: ["380 acp"], projectileUnitPrice: 0.42, projectileLabel: "Buffalo Ogival 100 gr", primerPerUnit: 0.9, charge: 2.9, factoryBox: 545.24 },
+          { aliases: ["38 spl", "38 special"], projectileUnitPrice: 0.47, projectileLabel: "Buffalo Ogival 158 gr", primerPerUnit: 0.9, charge: 4, factoryBox: 649.18 }
+        ],
         projectileReferences: [
           { aliases: ["380 acp"], unitPrice: (470 + 425 + 420) / 3000, label: "100 gr ogival; média Morigi, Eagle e Buffalo" },
           { aliases: ["9mm", "9x19", "38 super", "38 tpc"], unitPrice: (510 + 457 + 460) / 3000, label: "125 gr ogival; média Morigi, Eagle e Buffalo" },
@@ -5401,43 +5423,63 @@ _Valores apenas para demonstrar a comissão_`;
 
       function applySupplyCatalogPricing(row) {
         if (!row || row.supplyCatalogVersion === SUPPLY_CATALOG.version) return row;
-        const charge = Number(row.carga) || 0;
+        const caliber = normalize(row.calibre);
+        const costReference = SUPPLY_CATALOG.ammunitionCostReferences.find((reference) =>
+          reference.aliases.some((alias) => caliber === alias || caliber.startsWith(`${alias} `))
+        );
+        const charge = costReference ? costReference.charge : Number(row.carga) || 0;
         const oldPrimer = Number(row.espoleta) || 0;
         const oldGrainPrice = Number(row.valorGrain) || 0;
         if (!charge || !oldPrimer || !oldGrainPrice) return row;
 
-        const caliber = normalize(row.calibre);
-        const projectile = SUPPLY_CATALOG.projectileReferences.find((reference) =>
+        const projectile = costReference || SUPPLY_CATALOG.projectileReferences.find((reference) =>
           reference.aliases.some((alias) => caliber === alias || caliber.startsWith(`${alias} `))
         );
         const newGrainPrice = SUPPLY_CATALOG.powderPerKg / SUPPLY_CATALOG.grainsPerKg;
         const powderCost = charge * newGrainPrice;
-        const otherInputs = (Number(row.estojo) || 0) + (Number(row.bucha) || 0) + (Number(row.bagos) || 0);
+        const otherInputs = costReference
+          ? 0
+          : (Number(row.estojo) || 0) + (Number(row.bucha) || 0) + (Number(row.bagos) || 0);
+        const primerPerUnit = costReference ? costReference.primerPerUnit : SUPPLY_CATALOG.primerPerUnit;
+        const factoryBox = costReference ? costReference.factoryBox : row.factoryBox;
+        const boxQty = costReference ? 100 : row.boxQty;
+        const projectileUnitPrice = projectile
+          ? (costReference ? costReference.projectileUnitPrice : projectile.unitPrice)
+          : row.projetil;
         let recargaUnit;
         let recargaSource;
 
         if (projectile) {
-          recargaUnit = SUPPLY_CATALOG.primerPerUnit + powderCost + projectile.unitPrice + otherInputs;
-          recargaSource = `Catálogo de Insumos v1.0 (09/2026): ${projectile.label}; estojo e demais componentes conforme base`;
+          recargaUnit = primerPerUnit + powderCost + projectileUnitPrice + otherInputs;
+          recargaSource = costReference
+            ? `Simulação de custo (19/10/2026): ${projectile.projectileLabel}; pólvora CBC Base Simples a R$ 1.156,22/kg (ICMS 13% incluído); estojo reutilizado e fora do custo`
+            : `Catálogo de Insumos v1.0 (09/2026): ${projectile.label}; estojo e demais componentes conforme base`;
         } else {
           const priorTotal = Number(row.recargaUnit)
             || oldPrimer + charge * oldGrainPrice + (Number(row.projetil) || 0) + otherInputs;
           recargaUnit = priorTotal
-            + (SUPPLY_CATALOG.primerPerUnit - oldPrimer)
+            + (primerPerUnit - oldPrimer)
             + charge * (newGrainPrice - oldGrainPrice);
           recargaSource = "Catálogo de Insumos v1.0 (09/2026): pólvora e espoleta; demais itens preservados da base";
         }
 
         return {
           ...row,
-          espoleta: SUPPLY_CATALOG.primerPerUnit,
+          espoleta: primerPerUnit,
           polvora: powderCost,
           valorGrain: newGrainPrice,
-          projetil: projectile ? projectile.unitPrice : row.projetil,
+          carga: charge,
+          projetil: projectileUnitPrice,
+          estojo: costReference ? 0 : row.estojo,
+          bucha: costReference ? 0 : row.bucha,
+          bagos: costReference ? 0 : row.bagos,
+          factoryBox,
+          factoryUnit: factoryBox && boxQty ? factoryBox / boxQty : row.factoryUnit,
+          boxQty,
           recargaUnit,
           recargaSource,
           supplyCatalogVersion: SUPPLY_CATALOG.version,
-          atualizacao: "09/2026"
+          atualizacao: costReference ? "19/10/2026" : "09/2026"
         };
       }
 
@@ -5804,6 +5846,18 @@ _Valores apenas para demonstrar a comissão_`;
           }, 1200);
           return;
         }
+        if (step.action === "showDealSaverRules") {
+          el.dealSaverProductType.value = "pce";
+          updateDealSaverBrandOptions();
+          el.dealSaverBrand.value = "lee";
+          el.dealSaverPayment.value = "card7to12";
+          el.dealSaverValue.value = "3000";
+          el.dealSaverAppliedDiscount.value = "20%";
+          el.dealSaverFreeFreight.value = "150";
+          updateDealSaver();
+          moveTourCursorToTarget("#dealSaverFreeFreight", 80, 18);
+          return;
+        }
         if (step.action === "showInventoryEditor") {
           setImageToolMode("edit");
           moveTourCursorToTarget("#inventoryPasteZone", 85, 20);
@@ -5839,6 +5893,13 @@ _Valores apenas para demonstrar a comissão_`;
           commissionSplitPixAmount: el.commissionSplitPixAmount?.value || "",
           commissionSplitCardAmount: el.commissionSplitCardAmount?.value || "",
           commissionSplitCardInstallments: el.commissionSplitCardInstallments?.value || "1",
+          dealSaverProductType: el.dealSaverProductType?.value || "pce",
+          dealSaverBrand: el.dealSaverBrand?.value || "lee",
+          dealSaverPayment: el.dealSaverPayment?.value || "pix",
+          dealSaverValue: el.dealSaverValue?.value || "",
+          dealSaverAppliedDiscount: el.dealSaverAppliedDiscount?.value || "",
+          dealSaverFreeFreight: el.dealSaverFreeFreight?.value || "",
+          dealSaverEntry: el.dealSaverEntry?.value || "",
           activeTab: document.querySelector(".dash-view.active")?.id?.replace(/View$/, "") || "calc",
         };
       }
@@ -5863,8 +5924,17 @@ _Valores apenas para demonstrar a comissão_`;
         el.commissionSplitPixAmount.value = state.updateTourSnapshot.commissionSplitPixAmount;
         el.commissionSplitCardAmount.value = state.updateTourSnapshot.commissionSplitCardAmount;
         el.commissionSplitCardInstallments.value = state.updateTourSnapshot.commissionSplitCardInstallments;
+        el.dealSaverProductType.value = state.updateTourSnapshot.dealSaverProductType;
+        updateDealSaverBrandOptions();
+        el.dealSaverBrand.value = state.updateTourSnapshot.dealSaverBrand;
+        el.dealSaverPayment.value = state.updateTourSnapshot.dealSaverPayment;
+        el.dealSaverValue.value = state.updateTourSnapshot.dealSaverValue;
+        el.dealSaverAppliedDiscount.value = state.updateTourSnapshot.dealSaverAppliedDiscount;
+        el.dealSaverFreeFreight.value = state.updateTourSnapshot.dealSaverFreeFreight;
+        el.dealSaverEntry.value = state.updateTourSnapshot.dealSaverEntry;
         updateQuoteCommissionCalculator();
         updateCommissionCalculator();
+        updateDealSaver();
         closeGlobalSearch();
         switchDash(state.updateTourSnapshot.activeTab);
         state.updateTourSnapshot = null;
@@ -6241,7 +6311,7 @@ _Valores apenas para demonstrar a comissão_`;
         const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
         if (LOCAL_SHEET_ROWS.length) {
           state.rows = LOCAL_SHEET_ROWS.map(applySupplyCatalogPricing);
-          setSource("Insumos atualizados", "Referências do Catálogo de Insumos Recarga Club v1.0 (09/2026) aplicadas ao cálculo.", "Catálogo 09/2026");
+          setSource("Custos de munição atualizados", "Simulação de 19/10/2026 aplicada a 9mm, .38 TPC, .380 ACP e .38 SPL; demais referências do catálogo 09/2026 preservadas.", "Tabela 19/10/2026");
           hydrateCalibers();
           findAndCalculate();
         }
@@ -6259,7 +6329,7 @@ _Valores apenas para demonstrar a comissão_`;
           const result = await fetchSheetRows();
           state.rows = result.rows.map(applySupplyCatalogPricing);
           localStorage.setItem(CACHE_KEY, JSON.stringify({ rows: state.rows, savedAt: Date.now() }));
-          setSource("Planilha e catálogo conectados", `Dados carregados via ${result.source} e atualizados com o catálogo de insumos 09/2026.`, "Cache renovado");
+          setSource("Planilha e custos atualizados", `Dados carregados via ${result.source}; custos da simulação de 19/10/2026 aplicados aos quatro calibres correspondentes.`, "Cache renovado");
           hydrateCalibers();
           findAndCalculate();
         } catch (error) {
@@ -7419,7 +7489,8 @@ _Valores apenas para demonstrar a comissão_`;
           ${renderProductTable("nonPce", "Produtos não PCE")}
         </div>
         <p class="deal-saver-policy-note">* No PIX, o percentual total já inclui os 10% de desconto do site. Ex.: 20% = 10% do site + até 10% adicional. “Só os 10% do site” não permite desconto extra.</p>
-        <p class="deal-saver-policy-note">Válida para vendas pagas a partir de 01/10/2026.</p>`;
+        <p class="deal-saver-policy-note">Cupom sempre válido e contado no limite; se o cupom superar o teto, mantenha apenas o cupom, sem desconto adicional nem frete grátis. Frete grátis vale para qualquer região, desde que desconto, cupom e frete somados fiquem dentro do teto.</p>
+        <p class="deal-saver-policy-note">Válida para vendas pagas a partir de 01/10/2026. A tabela não define teto para boleto; confirme qualquer desconto ou frete grátis com o gestor.</p>`;
       }
 
       function updateDealSaverBrandOptions() {
@@ -7455,6 +7526,14 @@ _Valores apenas para demonstrar a comissão_`;
         const payment = el.dealSaverPayment?.value || "pix";
         const total = parseMoney(el.dealSaverValue?.value);
         const entry = parseMoney(el.dealSaverEntry?.value);
+        const isPix = payment === "pix";
+        const siteRate = isPix ? rule.pix.siteRate : 0;
+        const discountInput = String(el.dealSaverAppliedDiscount?.value || "").trim();
+        const enteredDiscountRate = parsePercentageInput(discountInput) / 100;
+        const appliedDiscountRate = isPix
+          ? Math.max(siteRate, discountInput ? enteredDiscountRate : siteRate)
+          : enteredDiscountRate;
+        const freeFreight = parseMoney(el.dealSaverFreeFreight?.value);
         if (!total) {
           return `
             <div class="deal-saver-card deal-saver-warn">
@@ -7479,26 +7558,50 @@ _Valores apenas para demonstrar a comissão_`;
                 <li>${isMinimumValue ? "Valor mínimo atendido." : `Faltam ${formatCurrencyCompact(6000 - total)} para o valor mínimo.`}</li>
                 <li>${hasMinimumEntry ? "Entrada mínima atendida." : `Entrada mínima necessária: ${formatCurrencyCompact(minimumEntry)}.`}</li>
                 <li>Saldo em 5 parcelas: ${formatInstallmentCurrency(boletoInstallment)}.</li>
+                <li>O guia não define teto de desconto ou frete grátis para boleto. Consulte o gestor antes de oferecer.</li>
               </ul>
             </div>
           `);
         } else {
-          const isPix = payment === "pix";
           const rate = isPix ? rule.pix.totalRate : rule.card[payment];
-          const siteRate = isPix ? rule.pix.siteRate : 0;
-          const sellerRate = Math.max(0, rate - siteRate);
           const maxDiscount = total * rate;
-          const sellerDiscount = total * sellerRate;
+          const appliedDiscount = total * appliedDiscountRate;
+          const realDiscount = appliedDiscount + freeFreight;
+          const realDiscountRate = total > 0 ? (realDiscount / total) * 100 : 0;
+          const couponExceedsLimit = appliedDiscount > maxDiscount + 0.005;
+          const excess = couponExceedsLimit ? freeFreight : Math.max(0, realDiscount - maxDiscount);
+          const additionalAllowance = Math.max(0, maxDiscount - realDiscount);
           const limitPrice = total - maxDiscount;
           const reserveMinimum = total * 0.2;
+          const exceedsLimit = excess > 0.005;
+          const statusClass = exceedsLimit
+            ? couponExceedsLimit && freeFreight <= 0 ? "deal-saver-warn" : "deal-saver-danger"
+            : couponExceedsLimit ? "deal-saver-warn" : "deal-saver-ok";
+          const statusTitle = exceedsLimit
+            ? couponExceedsLimit && freeFreight <= 0 ? "Cupom mantido; sem margem para desconto adicional"
+              : couponExceedsLimit ? "Cupom válido; frete grátis fora do limite" : "Desconto e frete ultrapassam o teto"
+            : couponExceedsLimit ? "Cupom mantido; sem margem para desconto adicional"
+            : "Dentro do limite permitido";
+          const policyNote = exceedsLimit
+            ? couponExceedsLimit
+              ? freeFreight > 0
+                ? "O cupom continua válido. Remova o frete grátis; não há margem para frete nem desconto adicional."
+                : "O cupom continua válido, mas já supera o teto. Não conceda desconto adicional nem frete grátis."
+              : `Reduza o desconto ou o frete em pelo menos ${formatCurrencyCompact(excess)} para respeitar o limite.`
+            : couponExceedsLimit
+              ? "O cupom continua válido, mas já supera o teto. Não conceda desconto adicional nem frete grátis."
+            : "Desconto, cupom e frete grátis estão dentro do limite da tabela.";
           cards.push(`
-            <div class="deal-saver-card deal-saver-ok">
-              <strong>Desconto máximo permitido</strong>
+            <div class="deal-saver-card ${statusClass}">
+              <strong>${statusTitle}</strong>
               <p>${rule.label} • ${getDealSaverPaymentLabel(payment)}</p>
               <ul class="deal-saver-list">
-                <li>Limite: ${formatPercent(rate * 100)}.</li>
-                <li>${isPix ? "Desconto total máximo" : "Desconto máximo"}: ${formatCurrencyCompact(maxDiscount)}.</li>
-                ${isPix ? `<li>Desconto do site: ${formatCurrencyCompact(total * siteRate)}; adicional máximo por você: ${formatCurrencyCompact(sellerDiscount)} (${formatPercent(sellerRate * 100)}).</li>` : ""}
+                <li>Teto total: ${formatPercent(rate * 100)} (${formatCurrencyCompact(maxDiscount)}).</li>
+                <li>Desconto/cupom aplicado: ${formatCurrencyCompact(appliedDiscount)} (${formatPercent(appliedDiscountRate * 100)}).</li>
+                <li>Frete grátis: ${formatCurrencyCompact(freeFreight)}.</li>
+                <li>Desconto real com frete: ${formatCurrencyCompact(realDiscount)} (${formatPercent(realDiscountRate)} do pedido).</li>
+                <li>Desconto adicional ainda permitido: ${formatCurrencyCompact(additionalAllowance)}.</li>
+                <li>${policyNote}</li>
                 <li>Valor mínimo após desconto: ${formatCurrencyCompact(limitPrice)}.</li>
                 <li>Valor mínimo para reservar: ${formatCurrencyCompact(reserveMinimum)}.</li>
               </ul>
@@ -7523,6 +7626,16 @@ _Valores apenas para demonstrar a comissão_`;
         if (el.dealSaverEntry) {
           el.dealSaverEntry.disabled = !isBoleto;
           el.dealSaverEntry.placeholder = isBoleto ? "Ex.: 1200,00" : "Usado apenas no boleto";
+        }
+        if (el.dealSaverAppliedDiscount) {
+          el.dealSaverAppliedDiscount.disabled = isBoleto;
+          el.dealSaverAppliedDiscount.placeholder = isBoleto
+            ? "Não definido para boleto"
+            : el.dealSaverPayment.value === "pix" ? "Em branco = 10% do site" : "Ex.: 5%";
+        }
+        if (el.dealSaverFreeFreight) {
+          el.dealSaverFreeFreight.disabled = isBoleto;
+          el.dealSaverFreeFreight.placeholder = isBoleto ? "Não definido para boleto" : "Ex.: 150,00";
         }
         if (!el.dealSaverPolicyTable.innerHTML) {
           el.dealSaverPolicyTable.innerHTML = renderDealSaverPolicyTable();
@@ -10148,6 +10261,9 @@ _Valores apenas para demonstrar a comissão_`;
       el.dealSaverBrand.addEventListener("change", updateDealSaver);
       el.dealSaverPayment.addEventListener("change", updateDealSaver);
       bindCurrencyField(el.dealSaverValue, updateDealSaver);
+      el.dealSaverAppliedDiscount.addEventListener("input", updateDealSaver);
+      el.dealSaverAppliedDiscount.addEventListener("change", updateDealSaver);
+      bindCurrencyField(el.dealSaverFreeFreight, updateDealSaver);
       bindCurrencyField(el.dealSaverEntry, updateDealSaver);
       el.inventoryPasteZone.addEventListener("click", readClipboardInventoryImage);
       el.inventoryPasteZone.addEventListener("paste", handleInventoryPaste);

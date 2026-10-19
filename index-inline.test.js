@@ -18,6 +18,58 @@ test("HTML não contém hashes de senha nem carrega agenda como arquivo público
   assert.doesNotMatch(html, /passwordHash|activities-data\.js|RECARGA_CLUB_ACTIVITIES/);
 });
 
+test("simulação de 19/10/2026 atualiza custos e munição industrial dos quatro calibres", () => {
+  const start = html.indexOf("      function normalize(value)");
+  const end = html.indexOf("\n      const GLOBAL_SEARCH_COMMANDS", start);
+  assert.ok(start >= 0 && end > start);
+  const sandbox = {};
+  vm.runInNewContext([
+    html.slice(start, end),
+    "globalThis.price = applySupplyCatalogPricing;"
+  ].join("\n"), sandbox);
+
+  const cases = [
+    { calibre: "9mm (9x19mm)", charge: 4.5, projectile: 0.435, factory: 6.8638, powder: 0.33714808074180513, reload: 1.6721480807418052, savedPer1000: 5191.65 },
+    { calibre: "38 TPC", charge: 4.2, projectile: 0.435, factory: 6.3243, powder: 0.3146715420256848, reload: 1.649671542025685, savedPer1000: 4674.63 },
+    { calibre: "380 ACP", charge: 2.9, projectile: 0.42, factory: 5.4524, powder: 0.2172732075891633, reload: 1.5372732075891633, savedPer1000: 3915.13 },
+    { calibre: "38 SPL", charge: 4, projectile: 0.47, factory: 6.4918, powder: 0.29968718288160456, reload: 1.6696871828816047, savedPer1000: 4822.11 }
+  ];
+
+  for (const item of cases) {
+    const row = sandbox.price({
+      calibre: item.calibre,
+      carga: 4,
+      espoleta: 1.16,
+      valorGrain: 0.0679581389,
+      projetil: 0.45,
+      factoryBox: 500,
+      factoryUnit: 5,
+      boxQty: 100,
+      estojo: 0.25,
+      bucha: 0,
+      bagos: 0
+    });
+    assert.equal(row.carga, item.charge);
+    assert.equal(row.espoleta, 0.9);
+    assert.ok(Math.abs(row.projetil - item.projectile) < 1e-12);
+    assert.ok(Math.abs(row.polvora - item.powder) < 1e-12);
+    assert.ok(Math.abs(row.recargaUnit - item.reload) < 1e-12);
+    assert.ok(Math.abs(row.factoryUnit - item.factory) < 1e-12);
+    assert.ok(Math.abs((row.factoryUnit - row.recargaUnit) * 1000 - item.savedPer1000) < 0.01);
+    assert.equal(row.estojo, 0);
+    assert.equal(row.atualizacao, "19/10/2026");
+    assert.match(row.recargaSource, /estojo reutilizado e fora do custo/);
+  }
+
+  const unrelated = sandbox.price({
+    calibre: "357 Mag", carga: 13.7, espoleta: 1.16, valorGrain: 0.0679581389,
+    projetil: 0.45, factoryBox: 676.54, factoryUnit: 6.7654, boxQty: 100,
+    estojo: 0, bucha: 0, bagos: 0
+  });
+  assert.equal(unrelated.atualizacao, "09/2026");
+  assert.equal(unrelated.espoleta, 1.2795);
+});
+
 test("interface não inclui compactação de vídeos nem dependência do Supabase", () => {
   assert.doesNotMatch(html, /Supabase|supabase|FFmpeg|compress-video|videoCompressor|compactador de vídeo/i);
   assert.match(html, /recarga_app_server_url/);
@@ -100,9 +152,11 @@ test("comissão segue todas as faixas de PIX e cartão e preserva a base de 0,40
   const { getPrizeRule, calculateCommissionValues } = sandbox.api;
   const rate = (payment, discount, installments = 1) => getPrizeRule(payment, discount, installments).prizeRate;
 
-  assert.equal(rate("pix", 10), 0.015);
-  assert.equal(rate("pix", 10.01), 0.012);
-  assert.equal(rate("pix", 12), 0.012);
+  assert.equal(rate("pix", 10), 0.02);
+  assert.equal(rate("pix", 10.01), 0.015);
+  assert.equal(rate("pix", 11), 0.015);
+  assert.equal(rate("pix", 11.01), 0.01);
+  assert.equal(rate("pix", 12), 0.01);
   assert.equal(rate("pix", 15), 0.01);
   assert.equal(rate("pix", 20), 0.008);
   assert.equal(rate("pix", 20.01), 0);
@@ -131,8 +185,17 @@ test("comissão segue todas as faixas de PIX e cartão e preserva a base de 0,40
   });
   assert.equal(sale.valorLiquidoPedido, 9200);
   assert.ok(Math.abs(sale.comissaoBase - 36.8) < 1e-10);
-  assert.ok(Math.abs(sale.premioNegociacao - 138) < 1e-10);
-  assert.ok(Math.abs(sale.totalVariavelVenda - 174.8) < 1e-10);
+  assert.ok(Math.abs(sale.premioNegociacao - 184) < 1e-10);
+  assert.ok(Math.abs(sale.totalVariavelVenda - 220.8) < 1e-10);
+  const exactTenPercent = calculateCommissionValues({
+    valorOriginal: 1000,
+    descontoPercentual: 10,
+    frete: 0,
+    formaPagamento: "pix"
+  });
+  assert.equal(exactTenPercent.valorLiquidoPedido, 900);
+  assert.equal(exactTenPercent.premioNegociacao, 18);
+  assert.ok(Math.abs(exactTenPercent.totalVariavelVenda - 21.6) < 1e-10);
 });
 
 test("pagamento dividido calcula o prêmio sobre o valor pago em cada modalidade", () => {
@@ -157,12 +220,12 @@ test("pagamento dividido calcula o prêmio sobre o valor pago em cada modalidade
     paymentSplit: { pixAmount: 1000, cardAmount: 1000, cardInstallments: 6 }
   });
   assert.equal(sale.valorTotalModalidades, 2000);
-  assert.equal(sale.premioPix, 15);
+  assert.equal(sale.premioPix, 20);
   assert.equal(sale.premioCartao, 12);
-  assert.equal(sale.premioNegociacao, 27);
+  assert.equal(sale.premioNegociacao, 32);
   assert.equal(sale.comissaoBase, 8);
-  assert.equal(sale.totalVariavelVenda, 35);
-  assert.equal(sale.percentualPremio, 0.0135);
+  assert.equal(sale.totalVariavelVenda, 40);
+  assert.equal(sale.percentualPremio, 0.016);
 
   const discounted = sandbox.calculate({
     valorOriginal: 2000,
@@ -173,9 +236,9 @@ test("pagamento dividido calcula o prêmio sobre o valor pago em cada modalidade
   });
   assert.equal(discounted.valorLiquidoPedido, 1900);
   assert.equal(discounted.valorTotalModalidades, 1900);
-  assert.equal(discounted.premioPix, 15);
+  assert.equal(discounted.premioPix, 20);
   assert.equal(discounted.premioCartao, 10.8);
-  assert.equal(discounted.premioNegociacao, 25.8);
+  assert.equal(discounted.premioNegociacao, 30.8);
 });
 
 test("comissão do orçamento fica recolhida até o clique e o botão de copiar vem antes", () => {
@@ -229,7 +292,8 @@ test("matriz de comissão destaca a faixa atual e mostra as regras completas", (
   const pixCells = [...sandbox.output.innerHTML.matchAll(/<td class="commission-matrix-current" aria-current="true"[^>]*>([\s\S]*?)<\/td>/g)];
   assert.equal(pixCells.length, 1);
   assert.match(sandbox.output.innerHTML, /<th scope="row">Até 10%<\/th>/);
-  assert.match(pixCells[0][1], /1\.50%/);
+  assert.match(pixCells[0][1], /2\.00%/);
+  assert.match(sandbox.output.innerHTML, /Até 11%/);
   assert.match(sandbox.output.innerHTML, /Acima de 20%/);
 
   sandbox.render("card", 5, 6, false);
@@ -281,19 +345,70 @@ test("descontos máximos seguem a tabela PCE e não PCE por marca", () => {
   assert.match(html, /target: "#dealSaverProductType"/);
 });
 
-test("tutorial de atualização se limita à comissão e preenche os detalhes a partir do orçamento", () => {
+test("simulador inclui cupom e frete no teto e preserva cupom acima do limite", () => {
+  const rulesStart = html.indexOf("      const DEAL_SAVER_BRANDS = {");
+  const end = html.indexOf("      function parseQuoteMoneyCandidate(", rulesStart);
+  assert.ok(rulesStart >= 0 && end > rulesStart);
+  const sandbox = {
+    el: {
+      dealSaverProductType: { value: "pce" },
+      dealSaverBrand: { value: "lee" },
+      dealSaverPayment: { value: "card7to12" },
+      dealSaverValue: { value: "3000" },
+      dealSaverAppliedDiscount: { value: "20" },
+      dealSaverFreeFreight: { value: "150" },
+      dealSaverEntry: { value: "" }
+    },
+    escapeHtml: (value) => String(value),
+    parseMoney: (value) => Number(value) || 0,
+    parsePercentageInput: (value) => Number.parseFloat(String(value).replace("%", "")) || 0,
+    formatCurrencyCompact: (value) => `R$${Number(value).toFixed(2)}`,
+    formatInstallmentCurrency: (value) => `R$${Number(value).toFixed(2)}`,
+    formatPercent: (value) => `${Number(value).toFixed(1)}%`
+  };
+  vm.runInNewContext([
+    html.slice(rulesStart, end),
+    "globalThis.render = buildDealSaverHtml;"
+  ].join("\n"), sandbox);
+  let result = sandbox.render();
+  assert.match(result, /deal-saver-danger/);
+  assert.match(result, /Teto total: 20\.0% \(R\$600\.00\)/);
+  assert.match(result, /Desconto real com frete: R\$750\.00 \(25\.0% do pedido\)/);
+  assert.match(result, /Reduza o desconto ou o frete em pelo menos R\$150\.00/);
+  assert.match(result, /Desconto adicional ainda permitido: R\$0\.00/);
+
+  sandbox.el.dealSaverPayment.value = "pix";
+  sandbox.el.dealSaverAppliedDiscount.value = "";
+  sandbox.el.dealSaverFreeFreight.value = "0";
+  result = sandbox.render();
+  assert.match(result, /Desconto\/cupom aplicado: R\$300\.00 \(10\.0%\)/);
+  assert.match(result, /Desconto adicional ainda permitido: R\$300\.00/);
+
+  sandbox.el.dealSaverPayment.value = "card7to12";
+  sandbox.el.dealSaverAppliedDiscount.value = "25";
+  result = sandbox.render();
+  assert.match(result, /deal-saver-warn/);
+  assert.match(result, /O cupom continua válido, mas já supera o teto/);
+  assert.match(result, /Não conceda desconto adicional nem frete grátis/);
+});
+
+test("tutorial de atualização apresenta comissão e nova regra de desconto com demonstração", () => {
   const start = html.indexOf("      const UPDATE_TOUR_STEPS = [");
   const end = html.indexOf("      const UPDATE_TOUR_DEMO_MESSAGE", start);
   assert.ok(start >= 0 && end > start);
   const tourSteps = html.slice(start, end);
-  assert.equal((tourSteps.match(/target:/g) || []).length, 2);
-  assert.match(html, /2026-10-02-tour-v9/);
+  assert.equal((tourSteps.match(/target:/g) || []).length, 3);
+  assert.match(html, /2026-10-07-tour-v10/);
   assert.match(tourSteps, /target: "#quoteCommissionDetailsButton"[\s\S]*requiresUserArea: true/);
   assert.match(html, /id="quoteCommissionToggle"[^>]*>Quanto vou ganhar\?/);
   assert.match(tourSteps, /Mostrar detalhes/);
   assert.match(html, /el\.commissionSaleValue\.value = formatCurrency\(state\.quoteValues\.subtotal\)/);
   assert.match(html, /el\.commissionFreight\.value = formatCurrency\(state\.quoteValues\.freight \|\| 0\)/);
   assert.match(html, /switchDash\("user"\);[\s\S]*el\.commissionCalculatorPanel\.scrollIntoView/);
+  assert.match(tourSteps, /Confira cupom e frete dentro do limite/);
+  assert.match(html, /action === "showDealSaverRules"/);
+  assert.match(html, /dealSaverAppliedDiscount: el\.dealSaverAppliedDiscount/);
+  assert.match(html, /el\.dealSaverFreeFreight\.value = state\.updateTourSnapshot\.dealSaverFreeFreight/);
 });
 
 test("previsão de meta mensal e a trava antiga de elegibilidade PIX foram removidas", () => {
