@@ -4248,10 +4248,6 @@
               </div>
                 <div class="panel ocr-box">
                 <h3>Mensagem de orçamento</h3>
-                <div class="field">
-                  <label for="quotePressName">Nome da prensa (opcional)</label>
-                  <input id="quotePressName" placeholder="Ex.: Dillon XL 750" />
-                </div>
                 <button id="quotePasteZone" class="btn ghost image-paste-button quote-drop-zone" type="button">Colar ou arrastar orçamento/PDF</button>
                 <textarea id="quoteResult" placeholder="A mensagem do orçamento aparece aqui..."></textarea>
                 <div class="copy-row quote-primary-actions">
@@ -5242,7 +5238,7 @@
         "shareCanvas", "downloadImage", "investmentValue", "monthlyQty", "monthlySave", "breakEvenQty", "paybackShort", "paybackText",
         "copyOcrText", "ocrFilterCpf", "ocrFilterName", "ocrImage", "pasteOcrImage", "ocrPasteZone", "ocrResult",
         "imageToolsTitle", "imageToolTabExtract", "imageToolTabEdit", "imageToolPanelExtract", "imageToolPanelEdit",
-        "quotePressName", "quotePasteZone", "quoteResult", "copyQuoteMessage", "quoteInstallmentsButton", "quoteInstallmentsPreview",
+        "quotePasteZone", "quoteResult", "copyQuoteMessage", "quoteInstallmentsButton", "quoteInstallmentsPreview",
         "quoteCommissionToggle", "quoteCommissionPanel", "quoteCommissionPayment", "quoteCommissionInstallmentsRow", "quoteCommissionInstallments", "quoteCommissionDiscount",
         "quoteCommissionValue", "quoteCommissionRate", "quoteCommissionDetailsButton",
         "dealSaverProductType", "dealSaverBrand", "dealSaverPayment", "dealSaverValue", "dealSaverAppliedDiscount", "dealSaverFreeFreight", "dealSaverEntry", "dealSaverResult", "dealSaverPolicyTable",
@@ -5333,13 +5329,8 @@
         }
       ];
 
-      const UPDATE_TOUR_DEMO_MESSAGE = `*Orçamento demonstrativo*
-
-Total da negociação: R$ 10.200,00
-
-À vista com 10% no Pix: R$ 9.200,00
-
-_Valores apenas para demonstrar a comissão_`;
+      const UPDATE_TOUR_DEMO_MESSAGE = `*⚫🟡 PREÇO BLACK NO PIX*
+*R$ 9.200,00*`;
 
       const columns = {
         estado: ["estado", "uf", "local", "regiao"],
@@ -7827,26 +7818,17 @@ _Valores apenas para demonstrar a comissão_`;
 
       const QUOTE_INSTALLMENTS = 21;
 
-      function buildQuoteMessage(values, pressName = "") {
+      function buildQuoteMessage(values) {
         const subtotal = Number(values.subtotal) || 0;
         const freight = Number(values.freight) || 0;
         const total = Number(values.total) || 0;
         if (!subtotal || !total) return "";
 
         const cash = subtotal * 0.90 + freight;
-        const installment = total / QUOTE_INSTALLMENTS;
-        const lines = [
-          `${formatCurrencyCompact(total)} em até ${QUOTE_INSTALLMENTS}X sem juros de ${formatInstallmentCurrency(installment)}`,
-          "",
-          "ou",
-          "",
-          `À vista por ${formatCurrencyCompact(cash)}`,
-          "",
-          "_Orçamento válido por 2 dias úteis_"
-        ];
-        const normalizedPressName = String(pressName || "").trim();
-        if (normalizedPressName) lines.unshift(`*${normalizedPressName}*`, "");
-        return lines.join("\n");
+        return [
+          "*⚫🟡 PREÇO BLACK NO PIX*",
+          `*${formatCurrencyCompact(cash)}*`
+        ].join("\n");
       }
 
       function buildQuoteInstallmentsHtml(values) {
@@ -7893,7 +7875,7 @@ _Valores apenas para demonstrar a comissão_`;
 
       function refreshQuoteMessage() {
         if (!state.quoteValues) return;
-        const message = buildQuoteMessage(state.quoteValues, el.quotePressName.value);
+        const message = buildQuoteMessage(state.quoteValues);
         if (message) el.quoteResult.value = message;
         renderQuoteInstallments(false);
         updateQuoteCommissionCalculator();
@@ -8005,7 +7987,7 @@ _Valores apenas para demonstrar a comissão_`;
 
       function applyQuoteText(text) {
         const values = extractQuoteValues(text);
-        const message = buildQuoteMessage(values, el.quotePressName.value);
+        const message = buildQuoteMessage(values);
         if (!message) {
           resetQuoteFailure();
           showToast("Orçamento não identificado.");
@@ -10245,7 +10227,6 @@ _Valores apenas para demonstrar a comissão_`;
       });
       el.pasteOcrImage.addEventListener("click", readClipboardImage);
       el.pasteOcrImage.addEventListener("paste", handleOcrPaste);
-      el.quotePressName.addEventListener("input", refreshQuoteMessage);
       el.quotePasteZone.addEventListener("click", readClipboardQuoteImage);
       el.quotePasteZone.addEventListener("paste", handleQuotePaste);
       el.quotePasteZone.addEventListener("dragenter", handleQuoteDrag);

@@ -70,6 +70,25 @@ test("simulação de 19/10/2026 atualiza custos e munição industrial dos quatr
   assert.equal(unrelated.espoleta, 1.2795);
 });
 
+test("mensagem do orçamento exibe somente o preço Black no Pix em negrito para WhatsApp", () => {
+  const start = html.indexOf("      const QUOTE_INSTALLMENTS = 21;");
+  const end = html.indexOf("\n      function buildQuoteInstallmentsHtml", start);
+  assert.ok(start >= 0 && end > start);
+  const sandbox = {
+    formatCurrencyCompact: (value) => `R$ ${Number(value).toFixed(2).replace(".", ",")}`
+  };
+  vm.runInNewContext([
+    html.slice(start, end),
+    "globalThis.build = buildQuoteMessage;"
+  ].join("\n"), sandbox);
+
+  assert.equal(
+    sandbox.build({ subtotal: 1000, freight: 50, total: 1300 }),
+    "*⚫🟡 PREÇO BLACK NO PIX*\n*R$ 950,00*"
+  );
+  assert.doesNotMatch(html, /id="quotePressName"|quotePressName\.addEventListener/);
+});
+
 test("interface não inclui compactação de vídeos nem dependência do Supabase", () => {
   assert.doesNotMatch(html, /Supabase|supabase|FFmpeg|compress-video|videoCompressor|compactador de vídeo/i);
   assert.match(html, /recarga_app_server_url/);
