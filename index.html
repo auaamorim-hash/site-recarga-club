@@ -1879,6 +1879,26 @@
         line-height: 1.45;
       }
 
+      .deal-saver-detected {
+        margin: 0 0 12px;
+        padding: 9px 11px;
+        border-left: 3px solid var(--yellow);
+        border-radius: 4px;
+        color: var(--muted);
+        background: rgba(254, 195, 43, 0.08);
+        font-size: 0.9rem;
+      }
+
+      .deal-saver-excess {
+        margin-top: 10px !important;
+        padding: 9px 11px;
+        border-left: 3px solid #ff646b;
+        border-radius: 4px;
+        color: #ff8a90 !important;
+        background: rgba(255, 56, 64, 0.12);
+        font-weight: 700;
+      }
+
       .deal-saver-list {
         margin: 8px 0 0;
         padding-left: 18px;
@@ -4291,6 +4311,7 @@
               </div>
               <div class="panel ocr-box deal-saver-box">
                 <h3>Proibido perder venda</h3>
+                <p id="dealSaverDetectedProduct" class="deal-saver-detected hidden" aria-live="polite"></p>
                 <div class="deal-saver-grid">
                   <div class="field">
                     <label for="dealSaverProductType">Tipo de produto</label>
@@ -4320,7 +4341,7 @@
                     </select>
                   </div>
                   <div class="field">
-                    <label for="dealSaverValue">Valor total</label>
+                    <label for="dealSaverValue">Valor dos produtos</label>
                     <input id="dealSaverValue" inputmode="decimal" placeholder="Ex.: 6000,00" />
                   </div>
                   <div class="field">
@@ -5241,7 +5262,7 @@
         "quotePasteZone", "quoteResult", "copyQuoteMessage", "quoteInstallmentsButton", "quoteInstallmentsPreview",
         "quoteCommissionToggle", "quoteCommissionPanel", "quoteCommissionPayment", "quoteCommissionInstallmentsRow", "quoteCommissionInstallments", "quoteCommissionDiscount",
         "quoteCommissionValue", "quoteCommissionRate", "quoteCommissionDetailsButton",
-        "dealSaverProductType", "dealSaverBrand", "dealSaverPayment", "dealSaverValue", "dealSaverAppliedDiscount", "dealSaverFreeFreight", "dealSaverEntry", "dealSaverResult", "dealSaverPolicyTable",
+        "dealSaverDetectedProduct", "dealSaverProductType", "dealSaverBrand", "dealSaverPayment", "dealSaverValue", "dealSaverAppliedDiscount", "dealSaverFreeFreight", "dealSaverEntry", "dealSaverResult", "dealSaverPolicyTable",
         "inventoryPasteZone", "inventoryEditorStatus", "inventoryEditorControls", "inventoryCaliberSelect", "inventoryQuantity", "inventoryPreview", "inventoryCanvas", "downloadInventoryImage",
         "carrierDdd", "carrierCep", "carrierCepResult", "carrierLocation", "militaryRegionBadge", "sfpcResult", "ufGrid", "carrierTitle", "carrierCount", "carrierList",
         "userTabButton", "profileAvatar", "profileName", "profileEmail", "profilePhone", "profileRole", "activitiesPanel", "activitySource", "activityList",
@@ -7560,32 +7581,23 @@
           const realDiscount = appliedDiscount + freeFreight;
           const realDiscountRate = total > 0 ? (realDiscount / total) * 100 : 0;
           const couponExceedsLimit = appliedDiscount > maxDiscount + 0.005;
-          const excess = couponExceedsLimit ? freeFreight : Math.max(0, realDiscount - maxDiscount);
+          const excess = Math.max(0, realDiscount - maxDiscount);
           const additionalAllowance = Math.max(0, maxDiscount - realDiscount);
           const limitPrice = total - maxDiscount;
           const reserveMinimum = total * 0.2;
           const exceedsLimit = excess > 0.005;
-          const statusClass = exceedsLimit
-            ? couponExceedsLimit && freeFreight <= 0 ? "deal-saver-warn" : "deal-saver-danger"
-            : couponExceedsLimit ? "deal-saver-warn" : "deal-saver-ok";
-          const statusTitle = exceedsLimit
-            ? couponExceedsLimit && freeFreight <= 0 ? "Cupom mantido; sem margem para desconto adicional"
-              : couponExceedsLimit ? "Cupom válido; frete grátis fora do limite" : "Desconto e frete ultrapassam o teto"
-            : couponExceedsLimit ? "Cupom mantido; sem margem para desconto adicional"
-            : "Dentro do limite permitido";
+          const statusClass = exceedsLimit ? "deal-saver-danger" : "deal-saver-ok";
+          const statusTitle = exceedsLimit ? "Fora da margem permitida" : "Dentro da margem permitida";
           const policyNote = exceedsLimit
             ? couponExceedsLimit
-              ? freeFreight > 0
-                ? "O cupom continua válido. Remova o frete grátis; não há margem para frete nem desconto adicional."
-                : "O cupom continua válido, mas já supera o teto. Não conceda desconto adicional nem frete grátis."
-              : `Reduza o desconto ou o frete em pelo menos ${formatCurrencyCompact(excess)} para respeitar o limite.`
-            : couponExceedsLimit
-              ? "O cupom continua válido, mas já supera o teto. Não conceda desconto adicional nem frete grátis."
-            : "Desconto, cupom e frete grátis estão dentro do limite da tabela.";
+              ? `Cupom mantido, mas desconto e frete excedem o limite em ${formatCurrencyCompact(excess)}. Não conceda desconto adicional nem frete grátis.`
+              : `Reduza o desconto ou o frete grátis em ${formatCurrencyCompact(excess)} para ficar dentro da margem.`
+            : "Desconto, cupom e frete grátis estão dentro da margem da tabela.";
           cards.push(`
             <div class="deal-saver-card ${statusClass}">
               <strong>${statusTitle}</strong>
               <p>${rule.label} • ${getDealSaverPaymentLabel(payment)}</p>
+              ${exceedsLimit ? `<p class="deal-saver-excess">Excedente: ${formatCurrencyCompact(excess)} (${formatPercent((excess / total) * 100)} do valor dos produtos)</p>` : ""}
               <ul class="deal-saver-list">
                 <li>Teto total: ${formatPercent(rate * 100)} (${formatCurrencyCompact(maxDiscount)}).</li>
                 <li>Desconto/cupom aplicado: ${formatCurrencyCompact(appliedDiscount)} (${formatPercent(appliedDiscountRate * 100)}).</li>
@@ -7816,6 +7828,116 @@
         return reconcileQuoteValues(values, lines);
       }
 
+      function extractQuoteDealDetails(text, values) {
+        const lines = String(text || "").split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+        const normalizedLines = lines.map(normalize);
+        const productPattern = /\b(?:prensa|press|die|dies|matriz|matrizes|acessorio|acessorios|kit)\b/;
+        const productIndex = normalizedLines.findIndex((line) => productPattern.test(line));
+        const brandRules = [
+          { value: "lee", pattern: /\blee(?: precision)?\b/ },
+          { value: "dillon", pattern: /\bdillon\b/ },
+          { value: "frankford", pattern: /\bfrankford\b/ },
+          { value: "recargaClub", pattern: /\brecarga club\b/ }
+        ];
+        const productContext = productIndex >= 0
+          ? lines.slice(Math.max(0, productIndex - 1), Math.min(lines.length, productIndex + 2)).join(" ")
+          : "";
+        const productContextNormalized = normalize(productContext);
+        let equipmentName = productIndex >= 0 ? lines[productIndex] : "";
+        if (equipmentName.length < 55 && productIndex >= 0) {
+          const nextLine = lines[productIndex + 1] || "";
+          const nextNormalized = normalize(nextLine);
+          if (nextLine && !/r\s*\$/i.test(nextLine) && !/(subtotal|valor total|frete|pagamento|desconto|tipo de|\bpce\b)/.test(nextNormalized)) {
+            equipmentName = `${equipmentName} ${nextLine}`.trim();
+          }
+        }
+
+        let brand = brandRules.find((rule) => rule.pattern.test(productContextNormalized))?.value || "";
+        if (!brand) {
+          const uniqueBrands = brandRules
+            .filter((rule) => rule.value !== "recargaClub" && rule.pattern.test(normalize(text)))
+            .map((rule) => rule.value);
+          if (uniqueBrands.length === 1) brand = uniqueBrands[0];
+        }
+        if (!equipmentName && brand) {
+          equipmentName = lines.find((line) => brandRules.find((rule) => rule.value === brand)?.pattern.test(normalize(line))) || "";
+        }
+        if (productIndex >= 0 && !brand) brand = "other";
+
+        const nonPce = /\b(?:npce|non pce|nao pce)\b/.test(productContextNormalized);
+        const explicitPce = /\bpce\b/.test(productContextNormalized);
+        const productType = nonPce
+          ? "nonPce"
+          : explicitPce || /\b(?:prensa|press|die|dies|matriz|matrizes)\b/.test(productContextNormalized)
+            ? "pce"
+            : /\b(?:acessorio|acessorios)\b/.test(productContextNormalized) ? "nonPce" : "";
+
+        const paymentLabelIndex = normalizedLines.findIndex((line) => /(?:forma|condicao) de pagamento|payment method/.test(line));
+        let paymentContext = "";
+        if (paymentLabelIndex >= 0) {
+          paymentContext = normalizedLines.slice(paymentLabelIndex, paymentLabelIndex + 2).join(" ");
+        } else {
+          const explicitPaymentIndex = normalizedLines.findIndex((line) =>
+            /\b(?:pix|cartao|boleto)\b/.test(line) && /(?:pagamento|avista|a vista|parcelas?|vezes|\d{1,2}\s*x|desconto)/.test(line)
+          );
+          if (explicitPaymentIndex >= 0) paymentContext = normalizedLines.slice(explicitPaymentIndex, explicitPaymentIndex + 2).join(" ");
+        }
+        let payment = /\bboleto\b/.test(paymentContext)
+          ? "boleto"
+          : /\bcartao\b|\bcredito\b/.test(paymentContext) ? "card1to6" : "pix";
+        const installmentMatch = paymentContext.match(/\b(\d{1,2})\s*x\b/) || paymentContext.match(/\b(\d{1,2})\s+parcelas?\b/);
+        if (payment.startsWith("card") && installmentMatch) {
+          const count = Number(installmentMatch[1]);
+          if (count > 12) payment = "card13to21";
+          else if (count > 6) payment = "card7to12";
+        }
+
+        const discountLine = lines.find((line, index) =>
+          /\b(?:desconto|cupom)\b/.test(normalizedLines[index]) && /\d/.test(line)
+        ) || lines.find((line, index) =>
+          /\b(?:pix|avista|a vista)\b/.test(normalizedLines[index]) && /%/.test(line)
+        );
+        let discountPercent = null;
+        if (discountLine) {
+          const percentMatch = discountLine.match(/(\d{1,3}(?:[,.]\d{1,3})?)\s*%/);
+          if (percentMatch) {
+            discountPercent = Number(percentMatch[1].replace(",", "."));
+          } else {
+            const discountAmount = extractMoneyValuesFromLine(discountLine)[0] || 0;
+            const base = Number(values.subtotal) || Number(values.total) || 0;
+            if (discountAmount && base) discountPercent = (discountAmount / base) * 100;
+          }
+        }
+        if (discountPercent === null || !Number.isFinite(discountPercent)) {
+          discountPercent = payment === "pix" ? 10 : 0;
+        }
+
+        return {
+          equipmentName: equipmentName.slice(0, 160),
+          brand,
+          productType,
+          payment,
+          discountPercent: Math.min(100, Math.max(0, discountPercent))
+        };
+      }
+
+      function applyQuoteDealSaverData(values, details) {
+        const base = Number(values.subtotal) || Number(values.total) || 0;
+        el.dealSaverValue.value = formatCurrencyCompact(base);
+        el.dealSaverProductType.value = details.productType || "pce";
+        updateDealSaverBrandOptions();
+        el.dealSaverBrand.value = details.brand || "other";
+        el.dealSaverPayment.value = details.payment || "pix";
+        el.dealSaverAppliedDiscount.value = formatPercentageInput(details.discountPercent);
+        el.dealSaverFreeFreight.value = "";
+        el.dealSaverEntry.value = "";
+        el.dealSaverDetectedProduct.textContent = details.equipmentName
+          ? `Identificado no orçamento: ${details.equipmentName}`
+          : "Equipamento não identificado no texto; confira tipo e marca.";
+        el.dealSaverDetectedProduct.classList.remove("hidden");
+        updateDealSaver();
+      }
+
       const QUOTE_INSTALLMENTS = 21;
 
       function buildQuoteMessage(values) {
@@ -8001,10 +8123,7 @@
         el.quoteCommissionInstallments.value = "1";
         el.quoteCommissionDiscount.value = "10%";
         el.quoteResult.value = message;
-        if (el.dealSaverValue && !el.dealSaverValue.value.trim()) {
-          el.dealSaverValue.value = formatCurrencyCompact(values.total);
-        }
-        updateDealSaver();
+        applyQuoteDealSaverData(values, extractQuoteDealDetails(text, values));
         renderQuoteInstallments(false);
         updateQuoteCommissionCalculator();
         showToast("Mensagem de orçamento gerada.");

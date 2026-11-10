@@ -89,6 +89,75 @@ test("mensagem do orçamento exibe somente o preço Black no Pix em negrito para
   assert.doesNotMatch(html, /id="quotePressName"|quotePressName\.addEventListener/);
 });
 
+test("orçamento preenche produto, tipo, marca, pagamento, base e desconto no Proibido perder venda", () => {
+  const normalizeStart = html.indexOf("      function normalize(value)");
+  const normalizeEnd = html.indexOf("\n      const SUPPLY_CATALOG", normalizeStart);
+  const parserStart = html.indexOf("      function parseQuoteMoneyCandidate(");
+  const parserEnd = html.indexOf("\n      const QUOTE_INSTALLMENTS", parserStart);
+  const applyStart = html.indexOf("      function applyQuoteDealSaverData(");
+  const applyEnd = html.indexOf("\n      const QUOTE_INSTALLMENTS", applyStart);
+  assert.ok(normalizeStart >= 0 && normalizeEnd > normalizeStart && parserStart >= 0 && parserEnd > parserStart && applyStart >= 0 && applyEnd > applyStart);
+
+  const sandbox = {
+    el: {
+      dealSaverDetectedProduct: { textContent: "", classList: { remove() {} } },
+      dealSaverValue: { value: "" },
+      dealSaverProductType: { value: "" },
+      dealSaverBrand: { value: "" },
+      dealSaverPayment: { value: "" },
+      dealSaverAppliedDiscount: { value: "" },
+      dealSaverFreeFreight: { value: "stale freight" },
+      dealSaverEntry: { value: "stale entry" }
+    },
+    formatCurrencyCompact: (value) => `R$ ${Number(value).toFixed(2)}`,
+    formatPercentageInput: (value) => `${Number(value)}%`,
+    updateDealSaverBrandOptions() {},
+    updateDealSaver() {}
+  };
+  vm.runInNewContext([
+    html.slice(normalizeStart, normalizeEnd),
+    html.slice(parserStart, parserEnd),
+    html.slice(applyStart, applyEnd),
+    "globalThis.extractAmounts = extractQuoteValues; globalThis.extractDetails = extractQuoteDealDetails; globalThis.applyDetails = applyQuoteDealSaverData;"
+  ].join("\n"), sandbox);
+
+  const source = [
+    "Produto",
+    "Prensa Dillon XL 750",
+    "Tipo de produto: PCE",
+    "Subtotal: R$ 10.000,00",
+    "Frete: R$ 200,00",
+    "Total da proposta: R$ 10.200,00",
+    "Forma de pagamento: Pix à vista",
+    "Desconto Pix: 10%"
+  ].join("\n");
+  const values = sandbox.extractAmounts(source);
+  const details = sandbox.extractDetails(source, values);
+  assert.deepEqual(JSON.parse(JSON.stringify(values)), { subtotal: 10000, freight: 200, total: 10200 });
+  assert.equal(details.equipmentName, "Prensa Dillon XL 750");
+  assert.equal(details.productType, "pce");
+  assert.equal(details.brand, "dillon");
+  assert.equal(details.payment, "pix");
+  assert.equal(details.discountPercent, 10);
+
+  sandbox.applyDetails(values, details);
+  assert.equal(sandbox.el.dealSaverValue.value, "R$ 10000.00");
+  assert.equal(sandbox.el.dealSaverProductType.value, "pce");
+  assert.equal(sandbox.el.dealSaverBrand.value, "dillon");
+  assert.equal(sandbox.el.dealSaverPayment.value, "pix");
+  assert.equal(sandbox.el.dealSaverAppliedDiscount.value, "10%");
+  assert.equal(sandbox.el.dealSaverFreeFreight.value, "");
+  assert.equal(sandbox.el.dealSaverEntry.value, "");
+  assert.match(sandbox.el.dealSaverDetectedProduct.textContent, /Prensa Dillon XL 750/);
+
+  const cardSource = "Produto: Jogo de Dies Frankford\nSubtotal: R$ 5.000,00\nTotal: R$ 5.000,00\nCondição de pagamento: Cartão de crédito em 12x\nDesconto aplicado: R$ 250,00";
+  const cardDetails = sandbox.extractDetails(cardSource, { subtotal: 5000, total: 5000 });
+  assert.equal(cardDetails.brand, "frankford");
+  assert.equal(cardDetails.productType, "pce");
+  assert.equal(cardDetails.payment, "card7to12");
+  assert.equal(cardDetails.discountPercent, 5);
+});
+
 test("interface não inclui compactação de vídeos nem dependência do Supabase", () => {
   assert.doesNotMatch(html, /Supabase|supabase|FFmpeg|compress-video|videoCompressor|compactador de vídeo/i);
   assert.match(html, /recarga_app_server_url/);
@@ -393,22 +462,30 @@ test("simulador inclui cupom e frete no teto e preserva cupom acima do limite", 
   assert.match(result, /deal-saver-danger/);
   assert.match(result, /Teto total: 20\.0% \(R\$600\.00\)/);
   assert.match(result, /Desconto real com frete: R\$750\.00 \(25\.0% do pedido\)/);
-  assert.match(result, /Reduza o desconto ou o frete em pelo menos R\$150\.00/);
+  assert.match(result, /Reduza o desconto ou o frete grátis em R\$150\.00/);
   assert.match(result, /Desconto adicional ainda permitido: R\$0\.00/);
 
   sandbox.el.dealSaverPayment.value = "pix";
   sandbox.el.dealSaverAppliedDiscount.value = "";
   sandbox.el.dealSaverFreeFreight.value = "0";
   result = sandbox.render();
+  assert.match(result, /deal-saver-ok/);
   assert.match(result, /Desconto\/cupom aplicado: R\$300\.00 \(10\.0%\)/);
   assert.match(result, /Desconto adicional ainda permitido: R\$300\.00/);
 
   sandbox.el.dealSaverPayment.value = "card7to12";
   sandbox.el.dealSaverAppliedDiscount.value = "25";
+  sandbox.el.dealSaverFreeFreight.value = "150";
   result = sandbox.render();
-  assert.match(result, /deal-saver-warn/);
-  assert.match(result, /O cupom continua válido, mas já supera o teto/);
+  assert.match(result, /deal-saver-danger/);
+  assert.match(result, /Cupom mantido, mas desconto e frete excedem o limite em R\$300\.00/);
+  assert.match(result, /Excedente: R\$300\.00/);
   assert.match(result, /Não conceda desconto adicional nem frete grátis/);
+
+  sandbox.el.dealSaverFreeFreight.value = "0";
+  result = sandbox.render();
+  assert.match(result, /deal-saver-danger/);
+  assert.match(result, /Excedente: R\$150\.00/);
 });
 
 test("tutorial de atualização apresenta comissão e nova regra de desconto com demonstração", () => {
